@@ -28,6 +28,13 @@ namespace web.Controllers
             return Ok(list);
         }
 
+        [HttpGet, Route("Distinct")]
+        public IHttpActionResult GetDistinct(int take, int skip)
+        {
+            var list = context.Persons.OrderBy(x => x.SortOrder).Skip(skip).Take(take).GroupBy(x => new { x.Lastname, x.Firstname });
+            return Ok(list);
+        }
+
         [HttpGet, Route("Count")]
         public IHttpActionResult Count()
         {
