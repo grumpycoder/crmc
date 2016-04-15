@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wot", "wot\wot.csproj", "{C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHarness", "TestHarness\TestHarness.csproj", "{B31F2935-27D3-492D-8714-794FEC723901}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "web", "web\web.csproj", "{B56DC810-986E-43B5-B627-B76339D63026}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B31F2935-27D3-492D-8714-794FEC723901}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B31F2935-27D3-492D-8714-794FEC723901}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B31F2935-27D3-492D-8714-794FEC723901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B56DC810-986E-43B5-B627-B76339D63026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B56DC810-986E-43B5-B627-B76339D63026}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B56DC810-986E-43B5-B627-B76339D63026}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B56DC810-986E-43B5-B627-B76339D63026}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,10 +2,7 @@
 using crmc.domain;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestHarness
 {
@@ -15,18 +12,31 @@ namespace TestHarness
         {
             var context = new DataContext();
 
-            var p = new Person()
+            var service = new NameService(context);
+
+            IEnumerable<Person> list = service.GetNames(take: 10, skip: 0);
+
+            foreach (var person in list)
             {
-                Firstname = "Mark",
-                Lastname = "Lawrence"
-            };
-            context.Persons.Add(p);
-            var i = context.SaveChanges();
-
-            Console.WriteLine(i);
-
+                Console.WriteLine(person);
+            }
             Console.WriteLine("Finished");
             Console.ReadLine();
+        }
+    }
+
+    internal class NameService
+    {
+        public DataContext Context { get; set; }
+
+        public NameService(DataContext context)
+        {
+            Context = context;
+        }
+
+        public IEnumerable<Person> GetNames(int take, int skip)
+        {
+            return Context.Persons.OrderBy(x => x.SortOrder).Skip(skip).Take(take);
         }
     }
 }
