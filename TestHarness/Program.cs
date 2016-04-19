@@ -1,8 +1,11 @@
 ﻿using crmc.data;
 using crmc.domain;
+using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using wot.Services;
 
 namespace TestHarness
 {
@@ -12,31 +15,70 @@ namespace TestHarness
         {
             var context = new DataContext();
 
-            var service = new NameService(context);
+            //NameTest();
+            HubTest();
 
-            IEnumerable<Person> list = service.GetNames(take: 10, skip: 0);
+            Console.WriteLine("Finished");
+            Console.ReadLine();
+        }
+
+        private static void HubTest()
+        {
+            var connection = new HubConnection("http://localhost:11277/signalr");
+            var hub = connection.CreateHubProxy("wot");
+            connection.Start().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Console.WriteLine("There was an error opening the connection:{0}",
+                                      task.Exception.GetBaseException());
+                }
+                else
+                {
+                    Console.WriteLine("Connected");
+                }
+            }).Wait();
+
+            hub.On<string, string>("addName", (kiosk, message) =>
+            {
+                Console.WriteLine("From Hub: {0} : {1}", kiosk, message);
+            });
+
+            while (true)
+            {
+                Console.WriteLine("Enter name:");
+                var line = Console.ReadLine();
+                if (line == "exit")
+                {
+                    break;
+                }
+
+                var person = new Person() { Firstname = line.Split(new char[] { ' ' })[0], Lastname = line.Split(new char[] { ' ' })[1] };
+                hub.Invoke("addName", "1", person).ContinueWith(task =>
+                {
+                    if (task.IsFaulted)
+                    {
+                        Console.WriteLine("There was an error calling send: {0}",
+                            task.Exception.GetBaseException());
+                    }
+                    else
+                    {
+                        Console.WriteLine("Added name: {0}", line);
+                    }
+                });
+            }
+        }
+
+        private static async void NameTest()
+        {
+            var service = new NameService("http://localhost:11277");
+
+            IEnumerable<Person> list = await service.GetDistinct(10, 0, false);
 
             foreach (var person in list)
             {
                 Console.WriteLine(person);
             }
-            Console.WriteLine("Finished");
-            Console.ReadLine();
-        }
-    }
-
-    internal class NameService
-    {
-        public DataContext Context { get; set; }
-
-        public NameService(DataContext context)
-        {
-            Context = context;
-        }
-
-        public IEnumerable<Person> GetNames(int take, int skip)
-        {
-            return Context.Persons.OrderBy(x => x.SortOrder).Skip(skip).Take(take);
         }
     }
 }
