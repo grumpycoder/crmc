@@ -163,12 +163,15 @@ namespace wot
                     yPosition = vm.GetYAxis(label); //TODO: Update X Axis from config settings
                 }
 
+                var timeModifier = 35; //TODO: Update timeModifier from config settings
+                var duration = timeModifier / label.FontSize * 10;
+
                 var fallAnimation = new DoubleAnimation
                 {
                     From = yPosition,
                     To = 600, //TODO: This is bottom margin. Could be height of screen or less
                     BeginTime = TimeSpan.FromSeconds(0),
-                    Duration = new Duration(TimeSpan.FromSeconds(20)) //TODO: This is how long to go from 0 to bottom margin
+                    Duration = new Duration(TimeSpan.FromSeconds(duration)) //TODO: This is how long to go from 0 to bottom margin
                 };
                 var e = new AnimationEventArgs { TagName = border.Uid };
                 storyboard.Completed += (sender, args) => StoryboardOnCompleted(e);
@@ -244,14 +247,17 @@ namespace wot
             return border;
         }
 
-        private Label CreateLabel(Person person)
+        private Label CreateLabel(PersonViewModel person)
         {
-            var labelFontSize = 20;
+            var minFont = 10;
+            var maxFont = 20;
+
+            var fontSize = RandomNumber(minFont, maxFont); //TODO: Font sizes from config settings
             var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
             var label = new Label()
             {
                 Content = person.ToString(),
-                FontSize = labelFontSize,
+                FontSize = fontSize,
                 //FontFamily = new FontFamily(SettingsManager.Configuration.FontFamily),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Name = name,
