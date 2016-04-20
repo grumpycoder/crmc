@@ -29,6 +29,7 @@ namespace wot
 
         private string AudioFilePath = @"C:\Audio";
         public List<DisplayLane> screenModels = new List<DisplayLane>();
+        public List<Color> FontColors = new List<Color>();
 
         private NameService service;
 
@@ -48,7 +49,7 @@ namespace wot
             await InitDisplay();
             await InitAudioSettings();
             await InitConnectionManager();
-
+            await LoadColors();
             //Label label = new Label()
             //{
             //    Content = "Loading Names ...",
@@ -72,6 +73,19 @@ namespace wot
             AsyncHelper.FireAndForget(BeginRotaion);
 
             //canvas.Children.Remove(border);
+        }
+
+        private async Task LoadColors()
+        {
+            var list = new List<Color>
+            {
+                Color.FromRgb(205, 238, 207),
+                Color.FromRgb(247, 231, 245),
+                Color.FromRgb(213, 236, 250),
+                Color.FromRgb(246, 244, 207),
+                Color.FromRgb(246, 227, 213)
+            };
+            FontColors = list;
         }
 
         private async Task BeginRotaion()
@@ -152,6 +166,7 @@ namespace wot
                 NameScope.SetNameScope(this, new NameScope());
                 var storyboard = new Storyboard();
 
+                var displayElement = new DisplayElement(person, lane);
                 Label label = CreateLabel(person);
                 Border border = CreateBorder(label, lane, person.RotationCount);
                 RegisterName(label.Name, label);
@@ -269,7 +284,7 @@ namespace wot
         {
             var minFont = 10; //TODO: Font sizes from config settings
             var maxFont = 20;
-
+            var color = RandomColor();
             var fontSize = RandomNumber(minFont, maxFont);
             var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
             var label = new Label()
@@ -281,13 +296,19 @@ namespace wot
                 Name = name,
                 Tag = name,
                 Uid = name,
-                Foreground = new SolidColorBrush(Colors.White) //TODO: Randomize font color from list
+                Foreground = new SolidColorBrush(color) //TODO: Randomize font color from list
             };
 
             label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
             label.Arrange(new Rect(label.DesiredSize));
 
             return label;
+        }
+
+        private Color RandomColor()
+        {
+            var color = FontColors[RandomNumber(0, FontColors.Count)];
+            return color;
         }
 
         private async Task InitConnectionManager()
@@ -342,5 +363,62 @@ namespace wot
             //HACK: Test if needed.
             Timeline.DesiredFrameRateProperty.OverrideMetadata(typeof(Timeline), new FrameworkPropertyMetadata { DefaultValue = 80 });
         }
+    }
+
+    internal class DisplayElement
+    {
+        public PersonViewModel Person { get; set; }
+        public DisplayLane Lane { get; set; }
+
+        public DisplayElement(PersonViewModel person, DisplayLane lane)
+        {
+            Person = person;
+            Lane = lane;
+            //Label label = CreateLabel(person);
+            //Border border = CreateBorder(label, lane, person.RotationCount);
+        }
+
+        //private Border CreateBorder(Label label, DisplayLane lane, int rotationCount)
+        //{
+        //var quadSize = canvas.Width / 4;
+        //var borderName = "border" + Guid.NewGuid().ToString("N").Substring(0, 10);
+        ////var width = random ? label.ActualWidth : quadSize;
+        ////var width = lane.IsKioskDisplay ? quadSize : label.ActualWidth;
+        //var width = lane.IsKioskDisplay && rotationCount == 0 ? quadSize : label.ActualWidth;
+        //var border = new Border()
+        //{
+        //    Name = borderName,
+        //    Uid = borderName,
+        //    Child = label,
+        //    Width = width,
+        //    HorizontalAlignment = HorizontalAlignment.Center
+        //};
+        //return border;
+        //}
+
+        //private Label CreateLabel(PersonViewModel person)
+        //{
+        //var minFont = 10; //TODO: Font sizes from config settings
+        //var maxFont = 20;
+        //var color = RandomColor();
+        //var fontSize = RandomNumber(minFont, maxFont);
+        //var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
+        //var label = new Label()
+        //{
+        //    Content = person.ToString(),
+        //    FontSize = fontSize,
+        //    //FontFamily = new FontFamily(SettingsManager.Configuration.FontFamily),
+        //    HorizontalAlignment = HorizontalAlignment.Center,
+        //    Name = name,
+        //    Tag = name,
+        //    Uid = name,
+        //    Foreground = new SolidColorBrush(Colors.White) //TODO: Randomize font color from list
+        //};
+
+        //label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
+        //label.Arrange(new Rect(label.DesiredSize));
+
+        //return label;
+        //}
     }
 }
