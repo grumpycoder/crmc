@@ -30,6 +30,8 @@ namespace wot
         private string AudioFilePath = @"C:\Audio";
         public List<DisplayLane> screenModels = new List<DisplayLane>();
         public List<Color> FontColors = new List<Color>();
+        public CancellationToken cancelToken = new CancellationToken();
+        public CancellationTokenSource Canceller = new CancellationTokenSource();
 
         private NameService service;
 
@@ -40,6 +42,11 @@ namespace wot
             InitializeComponent();
 
             Loaded += MainWindow_Loaded;
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            // Perform tasks at application exit
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -118,7 +125,6 @@ namespace wot
 
         private async Task DisplayScreenModelAsync(DisplayLane vm)
         {
-            CancellationToken cancelToken = new CancellationToken();
             while (true)
             {
                 var counter = 0;
@@ -130,7 +136,8 @@ namespace wot
                     person.RotationCount += 1;
                     await Animate(person, vm);
                     //TASK: Code smell nested if statement.
-                    if (vm.IsKioskDisplay && person.RotationCount == 3) //TODO: Remove person if greater than 3. config setting??
+                    if (vm.IsKioskDisplay && person.RotationCount == 3)
+                    //TODO: Remove person if greater than 3. config setting??
                     {
                         vm.People.Remove(person);
                     }
@@ -140,19 +147,28 @@ namespace wot
                         {
                             if (vm.LaneNumber == 0)
                             {
-                                AsyncHelper.FireAndForget(() => vm.UpdateQueueAsync(CurrentCount, DefaultTakeCount, true, WebServerUrl));
+                                AsyncHelper.FireAndForget(
+                                    () => vm.UpdateQueueAsync(CurrentCount, DefaultTakeCount, true, WebServerUrl));
                             }
                             else
                             {
-                                AsyncHelper.FireAndForget(() => vm.UpdateQueueAsync(CurrentCount, DefaultTakeCount, false, WebServerUrl));
+                                AsyncHelper.FireAndForget(
+                                    () => vm.UpdateQueueAsync(CurrentCount, DefaultTakeCount, false, WebServerUrl));
                             }
                             CurrentCount += DefaultTakeCount;
                         }
                     }
-                    await Task.Delay(TimeSpan.FromSeconds(vm.RotationDelay), cancelToken); //TODO: This is amount of time before next name displays and begins animation
+                    using (Canceller.Token.Register(Thread.CurrentThread.Abort))
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(vm.RotationDelay), Canceller.Token);
+                    }
+                    //TODO: This is amount of time before next name displays and begins animation
                 }
-                if (!vm.Queue.Any()) continue; //TODO: If queue list is not populated continue with existing list. Notifiy issue
-                if (vm.Queue.Count < DefaultTakeCount) CurrentCount = 0; //TODO: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
+                if (!vm.Queue.Any())
+                    continue; //TODO: If queue list is not populated continue with existing list. Notifiy issue
+                if (vm.Queue.Count < DefaultTakeCount)
+                    CurrentCount = 0;
+                //TODO: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
                 vm.People.Clear();
                 vm.People.AddRange(vm.Queue);
                 vm.Queue.Clear();
@@ -161,25 +177,23 @@ namespace wot
 
         private async Task<double> Animate(PersonViewModel person, DisplayLane lane)
         {
+            var totalTime = 0.0;
             await Dispatcher.InvokeAsync(() =>
             {
                 NameScope.SetNameScope(this, new NameScope());
                 var storyboard = new Storyboard();
 
                 var displayElement = new DisplayElement(person, lane);
-                Label label = CreateLabel(person);
-                Border border = CreateBorder(label, lane, person.RotationCount);
-                RegisterName(label.Name, label);
-                RegisterName(border.Name, border);
+                RegisterName(displayElement.Label.Name, displayElement.Label);
+                RegisterName(displayElement.Border.Name, displayElement.Border);
 
-                var xPosition = lane.RandomizeXAxis(label);
+                var xPosition = lane.RandomizeXAxis(displayElement.Label);
                 var yPosition = 0.0;
-
                 var currentTime = 0;
                 if (lane.IsKioskDisplay && person.RotationCount == 0)
                 {
                     xPosition = lane.LeftMargin;
-                    yPosition = lane.GetYAxis(label); //TODO: Update X Axis from config settings
+                    yPosition = lane.GetYAxis(displayElement.Label); //TODO: Update X Axis from config settings
 
                     var maxFont = 20; //TODO: Font sizes from config settings
                     var growTime = 10; //TODO: Grow time from config settings
@@ -192,7 +206,8 @@ namespace wot
                     };
 
                     var shrinkTime = 5; //TODO: Shrink time from config settings
-                    var pauseTime = 5; //TODO: Pause time from config settings. This is the time to add to the beginning of shrinking
+                    var pauseTime = 5;
+                    //TODO: Pause time from config settings. This is the time to add to the beginning of shrinking
                     var shrinkAnimation = new DoubleAnimation
                     {
                         From = maxFont * 2,
@@ -200,9 +215,9 @@ namespace wot
                         BeginTime = TimeSpan.FromSeconds(growTime + pauseTime), // time to begin shrinking
                         Duration = new Duration(TimeSpan.FromSeconds(shrinkTime)) // total animation takes to shrink
                     };
-                    Storyboard.SetTargetName(growAnimation, label.Name);
+                    Storyboard.SetTargetName(growAnimation, displayElement.Label.Name);
                     Storyboard.SetTargetProperty(growAnimation, new PropertyPath(FontSizeProperty));
-                    Storyboard.SetTargetName(shrinkAnimation, label.Name);
+                    Storyboard.SetTargetName(shrinkAnimation, displayElement.Label.Name);
                     Storyboard.SetTargetProperty(shrinkAnimation, new PropertyPath(FontSizeProperty));
 
                     storyboard.Children.Add(growAnimation);
@@ -212,38 +227,32 @@ namespace wot
                 }
 
                 var timeModifier = 35; //TODO: Update timeModifier from config settings
-                var duration = timeModifier / label.FontSize * 10;
+                var duration = timeModifier / displayElement.Label.FontSize * 10;
 
                 var fallAnimation = new DoubleAnimation
                 {
                     From = yPosition,
                     To = 600, //TODO: This is bottom margin. Could be height of screen or less
                     BeginTime = TimeSpan.FromSeconds(currentTime),
-                    Duration = new Duration(TimeSpan.FromSeconds(duration)) //TODO: This is how long to go from 0 to bottom margin
+                    Duration = new Duration(TimeSpan.FromSeconds(duration))
+                    //TODO: This is how long to go from 0 to bottom margin
                 };
-                var e = new AnimationEventArgs { TagName = border.Uid };
+                var e = new AnimationEventArgs { TagName = displayElement.Border.Uid };
                 storyboard.Completed += (sender, args) => StoryboardOnCompleted(e);
-                Storyboard.SetTargetName(fallAnimation, border.Name);
+                Storyboard.SetTargetName(fallAnimation, displayElement.Border.Name);
                 Storyboard.SetTargetProperty(fallAnimation, new PropertyPath(TopProperty));
                 storyboard.Children.Add(fallAnimation);
 
-                Canvas.SetLeft(border, xPosition);
-                Canvas.SetTop(border, yPosition);
-                canvas.Children.Add(border);
+                Canvas.SetLeft(displayElement.Border, xPosition);
+                Canvas.SetTop(displayElement.Border, yPosition);
+                canvas.Children.Add(displayElement.Border);
                 canvas.UpdateLayout();
 
+                totalTime = currentTime + duration;
                 storyboard.Begin(this);
             });
-            return 10; //TODO: Calculate total animation time
+            return totalTime; //TODO: Calculate total animation time
         }
-
-        private int RandomNumber(int min, int max)
-        {
-            if (max <= min) min = max - 1;
-            return Random.Next(min, max);
-        }
-
-        private static readonly Random Random = new Random();
 
         public class AnimationEventArgs : EventArgs
         {
@@ -262,55 +271,6 @@ namespace wot
             }
         }
 
-        private Border CreateBorder(Label label, DisplayLane lane, int rotationCount)
-        {
-            var quadSize = canvas.Width / 4;
-            var borderName = "border" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            //var width = random ? label.ActualWidth : quadSize;
-            //var width = lane.IsKioskDisplay ? quadSize : label.ActualWidth;
-            var width = lane.IsKioskDisplay && rotationCount == 0 ? quadSize : label.ActualWidth;
-            var border = new Border()
-            {
-                Name = borderName,
-                Uid = borderName,
-                Child = label,
-                Width = width,
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-            return border;
-        }
-
-        private Label CreateLabel(PersonViewModel person)
-        {
-            var minFont = 10; //TODO: Font sizes from config settings
-            var maxFont = 20;
-            var color = RandomColor();
-            var fontSize = RandomNumber(minFont, maxFont);
-            var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            var label = new Label()
-            {
-                Content = person.ToString(),
-                FontSize = fontSize,
-                //FontFamily = new FontFamily(SettingsManager.Configuration.FontFamily),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Name = name,
-                Tag = name,
-                Uid = name,
-                Foreground = new SolidColorBrush(color) //TODO: Randomize font color from list
-            };
-
-            label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
-            label.Arrange(new Rect(label.DesiredSize));
-
-            return label;
-        }
-
-        private Color RandomColor()
-        {
-            var color = FontColors[RandomNumber(0, FontColors.Count)];
-            return color;
-        }
-
         private async Task InitConnectionManager()
         {
             var connection = new HubConnection("http://localhost:11277/signalr");
@@ -321,7 +281,7 @@ namespace wot
                 if (task.IsFaulted)
                 {
                     Console.WriteLine("There was an error opening the connection:{0}",
-                                      task.Exception.GetBaseException());
+                        task.Exception.GetBaseException());
                 }
                 else
                 {
@@ -341,8 +301,9 @@ namespace wot
 
             var pvm = Mapper.Map<Person, PersonViewModel>(person);
 
-            await Animate(pvm, lane);
+            var waitUntil = await Animate(pvm, lane);
 
+            await Task.Delay(TimeSpan.FromSeconds(waitUntil), cancelToken);
             lane.People.Add(pvm);
         }
 
@@ -361,64 +322,14 @@ namespace wot
             canvas.UpdateLayout();
 
             //HACK: Test if needed.
-            Timeline.DesiredFrameRateProperty.OverrideMetadata(typeof(Timeline), new FrameworkPropertyMetadata { DefaultValue = 80 });
+            Timeline.DesiredFrameRateProperty.OverrideMetadata(typeof(Timeline),
+                new FrameworkPropertyMetadata { DefaultValue = 80 });
         }
-    }
 
-    internal class DisplayElement
-    {
-        public PersonViewModel Person { get; set; }
-        public DisplayLane Lane { get; set; }
-
-        public DisplayElement(PersonViewModel person, DisplayLane lane)
+        private void MainWindow_OnClosed(object sender, EventArgs e)
         {
-            Person = person;
-            Lane = lane;
-            //Label label = CreateLabel(person);
-            //Border border = CreateBorder(label, lane, person.RotationCount);
+            Console.WriteLine("Window Closed");
+            //Canceller.Cancel();
         }
-
-        //private Border CreateBorder(Label label, DisplayLane lane, int rotationCount)
-        //{
-        //var quadSize = canvas.Width / 4;
-        //var borderName = "border" + Guid.NewGuid().ToString("N").Substring(0, 10);
-        ////var width = random ? label.ActualWidth : quadSize;
-        ////var width = lane.IsKioskDisplay ? quadSize : label.ActualWidth;
-        //var width = lane.IsKioskDisplay && rotationCount == 0 ? quadSize : label.ActualWidth;
-        //var border = new Border()
-        //{
-        //    Name = borderName,
-        //    Uid = borderName,
-        //    Child = label,
-        //    Width = width,
-        //    HorizontalAlignment = HorizontalAlignment.Center
-        //};
-        //return border;
-        //}
-
-        //private Label CreateLabel(PersonViewModel person)
-        //{
-        //var minFont = 10; //TODO: Font sizes from config settings
-        //var maxFont = 20;
-        //var color = RandomColor();
-        //var fontSize = RandomNumber(minFont, maxFont);
-        //var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
-        //var label = new Label()
-        //{
-        //    Content = person.ToString(),
-        //    FontSize = fontSize,
-        //    //FontFamily = new FontFamily(SettingsManager.Configuration.FontFamily),
-        //    HorizontalAlignment = HorizontalAlignment.Center,
-        //    Name = name,
-        //    Tag = name,
-        //    Uid = name,
-        //    Foreground = new SolidColorBrush(Colors.White) //TODO: Randomize font color from list
-        //};
-
-        //label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
-        //label.Arrange(new Rect(label.DesiredSize));
-
-        //return label;
-        //}
     }
 }

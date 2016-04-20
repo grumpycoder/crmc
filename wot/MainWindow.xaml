@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wot"
         mc:Ignorable="d"
-        Title="MainWindow" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None">
+        Title="MainWindow" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None"
+       Closed="MainWindow_OnClosed">
     <Canvas x:Name="WallCanvas" Background="Black" DockPanel.Dock="Bottom">
     </Canvas>
 </Window>
