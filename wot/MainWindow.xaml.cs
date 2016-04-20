@@ -4,15 +4,14 @@ using crmc.domain;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using wot.Services;
 using wot.ViewModels;
 
 namespace wot
@@ -20,43 +19,31 @@ namespace wot
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private const int DefaultTakeCount = 20;
         private const string WebServerUrl = "http://localhost:11277";
-        private int CurrentCount = 0;
+        private int _currentCount;
         private Canvas canvas;
 
-        private string AudioFilePath = @"C:\Audio";
-        public List<DisplayLane> screenModels = new List<DisplayLane>();
-        public List<Color> FontColors = new List<Color>();
+        private readonly string AudioFilePath = @"C:\Audio";
+        public List<DisplayLane> Lanes = new List<DisplayLane>();
         public CancellationToken cancelToken = new CancellationToken();
         public CancellationTokenSource Canceller = new CancellationTokenSource();
-
-        private NameService service;
-
         public IHubProxy hub;
 
         public MainWindow()
         {
             InitializeComponent();
-
             Loaded += MainWindow_Loaded;
-        }
-
-        private void Application_Exit(object sender, ExitEventArgs e)
-        {
-            // Perform tasks at application exit
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            service = new NameService(WebServerUrl);
-
             await InitDisplay();
             await InitAudioSettings();
             await InitConnectionManager();
-            await LoadColors();
+
             //Label label = new Label()
             //{
             //    Content = "Loading Names ...",
@@ -64,11 +51,19 @@ namespace wot
             //    Foreground = new SolidColorBrush(Colors.White),
             //    Uid = "LoadingLabel"
             //};
-            //var vm = screenModels.FirstOrDefault(x => x.LaneNumber == 0);
             //label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
             //label.Arrange(new Rect(label.DesiredSize));
-            //var border = CreateBorder(label, vm, 0);
-            //border.Uid = "border1";
+
+            //var borderName = "border1";
+            //var borderwidth = label.ActualWidth;
+            //var border = new Border()
+            //{
+            //    Name = borderName,
+            //    Uid = borderName,
+            //    Child = label,
+            //    Width = borderwidth,
+            //    HorizontalAlignment = HorizontalAlignment.Center
+            //};
             //var left = canvas.Width / 2 - label.ActualWidth;
             //var top = canvas.Height / 2;
 
@@ -76,23 +71,11 @@ namespace wot
             //Canvas.SetTop(border, top);
             //canvas.Children.Add(border);
             //canvas.UpdateLayout();
-            //await BeginRotaion();
+
             AsyncHelper.FireAndForget(BeginRotaion);
 
+            //await Task.Delay(5000, cancelToken);
             //canvas.Children.Remove(border);
-        }
-
-        private async Task LoadColors()
-        {
-            var list = new List<Color>
-            {
-                Color.FromRgb(205, 238, 207),
-                Color.FromRgb(247, 231, 245),
-                Color.FromRgb(213, 236, 250),
-                Color.FromRgb(246, 244, 207),
-                Color.FromRgb(246, 227, 213)
-            };
-            FontColors = list;
         }
 
         private async Task BeginRotaion()
@@ -102,24 +85,29 @@ namespace wot
             //Kiosk Lanes
             for (var i = 1; i < 5; i++)
             {
-                //var model = new DisplayLane(5, i, width, 4) { IsKioskDisplay = true }; //TODO: Kisok delay config setting
-                //screenModels.Add(model);
-                screenModels.Add(new DisplayLane(5, i, width, 4) { IsKioskDisplay = true });
+                //TODO: Refactor out width
+                Lanes.Add(new DisplayLane(5, i, width, 4) { IsKioskDisplay = true }); //TODO: Kisok delay config setting
             }
+            //General Lanes
             for (var j = 1; j < 5; j++)
             {
-                var model = new DisplayLane(2, j, width, 4);
-                await model.LoadNamesAsync(CurrentCount, DefaultTakeCount, false, WebServerUrl);
-                CurrentCount += 25;
-                screenModels.Add(model);
+                var model = new DisplayLane(2, j, width, 4); //TODO: rotation delay config setting
+                await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+                _currentCount += 25;
+                Lanes.Add(model);
             }
-            var priorityModel = new DisplayLane(5);
-            await priorityModel.LoadNamesAsync(0, DefaultTakeCount, true, WebServerUrl);
-            screenModels.Add(priorityModel);
+            //Priority Lane
+            var priorityLane = new DisplayLane(5); //TODO: priority name delay config setting
+            await priorityLane.LoadNamesAsync(0, DefaultTakeCount, true, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+            Lanes.Add(priorityLane);
 
-            foreach (var vm in screenModels)
+            foreach (var lane in Lanes)
             {
-                AsyncHelper.FireAndForget(() => DisplayScreenModelAsync(vm));
+                AsyncHelper.FireAndForget(() => DisplayScreenModelAsync(lane), e =>
+                {
+                    Console.WriteLine($"Error starting loop for lane {lane.LaneNumber}");
+                    Debug.WriteLine(e);
+                });
             }
         }
 
@@ -129,7 +117,6 @@ namespace wot
             {
                 var counter = 0;
                 foreach (var person in vm.People.ToList())
-                //for (int i = 0; i < vm.People.Count; i++)
                 {
                     Console.WriteLine($"displaying {vm.LaneNumber} : {person}");
                     counter++;
@@ -148,14 +135,24 @@ namespace wot
                             if (vm.LaneNumber == 0)
                             {
                                 AsyncHelper.FireAndForget(
-                                    () => vm.UpdateQueueAsync(CurrentCount, DefaultTakeCount, true, WebServerUrl));
+                                    () => vm.UpdateQueueAsync(_currentCount, DefaultTakeCount, true, WebServerUrl),
+                                    e =>
+                                    {
+                                        Console.WriteLine("Error updating name queue for priority names");
+                                        Debug.WriteLine(e);
+                                    });
                             }
                             else
                             {
                                 AsyncHelper.FireAndForget(
-                                    () => vm.UpdateQueueAsync(CurrentCount, DefaultTakeCount, false, WebServerUrl));
+                                    () => vm.UpdateQueueAsync(_currentCount, DefaultTakeCount, false, WebServerUrl),
+                                    e =>
+                                    {
+                                        Console.WriteLine("Error updating name queue for general names");
+                                        Debug.WriteLine(e);
+                                    });
                             }
-                            CurrentCount += DefaultTakeCount;
+                            _currentCount += DefaultTakeCount;
                         }
                     }
                     using (Canceller.Token.Register(Thread.CurrentThread.Abort))
@@ -167,7 +164,7 @@ namespace wot
                 if (!vm.Queue.Any())
                     continue; //TODO: If queue list is not populated continue with existing list. Notifiy issue
                 if (vm.Queue.Count < DefaultTakeCount)
-                    CurrentCount = 0;
+                    _currentCount = 0;
                 //TODO: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
                 vm.People.Clear();
                 vm.People.AddRange(vm.Queue);
@@ -254,22 +251,22 @@ namespace wot
             return totalTime; //TODO: Calculate total animation time
         }
 
-        public class AnimationEventArgs : EventArgs
+        private async void KioskEntry(string kiosk, Person person)
         {
-            public string TagName { get; set; }
+            Mapper.CreateMap<Person, PersonViewModel>().ReverseMap(); //TODO: Should be in mapper configuration module
+
+            var lane = Lanes.FirstOrDefault(x => x.LaneNumber == Convert.ToInt16(kiosk) && x.IsKioskDisplay);
+            if (lane == null) return;
+
+            var pvm = Mapper.Map<Person, PersonViewModel>(person);
+
+            var waitUntil = await Animate(pvm, lane);
+
+            await Task.Delay(TimeSpan.FromSeconds(waitUntil), cancelToken);
+            lane.People.Add(pvm);
         }
 
-        private void StoryboardOnCompleted(AnimationEventArgs eventArgs)
-        {
-            var tagName = eventArgs.TagName;
-
-            foreach (UIElement child in canvas.Children.Cast<UIElement>().Where(child => tagName == child.Uid))
-            {
-                child.BeginAnimation(TopProperty, null);
-                canvas.Children.Remove(child);
-                return;
-            }
-        }
+        #region Initializations
 
         private async Task InitConnectionManager()
         {
@@ -287,24 +284,9 @@ namespace wot
                 {
                     Console.WriteLine("Connected");
                 }
-            }).Wait();
+            }).Wait(cancelToken);
 
             hub.On<string, Person>("addName", (kiosk, person) => Dispatcher.Invoke(() => KioskEntry(kiosk, person)));
-        }
-
-        private async void KioskEntry(string kiosk, Person person)
-        {
-            Mapper.CreateMap<Person, PersonViewModel>().ReverseMap(); //TODO: Should be in mapper configuration module
-
-            var lane = screenModels.FirstOrDefault(x => x.LaneNumber == Convert.ToInt16(kiosk) && x.IsKioskDisplay);
-            if (lane == null) return;
-
-            var pvm = Mapper.Map<Person, PersonViewModel>(person);
-
-            var waitUntil = await Animate(pvm, lane);
-
-            await Task.Delay(TimeSpan.FromSeconds(waitUntil), cancelToken);
-            lane.People.Add(pvm);
         }
 
         private async Task InitAudioSettings()
@@ -326,10 +308,28 @@ namespace wot
                 new FrameworkPropertyMetadata { DefaultValue = 80 });
         }
 
+        #endregion Initializations
+
+        #region Events
+
         private void MainWindow_OnClosed(object sender, EventArgs e)
         {
             Console.WriteLine("Window Closed");
             //Canceller.Cancel();
         }
+
+        private void StoryboardOnCompleted(AnimationEventArgs eventArgs)
+        {
+            var tagName = eventArgs.TagName;
+
+            foreach (UIElement child in canvas.Children.Cast<UIElement>().Where(child => tagName == child.Uid))
+            {
+                child.BeginAnimation(TopProperty, null);
+                canvas.Children.Remove(child);
+                return;
+            }
+        }
+
+        #endregion Events
     }
 }

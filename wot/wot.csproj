@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AnimationEventArgs.cs" />
     <Compile Include="DisplayElement.cs" />
     <Compile Include="ViewModels\PersonViewModel.cs" />
     <Page Include="MainWindow.xaml">
