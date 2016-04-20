@@ -49,28 +49,29 @@ namespace wot
             await InitAudioSettings();
             await InitConnectionManager();
 
-            Label label = new Label()
-            {
-                Content = "Loading Names ...",
-                FontSize = 20,
-                Foreground = new SolidColorBrush(Colors.White),
-                Uid = "LoadingLabel"
-            };
-            label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
-            label.Arrange(new Rect(label.DesiredSize));
-            var border = CreateBorder(label, false);
-            border.Uid = "border1";
-            var left = canvas.Width / 2 - label.ActualWidth;
-            var top = canvas.Height / 2;
+            //Label label = new Label()
+            //{
+            //    Content = "Loading Names ...",
+            //    FontSize = 20,
+            //    Foreground = new SolidColorBrush(Colors.White),
+            //    Uid = "LoadingLabel"
+            //};
+            //var vm = screenModels.FirstOrDefault(x => x.LaneNumber == 0);
+            //label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
+            //label.Arrange(new Rect(label.DesiredSize));
+            //var border = CreateBorder(label, vm, 0);
+            //border.Uid = "border1";
+            //var left = canvas.Width / 2 - label.ActualWidth;
+            //var top = canvas.Height / 2;
 
-            Canvas.SetLeft(border, left);
-            Canvas.SetTop(border, top);
-            canvas.Children.Add(border);
-            canvas.UpdateLayout();
+            //Canvas.SetLeft(border, left);
+            //Canvas.SetTop(border, top);
+            //canvas.Children.Add(border);
+            //canvas.UpdateLayout();
             //await BeginRotaion();
             AsyncHelper.FireAndForget(BeginRotaion);
 
-            canvas.Children.Remove(border);
+            //canvas.Children.Remove(border);
         }
 
         private async Task BeginRotaion()
@@ -144,7 +145,7 @@ namespace wot
             }
         }
 
-        private async Task Animate(PersonViewModel person, DisplayLane vm)
+        private async Task<double> Animate(PersonViewModel person, DisplayLane lane)
         {
             await Dispatcher.InvokeAsync(() =>
             {
@@ -152,15 +153,47 @@ namespace wot
                 var storyboard = new Storyboard();
 
                 Label label = CreateLabel(person);
-                Border border = CreateBorder(label, true);
+                Border border = CreateBorder(label, lane, person.RotationCount);
                 RegisterName(label.Name, label);
                 RegisterName(border.Name, border);
 
-                var xPosition = vm.RandomizeXAxis(label);
+                var xPosition = lane.RandomizeXAxis(label);
                 var yPosition = 0.0;
-                if (vm.IsKioskDisplay && person.RotationCount == 0)
+
+                var currentTime = 0;
+                if (lane.IsKioskDisplay && person.RotationCount == 0)
                 {
-                    yPosition = vm.GetYAxis(label); //TODO: Update X Axis from config settings
+                    xPosition = lane.LeftMargin;
+                    yPosition = lane.GetYAxis(label); //TODO: Update X Axis from config settings
+
+                    var maxFont = 20; //TODO: Font sizes from config settings
+                    var growTime = 10; //TODO: Grow time from config settings
+                    var growAnimation = new DoubleAnimation
+                    {
+                        From = 0,
+                        To = maxFont * 2,
+                        BeginTime = TimeSpan.FromSeconds(0),
+                        Duration = new Duration(TimeSpan.FromSeconds(growTime)),
+                    };
+
+                    var shrinkTime = 5; //TODO: Shrink time from config settings
+                    var pauseTime = 5; //TODO: Pause time from config settings. This is the time to add to the beginning of shrinking
+                    var shrinkAnimation = new DoubleAnimation
+                    {
+                        From = maxFont * 2,
+                        To = maxFont,
+                        BeginTime = TimeSpan.FromSeconds(growTime + pauseTime), // time to begin shrinking
+                        Duration = new Duration(TimeSpan.FromSeconds(shrinkTime)) // total animation takes to shrink
+                    };
+                    Storyboard.SetTargetName(growAnimation, label.Name);
+                    Storyboard.SetTargetProperty(growAnimation, new PropertyPath(FontSizeProperty));
+                    Storyboard.SetTargetName(shrinkAnimation, label.Name);
+                    Storyboard.SetTargetProperty(shrinkAnimation, new PropertyPath(FontSizeProperty));
+
+                    storyboard.Children.Add(growAnimation);
+                    storyboard.Children.Add(shrinkAnimation);
+
+                    currentTime += growTime + shrinkTime;
                 }
 
                 var timeModifier = 35; //TODO: Update timeModifier from config settings
@@ -170,7 +203,7 @@ namespace wot
                 {
                     From = yPosition,
                     To = 600, //TODO: This is bottom margin. Could be height of screen or less
-                    BeginTime = TimeSpan.FromSeconds(0),
+                    BeginTime = TimeSpan.FromSeconds(currentTime),
                     Duration = new Duration(TimeSpan.FromSeconds(duration)) //TODO: This is how long to go from 0 to bottom margin
                 };
                 var e = new AnimationEventArgs { TagName = border.Uid };
@@ -180,29 +213,13 @@ namespace wot
                 storyboard.Children.Add(fallAnimation);
 
                 Canvas.SetLeft(border, xPosition);
-                Canvas.SetTop(border, 0);
+                Canvas.SetTop(border, yPosition);
                 canvas.Children.Add(border);
                 canvas.UpdateLayout();
 
                 storyboard.Begin(this);
             });
-        }
-
-        private int GetLeftPosition(Label label, DisplayLane vm)
-        {
-            var sectionWidth = canvas.Width / 4;
-            var leftMargin = sectionWidth * (vm.LaneNumber - 1);
-            var rightMargin = leftMargin + sectionWidth;
-            var position = RandomNumber(Convert.ToInt32(leftMargin), Convert.ToInt32(rightMargin));
-            if (vm.LaneNumber == 0)
-            {
-                position = RandomNumber(Convert.ToInt32(0), Convert.ToInt32(canvas.Width));
-            }
-            if (position + label.ActualWidth > canvas.Width)
-            {
-                position = RandomNumber(Convert.ToInt32(leftMargin), Convert.ToInt32((canvas.Width - label.ActualWidth)));
-            }
-            return position;
+            return 10; //TODO: Calculate total animation time
         }
 
         private int RandomNumber(int min, int max)
@@ -230,12 +247,13 @@ namespace wot
             }
         }
 
-        private Border CreateBorder(Label label, bool random)
+        private Border CreateBorder(Label label, DisplayLane lane, int rotationCount)
         {
-            //var quadSize = 200;
             var quadSize = canvas.Width / 4;
             var borderName = "border" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            var width = random ? label.ActualWidth : quadSize;
+            //var width = random ? label.ActualWidth : quadSize;
+            //var width = lane.IsKioskDisplay ? quadSize : label.ActualWidth;
+            var width = lane.IsKioskDisplay && rotationCount == 0 ? quadSize : label.ActualWidth;
             var border = new Border()
             {
                 Name = borderName,
@@ -249,10 +267,10 @@ namespace wot
 
         private Label CreateLabel(PersonViewModel person)
         {
-            var minFont = 10;
+            var minFont = 10; //TODO: Font sizes from config settings
             var maxFont = 20;
 
-            var fontSize = RandomNumber(minFont, maxFont); //TODO: Font sizes from config settings
+            var fontSize = RandomNumber(minFont, maxFont);
             var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
             var label = new Label()
             {
