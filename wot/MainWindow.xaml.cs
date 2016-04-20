@@ -81,25 +81,29 @@ namespace wot
         private async Task BeginRotaion()
         {
             var width = canvas.ActualWidth;
-            // Initialize 4 display screen models
+            // Initialize 4 lanes each for kiosk and general
+
             //Kiosk Lanes
             for (var i = 1; i < 5; i++)
             {
                 //TODO: Refactor out width
                 Lanes.Add(new DisplayLane(5, i, width, 4) { IsKioskDisplay = true }); //TODO: Kisok delay config setting
             }
+
             //General Lanes
-            for (var j = 1; j < 5; j++)
-            {
-                var model = new DisplayLane(2, j, width, 4); //TODO: rotation delay config setting
-                await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
-                _currentCount += 25;
-                Lanes.Add(model);
-            }
+            //for (var j = 1; j < 5; j++)
+            //{
+            //    var model = new DisplayLane(2, j, width, 4); //TODO: rotation delay config setting
+            //    await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+            //    _currentCount += 25;
+            //    Lanes.Add(model);
+            //}
+
             //Priority Lane
-            var priorityLane = new DisplayLane(5); //TODO: priority name delay config setting
-            await priorityLane.LoadNamesAsync(0, DefaultTakeCount, true, WebServerUrl); //TODO: Remove dependecy on webserverurl string
-            Lanes.Add(priorityLane);
+            //var priorityLane = new DisplayLane(5, 0, width, 4) { IsPriorityLane = true }; //TODO: priority name delay config setting
+            //priorityLane.SetMargins();
+            //await priorityLane.LoadNamesAsync(0, DefaultTakeCount, true, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+            //Lanes.Add(priorityLane);
 
             foreach (var lane in Lanes)
             {
@@ -111,64 +115,62 @@ namespace wot
             }
         }
 
-        private async Task DisplayScreenModelAsync(DisplayLane vm)
+        private async Task DisplayScreenModelAsync(DisplayLane lane)
         {
             while (true)
             {
-                var counter = 0;
-                foreach (var person in vm.People.ToList())
+                var currentPersonIndex = 0;
+                foreach (var person in lane.People.ToList())
                 {
-                    Console.WriteLine($"displaying {vm.LaneNumber} : {person}");
-                    counter++;
-                    person.RotationCount += 1;
-                    await Animate(person, vm);
-                    //TASK: Code smell nested if statement.
-                    if (vm.IsKioskDisplay && person.RotationCount == 3)
-                    //TODO: Remove person if greater than 3. config setting??
+                    Console.WriteLine($"displaying {lane.LaneNumber} : {person}");
+                    currentPersonIndex++;
+
+                    if (lane.IsKioskDisplay && (DateTime.Now >= person.NextDisplayTime))
                     {
-                        vm.People.Remove(person);
+                        person.RotationCount += 1;
+                        var timeToCompleteAnimation = await Animate(person, lane);
+                        person.NextDisplayTime = DateTime.Now.AddSeconds(timeToCompleteAnimation);
+                        Console.WriteLine($"Displaying {person} in {timeToCompleteAnimation} seconds");
                     }
-                    if (!vm.IsKioskDisplay && vm.LaneNumber != 0)
+                    if (!lane.IsKioskDisplay)
                     {
-                        if (counter >= vm.People.Count - 2) //TODO: Refresh queue list before end
+                        await Animate(person, lane);
+                    }
+
+                    //TASK: Code smell nested if statement.
+                    if (lane.IsKioskDisplay && person.RotationCount == 3)
+                    //TODO: Remove person if greater than 3. RotationCount config setting??
+                    {
+                        lane.People.Remove(person);
+                    }
+                    if (!lane.IsKioskDisplay)
+                    {
+                        if (currentPersonIndex >= lane.People.Count - 2) //TODO: Refresh queue list before end
                         {
-                            if (vm.LaneNumber == 0)
-                            {
-                                AsyncHelper.FireAndForget(
-                                    () => vm.UpdateQueueAsync(_currentCount, DefaultTakeCount, true, WebServerUrl),
-                                    e =>
-                                    {
-                                        Console.WriteLine("Error updating name queue for priority names");
-                                        Debug.WriteLine(e);
-                                    });
-                            }
-                            else
-                            {
-                                AsyncHelper.FireAndForget(
-                                    () => vm.UpdateQueueAsync(_currentCount, DefaultTakeCount, false, WebServerUrl),
-                                    e =>
-                                    {
-                                        Console.WriteLine("Error updating name queue for general names");
-                                        Debug.WriteLine(e);
-                                    });
-                            }
+                            AsyncHelper.FireAndForget(
+                                () => lane.UpdateQueueAsync(_currentCount, DefaultTakeCount, WebServerUrl),
+                                e =>
+                                {
+                                    Console.WriteLine("Error updating name queue for general names");
+                                    Debug.WriteLine(e);
+                                });
                             _currentCount += DefaultTakeCount;
                         }
                     }
                     using (Canceller.Token.Register(Thread.CurrentThread.Abort))
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(vm.RotationDelay), Canceller.Token);
+                        if (!lane.IsKioskDisplay) await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
                     }
                     //TODO: This is amount of time before next name displays and begins animation
                 }
-                if (!vm.Queue.Any())
+                if (!lane.Queue.Any())
                     continue; //TODO: If queue list is not populated continue with existing list. Notifiy issue
-                if (vm.Queue.Count < DefaultTakeCount)
+                if (lane.Queue.Count < DefaultTakeCount)
                     _currentCount = 0;
                 //TODO: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
-                vm.People.Clear();
-                vm.People.AddRange(vm.Queue);
-                vm.Queue.Clear();
+                lane.People.Clear();
+                lane.People.AddRange(lane.Queue);
+                lane.Queue.Clear();
             }
         }
 
@@ -191,9 +193,9 @@ namespace wot
                 {
                     xPosition = lane.LeftMargin;
                     yPosition = lane.GetYAxis(displayElement.Label); //TODO: Update X Axis from config settings
-
+                    //displayElement.Label.FontSize = 0.1;
                     var maxFont = 20; //TODO: Font sizes from config settings
-                    var growTime = 10; //TODO: Grow time from config settings
+                    var growTime = 3; //TODO: Grow time from config settings
                     var growAnimation = new DoubleAnimation
                     {
                         From = 0,
@@ -202,8 +204,8 @@ namespace wot
                         Duration = new Duration(TimeSpan.FromSeconds(growTime)),
                     };
 
-                    var shrinkTime = 5; //TODO: Shrink time from config settings
-                    var pauseTime = 5;
+                    var shrinkTime = 2; //TODO: Shrink time from config settings
+                    var pauseTime = 2;
                     //TODO: Pause time from config settings. This is the time to add to the beginning of shrinking
                     var shrinkAnimation = new DoubleAnimation
                     {
@@ -223,7 +225,7 @@ namespace wot
                     currentTime += growTime + shrinkTime;
                 }
 
-                var timeModifier = 35; //TODO: Update timeModifier from config settings
+                var timeModifier = 15; //TODO: Update timeModifier from config settings
                 var duration = timeModifier / displayElement.Label.FontSize * 10;
 
                 var fallAnimation = new DoubleAnimation
@@ -261,8 +263,8 @@ namespace wot
             var pvm = Mapper.Map<Person, PersonViewModel>(person);
 
             var waitUntil = await Animate(pvm, lane);
-
-            await Task.Delay(TimeSpan.FromSeconds(waitUntil), cancelToken);
+            pvm.NextDisplayTime = DateTime.Now.AddSeconds(waitUntil);
+            //await Task.Delay(TimeSpan.FromSeconds(waitUntil), cancelToken);
             lane.People.Add(pvm);
         }
 
@@ -270,7 +272,7 @@ namespace wot
 
         private async Task InitConnectionManager()
         {
-            var connection = new HubConnection("http://localhost:11277/signalr");
+            var connection = new HubConnection("http://localhost:11277/signalr"); //TODO: signalr connection from config settings
             hub = connection.CreateHubProxy("wot");
 
             connection.Start().ContinueWith(task =>

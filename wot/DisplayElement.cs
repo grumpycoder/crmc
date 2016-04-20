@@ -16,7 +16,7 @@ namespace wot
         public Label Label { get; set; }
         public Border Border { get; set; }
 
-        private List<Color> fontColors = new List<Color>
+        private readonly List<Color> fontColors = new List<Color>
         {
             Color.FromRgb(205, 238, 207),
             Color.FromRgb(247, 231, 245),
@@ -64,7 +64,7 @@ namespace wot
                 Name = name,
                 Tag = name,
                 Uid = name,
-                Foreground = new SolidColorBrush(Colors.White) //TODO: Randomize font color from list
+                Foreground = new SolidColorBrush(color) //TODO: Randomize font color from list
             };
 
             label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
@@ -81,7 +81,7 @@ namespace wot
 
         private Color RandomColor()
         {
-            return fontColors[new Random().Next(0, fontColors.Count)];
+            return fontColors[Random.Next(0, fontColors.Count)];
         }
     }
 }

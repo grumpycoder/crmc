@@ -29,7 +29,7 @@ namespace wot.Services
             using (var client = new HttpClient())
             {
                 var startTime = DateTime.Now;
-                var path = $"/api/person/distinct?take={take}&skip={skip}&priority={priority}";
+                var path = $"/api/person/distinct?take={take}&skip={skip}&priority={priority}"; //TODO: Magic string
                 var fullPath = WebServerUrl + path;
 
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -39,7 +39,7 @@ namespace wot.Services
                 {
                     var result = await response.Content.ReadAsStringAsync();
 
-                    list = JsonConvert.DeserializeObject<List<Person>>(result);
+                    list = JsonConvert.DeserializeObject<List<Person>>(result); //TODO: Refactor
                     list2 = Mapper.Map<List<Person>, List<PersonViewModel>>(list);
                 }
                 else
