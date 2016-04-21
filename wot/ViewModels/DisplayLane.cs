@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using wot.Services;
 
 namespace wot.ViewModels
@@ -11,7 +10,7 @@ namespace wot.ViewModels
         public List<PersonViewModel> People { get; set; }
         public List<PersonViewModel> Queue { get; set; }
         public bool IsPriorityLane { get; set; }
-        public bool IsKioskDisplay { get; set; }
+        public bool IsKioskLane { get; set; }
         public int LaneNumber { get; set; }
         public double RotationDelay { get; set; }
         public double LeftMargin { get; set; }
@@ -65,29 +64,5 @@ namespace wot.ViewModels
                 RightMargin = LeftMargin + SectionWidth;
             }
         }
-
-        public double RandomizeXAxis(Label label)
-        {
-            var position = RandomNumber(Convert.ToInt32(LeftMargin), Convert.ToInt32(RightMargin));
-            // Adjustment to keep label from growing outside canvas area
-            if (position + label.ActualWidth > CanvasWidth)
-            {
-                position = RandomNumber(Convert.ToInt32(LeftMargin), Convert.ToInt32(CanvasWidth - label.ActualWidth));
-            }
-            return position;
-        }
-
-        public double GetYAxis(Label label)
-        {
-            return 200.0;
-        }
-
-        private int RandomNumber(int min, int max)
-        {
-            if (max <= min) min = max - 1;
-            return Random.Next(min, max);
-        }
-
-        private static readonly Random Random = new Random();
     }
 }

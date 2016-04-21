@@ -21,7 +21,7 @@ namespace wot
     /// </summary>
     public partial class MainWindow
     {
-        private const int DefaultTakeCount = 20;
+        private const int DefaultTakeCount = 25;
         private const string WebServerUrl = "http://localhost:11277";
         private int _currentCount;
         private Canvas canvas;
@@ -43,39 +43,9 @@ namespace wot
             await InitDisplay();
             await InitAudioSettings();
             await InitConnectionManager();
-
-            //Label label = new Label()
-            //{
-            //    Content = "Loading Names ...",
-            //    FontSize = 20,
-            //    Foreground = new SolidColorBrush(Colors.White),
-            //    Uid = "LoadingLabel"
-            //};
-            //label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
-            //label.Arrange(new Rect(label.DesiredSize));
-
-            //var borderName = "border1";
-            //var borderwidth = label.ActualWidth;
-            //var border = new Border()
-            //{
-            //    Name = borderName,
-            //    Uid = borderName,
-            //    Child = label,
-            //    Width = borderwidth,
-            //    HorizontalAlignment = HorizontalAlignment.Center
-            //};
-            //var left = canvas.Width / 2 - label.ActualWidth;
-            //var top = canvas.Height / 2;
-
-            //Canvas.SetLeft(border, left);
-            //Canvas.SetTop(border, top);
-            //canvas.Children.Add(border);
-            //canvas.UpdateLayout();
-
+        
             AsyncHelper.FireAndForget(BeginRotaion);
 
-            //await Task.Delay(5000, cancelToken);
-            //canvas.Children.Remove(border);
         }
 
         private async Task BeginRotaion()
@@ -87,17 +57,17 @@ namespace wot
             for (var i = 1; i < 5; i++)
             {
                 //TODO: Refactor out width
-                Lanes.Add(new DisplayLane(5, i, width, 4) { IsKioskDisplay = true }); //TODO: Kisok delay config setting
+                Lanes.Add(new DisplayLane(5, i, width, 4) { IsKioskLane = true }); //TODO: Kisok delay config setting
             }
 
             //General Lanes
-            //for (var j = 1; j < 5; j++)
-            //{
-            //    var model = new DisplayLane(2, j, width, 4); //TODO: rotation delay config setting
-            //    await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
-            //    _currentCount += 25;
-            //    Lanes.Add(model);
-            //}
+            for (var j = 1; j < 2; j++)
+            {
+                var model = new DisplayLane(2, j, width, 4); //TODO: rotation delay config setting
+                await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+                _currentCount += DefaultTakeCount;
+                Lanes.Add(model);
+            }
 
             //Priority Lane
             //var priorityLane = new DisplayLane(5, 0, width, 4) { IsPriorityLane = true }; //TODO: priority name delay config setting
@@ -125,25 +95,25 @@ namespace wot
                     Console.WriteLine($"displaying {lane.LaneNumber} : {person}");
                     currentPersonIndex++;
 
-                    if (lane.IsKioskDisplay && (DateTime.Now >= person.NextDisplayTime))
+                    if (lane.IsKioskLane && (DateTime.Now >= person.NextDisplayTime))
                     {
-                        person.RotationCount += 1;
+                        person.CurrentDisplayCount += 1;
                         var timeToCompleteAnimation = await Animate(person, lane);
                         person.NextDisplayTime = DateTime.Now.AddSeconds(timeToCompleteAnimation);
                         Console.WriteLine($"Displaying {person} in {timeToCompleteAnimation} seconds");
                     }
-                    if (!lane.IsKioskDisplay)
+                    if (!lane.IsKioskLane)
                     {
                         await Animate(person, lane);
                     }
 
                     //TASK: Code smell nested if statement.
-                    if (lane.IsKioskDisplay && person.RotationCount == 3)
+                    if (lane.IsKioskLane && person.CurrentDisplayCount == 3)
                     //TODO: Remove person if greater than 3. RotationCount config setting??
                     {
                         lane.People.Remove(person);
                     }
-                    if (!lane.IsKioskDisplay)
+                    if (!lane.IsKioskLane)
                     {
                         if (currentPersonIndex >= lane.People.Count - 2) //TODO: Refresh queue list before end
                         {
@@ -159,7 +129,7 @@ namespace wot
                     }
                     using (Canceller.Token.Register(Thread.CurrentThread.Abort))
                     {
-                        if (!lane.IsKioskDisplay) await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
+                        if (!lane.IsKioskLane) await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
                     }
                     //TODO: This is amount of time before next name displays and begins animation
                 }
@@ -177,87 +147,43 @@ namespace wot
         private async Task<double> Animate(PersonViewModel person, DisplayLane lane)
         {
             var totalTime = 0.0;
+            var width = canvas.ActualWidth;
             await Dispatcher.InvokeAsync(() =>
             {
                 NameScope.SetNameScope(this, new NameScope());
                 var storyboard = new Storyboard();
 
-                var displayElement = new DisplayElement(person, lane);
+                var displayElement = new DisplayElement(person, lane, width);
+                List<MyAnimation> animations = displayElement.CreateAnimations();
                 RegisterName(displayElement.Label.Name, displayElement.Label);
                 RegisterName(displayElement.Border.Name, displayElement.Border);
 
-                var xPosition = lane.RandomizeXAxis(displayElement.Label);
-                var yPosition = 0.0;
-                var currentTime = 0;
-                if (lane.IsKioskDisplay && person.RotationCount == 0)
-                {
-                    xPosition = lane.LeftMargin;
-                    yPosition = lane.GetYAxis(displayElement.Label); //TODO: Update X Axis from config settings
-                    //displayElement.Label.FontSize = 0.1;
-                    var maxFont = 20; //TODO: Font sizes from config settings
-                    var growTime = 3; //TODO: Grow time from config settings
-                    var growAnimation = new DoubleAnimation
-                    {
-                        From = 0,
-                        To = maxFont * 2,
-                        BeginTime = TimeSpan.FromSeconds(0),
-                        Duration = new Duration(TimeSpan.FromSeconds(growTime)),
-                    };
-
-                    var shrinkTime = 2; //TODO: Shrink time from config settings
-                    var pauseTime = 2;
-                    //TODO: Pause time from config settings. This is the time to add to the beginning of shrinking
-                    var shrinkAnimation = new DoubleAnimation
-                    {
-                        From = maxFont * 2,
-                        To = maxFont,
-                        BeginTime = TimeSpan.FromSeconds(growTime + pauseTime), // time to begin shrinking
-                        Duration = new Duration(TimeSpan.FromSeconds(shrinkTime)) // total animation takes to shrink
-                    };
-                    Storyboard.SetTargetName(growAnimation, displayElement.Label.Name);
-                    Storyboard.SetTargetProperty(growAnimation, new PropertyPath(FontSizeProperty));
-                    Storyboard.SetTargetName(shrinkAnimation, displayElement.Label.Name);
-                    Storyboard.SetTargetProperty(shrinkAnimation, new PropertyPath(FontSizeProperty));
-
-                    storyboard.Children.Add(growAnimation);
-                    storyboard.Children.Add(shrinkAnimation);
-
-                    currentTime += growTime + shrinkTime;
-                }
-
-                var timeModifier = 15; //TODO: Update timeModifier from config settings
-                var duration = timeModifier / displayElement.Label.FontSize * 10;
-
-                var fallAnimation = new DoubleAnimation
-                {
-                    From = yPosition,
-                    To = 600, //TODO: This is bottom margin. Could be height of screen or less
-                    BeginTime = TimeSpan.FromSeconds(currentTime),
-                    Duration = new Duration(TimeSpan.FromSeconds(duration))
-                    //TODO: This is how long to go from 0 to bottom margin
-                };
                 var e = new AnimationEventArgs { TagName = displayElement.Border.Uid };
                 storyboard.Completed += (sender, args) => StoryboardOnCompleted(e);
-                Storyboard.SetTargetName(fallAnimation, displayElement.Border.Name);
-                Storyboard.SetTargetProperty(fallAnimation, new PropertyPath(TopProperty));
-                storyboard.Children.Add(fallAnimation);
-
+           
+                foreach (var da in animations)
+                {
+                    Storyboard.SetTargetName(da, da.TargetName);
+                    Storyboard.SetTargetProperty(da, da.PropertyPath);
+                    storyboard.Children.Add(da);
+                }
+                totalTime = displayElement.TotalTime; 
+                var xPosition = displayElement.XAxis;
+                var yPosition = displayElement.YAxis;
                 Canvas.SetLeft(displayElement.Border, xPosition);
                 Canvas.SetTop(displayElement.Border, yPosition);
                 canvas.Children.Add(displayElement.Border);
                 canvas.UpdateLayout();
-
-                totalTime = currentTime + duration;
                 storyboard.Begin(this);
             });
-            return totalTime; //TODO: Calculate total animation time
+            return totalTime; 
         }
 
         private async void KioskEntry(string kiosk, Person person)
         {
             Mapper.CreateMap<Person, PersonViewModel>().ReverseMap(); //TODO: Should be in mapper configuration module
 
-            var lane = Lanes.FirstOrDefault(x => x.LaneNumber == Convert.ToInt16(kiosk) && x.IsKioskDisplay);
+            var lane = Lanes.FirstOrDefault(x => x.LaneNumber == Convert.ToInt16(kiosk) && x.IsKioskLane);
             if (lane == null) return;
 
             var pvm = Mapper.Map<Person, PersonViewModel>(person);
