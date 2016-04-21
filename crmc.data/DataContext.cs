@@ -19,6 +19,7 @@ namespace crmc.data
             builder.Properties<string>().Configure(c => c.HasColumnType("varchar"));
             builder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
             builder.Entity<Person>().ToTable("Persons");
+            builder.Entity<WallConfiguration>().ToTable("WallConfigurations");
 
             base.OnModelCreating(builder);
         }

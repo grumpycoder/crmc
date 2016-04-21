@@ -20,14 +20,13 @@ namespace wot.ViewModels
         public double CanvasWidth { get; set; }
         public int TotalLanes { get; set; }
 
-        public KioskDisplayLane(double rotationDelay)
+        public KioskDisplayLane()
         {
             People = new List<PersonViewModel>();
             Queue = new List<PersonViewModel>();
-            RotationDelay = rotationDelay;
         }
 
-        public KioskDisplayLane(double rotationDelay, int laneIndex, double canvasWidth, int totalLanes) : this(rotationDelay)
+        public KioskDisplayLane(int laneIndex, double canvasWidth, int totalLanes) : this()
         {
             LaneIndex = laneIndex;
             CanvasWidth = canvasWidth;

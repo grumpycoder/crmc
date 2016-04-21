@@ -26,7 +26,7 @@ namespace wot
         private const string WebServerUrl = "http://localhost:11277";
         private int _currentCount;
         private Canvas _canvas;
-
+        public WallConfiguration Configuration;
         private readonly string AudioFilePath = @"C:\Audio";
         public List<IDisplayLane> Lanes = new List<IDisplayLane>();
         public CancellationToken CancelToken = new CancellationToken();
@@ -41,6 +41,20 @@ namespace wot
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Configuration = new WallConfiguration()
+            {
+                KioskDisplayRecycleCount = 3,
+                GeneralRotationDelay = 0.15,
+                PriorityRotationDelay = 5,
+                MinFontSize = 10,
+                MaxFontSize = 20,
+                KioskEntryTopMargin = 200,
+                GrowAnimationDuration = 3,
+                ShrinkAnimationDuration = 3,
+                FallAnimationDurationTimeModifier = 25,
+                ScreenBottomMargin = 600
+            };
+
             await InitDisplay();
             await InitAudioSettings();
             await InitConnectionManager();
@@ -56,17 +70,17 @@ namespace wot
             for (var i = 1; i < 5; i++)
             {
                 //TODO: Refactor out width
-                Lanes.Add(new KioskDisplayLane(rotationDelay: 5, laneIndex: i, canvasWidth: width, totalLanes: 4)); //TODO: Kisok delay config setting
+                Lanes.Add(new KioskDisplayLane(laneIndex: i, canvasWidth: width, totalLanes: 4));
             }
 
             //General Lane
-            var model = new GeneralDisplayLane(0.15, width); //TODO: rotation delay config setting
+            var model = new GeneralDisplayLane(Configuration.GeneralRotationDelay, width);
             await model.LoadNamesAsync(_currentCount, DefaultTakeCount, WebServerUrl); //TODO: Remove dependecy on webserverurl string
             _currentCount += DefaultTakeCount;
             Lanes.Add(model);
 
             //Priority Lane
-            var priorityLane = new PriorityDisplayLane(5, width); //TODO: priority name delay config setting
+            var priorityLane = new PriorityDisplayLane(Configuration.PriorityRotationDelay, width);
             await priorityLane.LoadNamesAsync(0, DefaultTakeCount, WebServerUrl); //TODO: Remove dependecy on webserverurl string
             Lanes.Add(priorityLane);
 
@@ -94,8 +108,8 @@ namespace wot
                         {
                             person.CurrentDisplayCount += 1;
                             await Animate(person, lane);
-                            //TODO: Remove person if greater than 3. RotationCount config setting??
-                            if (person.CurrentDisplayCount > 3) lane.People.Remove(person);
+                            //TODO: Refactor out RecycleCount
+                            if (person.CurrentDisplayCount > Configuration.KioskDisplayRecycleCount) lane.People.Remove(person);
                         }
                         continue;
                     }
@@ -115,7 +129,7 @@ namespace wot
                     }
                     using (Canceller.Token.Register(Thread.CurrentThread.Abort))
                     {
-                        //TODO: This is amount of time before next name displays and begins animation
+                        //NOTE: This is amount of time before next name displays and begins animation
                         await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
                     }
                 }
@@ -123,7 +137,7 @@ namespace wot
                 //TODO: If queue list is not populated continue with existing list. Notifiy issue
                 if (!lane.Queue.Any()) continue;
 
-                //TODO: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
+                //NOTE: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
                 if (lane.Queue.Count < DefaultTakeCount) _currentCount = 0;
 
                 lane.People.Clear();
@@ -140,7 +154,7 @@ namespace wot
                 NameScope.SetNameScope(this, new NameScope());
                 var storyboard = new Storyboard();
 
-                var displayElement = new DisplayElement(person, lane, width);
+                var displayElement = new DisplayElement(person, lane, width, Configuration);
                 List<MyAnimation> animations = displayElement.CreateAnimations();
                 RegisterName(displayElement.Label.Name, displayElement.Label);
                 RegisterName(displayElement.Border.Name, displayElement.Border);
@@ -177,6 +191,7 @@ namespace wot
             var pvm = Mapper.Map<Person, PersonViewModel>(person);
 
             var waitUntil = await Animate(pvm, lane);
+            //TODO: Not needed. handled in display method loop
             pvm.NextDisplayTime = DateTime.Now.AddSeconds(waitUntil);
             //await Task.Delay(TimeSpan.FromSeconds(waitUntil), cancelToken);
             lane.People.Add(pvm);
@@ -186,7 +201,7 @@ namespace wot
 
         private async Task InitConnectionManager()
         {
-            var connection = new HubConnection("http://localhost:11277/signalr"); //TODO: signalr connection from config settings
+            var connection = new HubConnection("http://localhost:11277/signalr"); //TODO: signalr connection from app settings
             Hub = connection.CreateHubProxy("wot");
 
             connection.Start().ContinueWith(task =>

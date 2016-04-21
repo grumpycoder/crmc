@@ -1,3 +1,4 @@
+using crmc.domain;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -22,6 +23,7 @@ namespace wot
         public double YAxis { get; set; }
         public double TotalTime { get; set; }
         private double _currentTime;
+        private WallConfiguration _configuration;
 
         private readonly List<Color> _fontColors = new List<Color>
         {
@@ -32,8 +34,10 @@ namespace wot
             Color.FromRgb(246, 227, 213)
         };
 
-        public DisplayElement(PersonViewModel person, IDisplayLane lane, double canvasWidth)
+        //TODO: Refactor out Configuration
+        public DisplayElement(PersonViewModel person, IDisplayLane lane, double canvasWidth, WallConfiguration configuration)
         {
+            _configuration = configuration;
             Person = person;
             Lane = lane;
             TotalCanvasWidth = canvasWidth;
@@ -60,8 +64,8 @@ namespace wot
 
         private Label CreateLabel(PersonViewModel person)
         {
-            var minFont = 10; //TODO: Font sizes from config settings
-            var maxFont = 20;
+            var minFont = _configuration.MinFontSize;
+            var maxFont = _configuration.MaxFontSize;
             var color = RandomColor();
             var fontSize = RandomNumber(minFont, maxFont);
             var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
@@ -75,7 +79,7 @@ namespace wot
                 Name = name,
                 Tag = name,
                 Uid = name,
-                Foreground = new SolidColorBrush(color) //TODO: Randomize font color from list
+                Foreground = new SolidColorBrush(color)
             };
 
             label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
@@ -112,7 +116,7 @@ namespace wot
         {
             if (Lane.GetType() == typeof(KioskDisplayLane) && Person.IsFirstRun)
             {
-                YAxis = 200.0; //TODO: Top Margin offset for kiosk entry.
+                YAxis = _configuration.KioskEntryTopMargin;
             }
             else
             {
@@ -125,14 +129,14 @@ namespace wot
             var list = new List<MyAnimation>();
             if (Lane.GetType() == typeof(KioskDisplayLane) && Person.IsFirstRun)
             {
-                var grow = CreateGrowAnimation(0, 3); //TODO: Grow animation duration config setting
+                var grow = CreateGrowAnimation(0, _configuration.GrowAnimationDuration);
                 _currentTime += grow.Duration.TimeSpan.Seconds;
                 list.Add(grow);
-                var shrink = CreateShrinkAnimation(_currentTime, 3);  //TODO: Shrink animation duration config setting
+                var shrink = CreateShrinkAnimation(_currentTime, _configuration.ShrinkAnimationDuration);
                 list.Add(shrink);
                 _currentTime += grow.Duration.TimeSpan.Seconds;
             }
-            var timeModifier = 25; //TODO: Update timeModifier from config settings
+            var timeModifier = _configuration.FallAnimationDurationTimeModifier;
 
             var fallDuration = timeModifier / Label.FontSize * 10;
             var fallAnimation = CreateFallAnimation(_currentTime, fallDuration);
@@ -147,7 +151,7 @@ namespace wot
             {
                 Name = "FallAnimation",
                 From = YAxis,
-                To = 600, //TODO: This is bottom margin. Could be height of screen or less
+                To = _configuration.ScreenBottomMargin, //NOTE: Screen bottom margin where names fall off
                 BeginTime = TimeSpan.FromSeconds(startTime),
                 Duration = new Duration(TimeSpan.FromSeconds(duration)),
                 PropertyPath = new PropertyPath(Window.TopProperty),
