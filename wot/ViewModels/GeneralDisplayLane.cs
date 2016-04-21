@@ -27,11 +27,9 @@ namespace wot.ViewModels
             RotationDelay = rotationDelay;
         }
 
-        public GeneralDisplayLane(double rotationDelay, int laneIndex, double canvasWidth, int totalLanes) : this(rotationDelay)
+        public GeneralDisplayLane(double rotationDelay, double canvasWidth) : this(rotationDelay)
         {
-            LaneIndex = laneIndex;
             CanvasWidth = canvasWidth;
-            TotalLanes = totalLanes;
             SetMargins();
         }
 
@@ -54,10 +52,6 @@ namespace wot.ViewModels
         {
             LeftMargin = 0;
             RightMargin = CanvasWidth;
-
-            //LaneWidth = LaneIndex != 0 ? CanvasWidth / TotalLanes : CanvasWidth;
-            //LeftMargin = LaneIndex != 0 ? LaneWidth * (LaneIndex - 1) : 0;
-            //RightMargin = LeftMargin + LaneWidth;
         }
     }
 }

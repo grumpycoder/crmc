@@ -27,11 +27,9 @@ namespace wot.ViewModels
             RotationDelay = rotationDelay;
         }
 
-        public PriorityDisplayLane(double rotationDelay, int laneIndex, double canvasWidth, int totalLanes) : this(rotationDelay)
+        public PriorityDisplayLane(double rotationDelay, double canvasWidth) : this(rotationDelay)
         {
-            LaneIndex = laneIndex;
             CanvasWidth = canvasWidth;
-            TotalLanes = totalLanes;
             SetMargins();
         }
 
