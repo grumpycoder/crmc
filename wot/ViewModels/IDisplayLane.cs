@@ -15,7 +15,7 @@ namespace wot.ViewModels
         List<PersonViewModel> People { get; set; }
         List<PersonViewModel> Queue { get; set; }
 
-        Task LoadNamesAsync(int currentCount, int defaultTakeCount, bool priority, string webServerUrl);
+        Task LoadNamesAsync(int currentCount, int defaultTakeCount, string webServerUrl);
 
         Task<List<PersonViewModel>> UpdateQueueAsync(int currentCount, int defaultTakeCount, string webServerUrl);
 

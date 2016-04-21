@@ -50,7 +50,6 @@ namespace wot
         private async Task BeginRotaion()
         {
             var width = _canvas.ActualWidth;
-            // Initialize 4 lanes each for kiosk and general
 
             //Kiosk Lanes
             for (var i = 1; i < 5; i++)
@@ -88,50 +87,43 @@ namespace wot
                 {
                     Console.WriteLine($"displaying {lane.LaneIndex} : {person}");
 
-                    if (lane.GetType() == typeof(KioskDisplayLane) && (DateTime.Now >= person.NextDisplayTime))
+                    if (lane.GetType() == typeof(KioskDisplayLane))
                     {
-                        person.CurrentDisplayCount += 1;
-                        await Animate(person, lane);
-                    }
-                    if (lane.GetType() != typeof(KioskDisplayLane))
-                    {
-                        await Animate(person, lane);
-                    }
-
-                    //TASK: Code smell nested if statement.
-                    if (lane.GetType() == typeof(KioskDisplayLane) && person.CurrentDisplayCount == 3)
-                    //TODO: Remove person if greater than 3. RotationCount config setting??
-                    {
-                        lane.People.Remove(person);
-                    }
-                    if (lane.GetType() != typeof(KioskDisplayLane))
-                    {
-                        Console.WriteLine($"Current Index: {lane.People.IndexOf(person)}");
-                        Console.WriteLine($"Current Percent Used: {Convert.ToDouble(lane.People.IndexOf(person)) / Convert.ToDouble(DefaultTakeCount) * 100}");
-                        //if (currentPersonIndex >= lane.People.Count - 2) //TODO: Refresh queue list before end
-                        if (lane.People.IndexOf(person) / DefaultTakeCount * 100 >= 90) //TODO: Refresh queue list before end
+                        if ((DateTime.Now >= person.NextDisplayTime))
                         {
-                            AsyncHelper.FireAndForget(
-                                () => lane.UpdateQueueAsync(_currentCount, DefaultTakeCount, WebServerUrl),
-                                e =>
-                                {
-                                    Console.WriteLine(@"Error updating name queue for general names");
-                                    Debug.WriteLine(e);
-                                });
-                            _currentCount += DefaultTakeCount;
+                            person.CurrentDisplayCount += 1;
+                            await Animate(person, lane);
+                            //TODO: Remove person if greater than 3. RotationCount config setting??
+                            if (person.CurrentDisplayCount > 3) lane.People.Remove(person);
                         }
+                        continue;
+                    }
+                    await Animate(person, lane);
+
+                    var percent = Convert.ToDouble(lane.People.IndexOf(person)) / Convert.ToDouble(DefaultTakeCount) * 100;
+                    if (percent >= 90)
+                    {
+                        AsyncHelper.FireAndForget(
+                            () => lane.UpdateQueueAsync(_currentCount, DefaultTakeCount, WebServerUrl),
+                            e =>
+                            {
+                                Console.WriteLine(@"Error updating name queue for general names");
+                                Debug.WriteLine(e);
+                            });
+                        _currentCount += DefaultTakeCount;
                     }
                     using (Canceller.Token.Register(Thread.CurrentThread.Abort))
                     {
-                        if (lane.GetType() != typeof(KioskDisplayLane)) await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
+                        //TODO: This is amount of time before next name displays and begins animation
+                        await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
                     }
-                    //TODO: This is amount of time before next name displays and begins animation
                 }
+                //TODO: If queue list is not populated continue with existing list. Notifiy issue
                 if (!lane.Queue.Any())
-                    continue; //TODO: If queue list is not populated continue with existing list. Notifiy issue
-                if (lane.Queue.Count < DefaultTakeCount)
-                    _currentCount = 0;
+                    continue;
                 //TODO: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
+                if (lane.Queue.Count < DefaultTakeCount) _currentCount = 0;
+
                 lane.People.Clear();
                 lane.People.AddRange(lane.Queue);
                 lane.Queue.Clear();

@@ -35,11 +35,11 @@ namespace wot.ViewModels
             SetMargins();
         }
 
-        public async Task LoadNamesAsync(int currentCount, int defaultTakeCount, bool priority, string webServerUrl)
+        public async Task LoadNamesAsync(int currentCount, int defaultTakeCount, string webServerUrl)
         {
             Console.WriteLine($"Loading new names {currentCount}");
             var service = new NameService(webServerUrl);
-            People = await service.GetDistinct(currentCount, defaultTakeCount, priority);
+            People = await service.GetDistinct(currentCount, defaultTakeCount, false);
         }
 
         public async Task<List<PersonViewModel>> UpdateQueueAsync(int currentCount, int defaultTakeCount, string webServerUrl)
