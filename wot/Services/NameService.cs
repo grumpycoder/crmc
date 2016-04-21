@@ -48,9 +48,9 @@ namespace wot.Services
                     //Log.Error("Error downloading from person repository");
                     //Log.Error("Error: {0}", response.StatusCode);
                 }
-                Console.WriteLine($"Downloaded {list.Count}");
-                var totalTime = DateTime.Now.Subtract(startTime);
-                Console.WriteLine($"Total download time {totalTime}");
+                //Console.WriteLine($"Downloaded {list.Count}");
+                //var totalTime = DateTime.Now.Subtract(startTime);
+                //Console.WriteLine($"Total download time {totalTime}");
             }
 
             return list2;

@@ -22,7 +22,7 @@ namespace wot
     /// </summary>
     public partial class MainWindow
     {
-        private const int DefaultTakeCount = 25;
+        private const int DefaultTakeCount = 50;
         private const string WebServerUrl = "http://localhost:11277";
         private int _currentCount;
         private Canvas _canvas;
@@ -60,7 +60,7 @@ namespace wot
             }
 
             //General Lane
-            var model = new GeneralDisplayLane(0.2, width); //TODO: rotation delay config setting
+            var model = new GeneralDisplayLane(0.15, width); //TODO: rotation delay config setting
             await model.LoadNamesAsync(_currentCount, DefaultTakeCount, WebServerUrl); //TODO: Remove dependecy on webserverurl string
             _currentCount += DefaultTakeCount;
             Lanes.Add(model);
@@ -86,7 +86,7 @@ namespace wot
             {
                 foreach (var person in lane.People.ToList())
                 {
-                    Console.WriteLine($"displaying {lane.LaneIndex} : {person}");
+                    //Console.WriteLine($"displaying {lane.LaneIndex} : {person}");
 
                     if (lane.GetType() == typeof(KioskDisplayLane))
                     {

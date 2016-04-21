@@ -46,7 +46,7 @@ namespace wot
         private Border CreateBorder(Label label, IDisplayLane lane, int rotationCount)
         {
             var borderName = "border" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            var width = lane.GetType() == typeof(KioskDisplayLane) && rotationCount == 0 ? lane.LaneWidth : label.ActualWidth;
+            var width = lane.GetType() == typeof(KioskDisplayLane) && Person.IsFirstRun ? lane.LaneWidth : label.ActualWidth;
             var border = new Border()
             {
                 Name = borderName,
@@ -60,15 +60,16 @@ namespace wot
 
         private Label CreateLabel(PersonViewModel person)
         {
-            var minFont = 20; //TODO: Font sizes from config settings
-            var maxFont = 40;
+            var minFont = 10; //TODO: Font sizes from config settings
+            var maxFont = 20;
             var color = RandomColor();
             var fontSize = RandomNumber(minFont, maxFont);
             var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
             var label = new Label()
             {
                 Content = person.ToString(),
-                FontSize = fontSize,
+                //TODO: Refactor complex expression
+                FontSize = Lane.GetType() == typeof(KioskDisplayLane) && person.IsFirstRun ? maxFont : fontSize,
                 //FontFamily = new FontFamily(SettingsManager.Configuration.FontFamily),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Name = name,
@@ -79,7 +80,14 @@ namespace wot
 
             label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
             label.Arrange(new Rect(label.DesiredSize));
-
+            Console.WriteLine($"lane: {Lane.LaneWidth} - lable: {label.ActualWidth}");
+            if (Lane.GetType() == typeof(KioskDisplayLane))
+            {
+                if (label.ActualWidth > Lane.LaneWidth)
+                {
+                    Console.WriteLine($"Label to large {Person}");
+                }
+            }
             return label;
         }
 
@@ -124,7 +132,7 @@ namespace wot
                 list.Add(shrink);
                 _currentTime += grow.Duration.TimeSpan.Seconds;
             }
-            var timeModifier = 20; //TODO: Update timeModifier from config settings
+            var timeModifier = 25; //TODO: Update timeModifier from config settings
 
             var fallDuration = timeModifier / Label.FontSize * 10;
             var fallAnimation = CreateFallAnimation(_currentTime, fallDuration);
@@ -151,7 +159,7 @@ namespace wot
 
         private MyAnimation CreateShrinkAnimation(double startTime, double duration)
         {
-            var maxFont = 40;
+            var maxFont = 20;
             var shrinkAnimation = new MyAnimation
             {
                 Name = "ShrinkAnimation",
@@ -168,7 +176,9 @@ namespace wot
 
         private MyAnimation CreateGrowAnimation(double startTime, double duration)
         {
-            var maxFont = 40;
+            var maxFont = 20;
+            //TODO: reset position based on full size label for kiosk
+            Label.FontSize = 0.1;
             var growAnimation = new MyAnimation
             {
                 Name = "GrowAnimation",
