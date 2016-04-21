@@ -67,6 +67,10 @@ namespace wot
             //    _currentCount += DefaultTakeCount;
             //    Lanes.Add(model);
             //}
+            var model = new GeneralDisplayLane(0.2, 0, width, 4); //TODO: rotation delay config setting
+            await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+            _currentCount += DefaultTakeCount;
+            Lanes.Add(model);
 
             //Priority Lane
             //var priorityLane = new PriorityDisplayLane(5, 0, width, 4); //TODO: priority name delay config setting
@@ -111,7 +115,10 @@ namespace wot
                     }
                     if (lane.GetType() != typeof(KioskDisplayLane))
                     {
-                        if (currentPersonIndex >= lane.People.Count - 2) //TODO: Refresh queue list before end
+                        Console.WriteLine($"Current Index: {lane.People.IndexOf(person)}");
+                        Console.WriteLine($"Current Percent Used: {Convert.ToDouble(lane.People.IndexOf(person)) / Convert.ToDouble(DefaultTakeCount) * 100}");
+                        //if (currentPersonIndex >= lane.People.Count - 2) //TODO: Refresh queue list before end
+                        if (lane.People.IndexOf(person) / DefaultTakeCount * 100 >= 90) //TODO: Refresh queue list before end
                         {
                             AsyncHelper.FireAndForget(
                                 () => lane.UpdateQueueAsync(_currentCount, DefaultTakeCount, WebServerUrl),

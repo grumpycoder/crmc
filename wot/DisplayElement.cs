@@ -128,12 +128,12 @@ namespace wot
                 list.Add(shrink);
                 _currentTime += grow.Duration.TimeSpan.Seconds;
             }
-            var timeModifier = 15; //TODO: Update timeModifier from config settings
+            var timeModifier = 20; //TODO: Update timeModifier from config settings
 
             var fallDuration = timeModifier / Label.FontSize * 10;
             var fallAnimation = CreateFallAnimation(_currentTime, fallDuration);
             list.Add(fallAnimation);
-            TotalTime = _currentTime + fallAnimation.Duration.TimeSpan.Seconds;
+            TotalTime = _currentTime + fallDuration;
             return list;
         }
 

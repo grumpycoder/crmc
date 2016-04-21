@@ -52,9 +52,12 @@ namespace wot.ViewModels
 
         public void SetMargins()
         {
-            LaneWidth = LaneIndex != 0 ? CanvasWidth / TotalLanes : CanvasWidth;
-            LeftMargin = LaneIndex != 0 ? LaneWidth * (LaneIndex - 1) : 0;
-            RightMargin = LeftMargin + LaneWidth;
+            LeftMargin = 0;
+            RightMargin = CanvasWidth;
+
+            //LaneWidth = LaneIndex != 0 ? CanvasWidth / TotalLanes : CanvasWidth;
+            //LeftMargin = LaneIndex != 0 ? LaneWidth * (LaneIndex - 1) : 0;
+            //RightMargin = LeftMargin + LaneWidth;
         }
     }
 }
