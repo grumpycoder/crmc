@@ -27,7 +27,7 @@ namespace wot
         private Canvas canvas;
 
         private readonly string AudioFilePath = @"C:\Audio";
-        public List<DisplayLane> Lanes = new List<DisplayLane>();
+        public List<IDisplayLane> Lanes = new List<IDisplayLane>();
         public CancellationToken cancelToken = new CancellationToken();
         public CancellationTokenSource Canceller = new CancellationTokenSource();
         public IHubProxy hub;
@@ -43,9 +43,8 @@ namespace wot
             await InitDisplay();
             await InitAudioSettings();
             await InitConnectionManager();
-        
-            AsyncHelper.FireAndForget(BeginRotaion);
 
+            AsyncHelper.FireAndForget(BeginRotaion);
         }
 
         private async Task BeginRotaion()
@@ -57,17 +56,17 @@ namespace wot
             for (var i = 1; i < 5; i++)
             {
                 //TODO: Refactor out width
-                Lanes.Add(new DisplayLane(5, i, width, 4) { IsKioskLane = true }); //TODO: Kisok delay config setting
+                Lanes.Add(new KioskDisplayLane(5, i, width, 4)); //TODO: Kisok delay config setting
             }
 
             //General Lanes
-            for (var j = 1; j < 2; j++)
-            {
-                var model = new DisplayLane(2, j, width, 4); //TODO: rotation delay config setting
-                await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
-                _currentCount += DefaultTakeCount;
-                Lanes.Add(model);
-            }
+            //for (var j = 1; j < 2; j++)
+            //{
+            //    var model = new GeneralDisplayLane(2, j, width, 4); //TODO: rotation delay config setting
+            //    await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+            //    _currentCount += DefaultTakeCount;
+            //    Lanes.Add(model);
+            //}
 
             //Priority Lane
             //var priorityLane = new DisplayLane(5, 0, width, 4) { IsPriorityLane = true }; //TODO: priority name delay config setting
@@ -79,20 +78,20 @@ namespace wot
             {
                 AsyncHelper.FireAndForget(() => DisplayScreenModelAsync(lane), e =>
                 {
-                    Console.WriteLine($"Error starting loop for lane {lane.LaneNumber}");
+                    Console.WriteLine($"Error starting loop for lane {lane.LaneIndex}");
                     Debug.WriteLine(e);
                 });
             }
         }
 
-        private async Task DisplayScreenModelAsync(DisplayLane lane)
+        private async Task DisplayScreenModelAsync(IDisplayLane lane)
         {
             while (true)
             {
                 var currentPersonIndex = 0;
                 foreach (var person in lane.People.ToList())
                 {
-                    Console.WriteLine($"displaying {lane.LaneNumber} : {person}");
+                    Console.WriteLine($"displaying {lane.LaneIndex} : {person}");
                     currentPersonIndex++;
 
                     if (lane.IsKioskLane && (DateTime.Now >= person.NextDisplayTime))
@@ -144,7 +143,7 @@ namespace wot
             }
         }
 
-        private async Task<double> Animate(PersonViewModel person, DisplayLane lane)
+        private async Task<double> Animate(PersonViewModel person, IDisplayLane lane)
         {
             var totalTime = 0.0;
             var width = canvas.ActualWidth;
@@ -160,14 +159,14 @@ namespace wot
 
                 var e = new AnimationEventArgs { TagName = displayElement.Border.Uid };
                 storyboard.Completed += (sender, args) => StoryboardOnCompleted(e);
-           
+
                 foreach (var da in animations)
                 {
                     Storyboard.SetTargetName(da, da.TargetName);
                     Storyboard.SetTargetProperty(da, da.PropertyPath);
                     storyboard.Children.Add(da);
                 }
-                totalTime = displayElement.TotalTime; 
+                totalTime = displayElement.TotalTime;
                 var xPosition = displayElement.XAxis;
                 var yPosition = displayElement.YAxis;
                 Canvas.SetLeft(displayElement.Border, xPosition);
@@ -176,14 +175,14 @@ namespace wot
                 canvas.UpdateLayout();
                 storyboard.Begin(this);
             });
-            return totalTime; 
+            return totalTime;
         }
 
         private async void KioskEntry(string kiosk, Person person)
         {
             Mapper.CreateMap<Person, PersonViewModel>().ReverseMap(); //TODO: Should be in mapper configuration module
 
-            var lane = Lanes.FirstOrDefault(x => x.LaneNumber == Convert.ToInt16(kiosk) && x.IsKioskLane);
+            var lane = Lanes.FirstOrDefault(x => x.LaneIndex == Convert.ToInt16(kiosk) && x.IsKioskLane);
             if (lane == null) return;
 
             var pvm = Mapper.Map<Person, PersonViewModel>(person);

@@ -13,7 +13,7 @@ namespace wot
         private static readonly Random Random = new Random();
 
         public PersonViewModel Person { get; set; }
-        public DisplayLane Lane { get; set; }
+        public IDisplayLane Lane { get; set; }
         public Label Label { get; set; }
         public Border Border { get; set; }
         public double TotalCanvasWidth { get; set; }
@@ -32,7 +32,7 @@ namespace wot
 
         private double startTime;
 
-        public DisplayElement(PersonViewModel person, DisplayLane lane, double canvasWidth)
+        public DisplayElement(PersonViewModel person, IDisplayLane lane, double canvasWidth)
         {
             Person = person;
             Lane = lane;
@@ -43,10 +43,10 @@ namespace wot
             GetYAxis();
         }
 
-        private Border CreateBorder(Label label, DisplayLane lane, int rotationCount)
+        private Border CreateBorder(Label label, IDisplayLane lane, int rotationCount)
         {
             var borderName = "border" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            var width = lane.IsKioskLane && rotationCount == 0 ? lane.SectionWidth : label.ActualWidth;
+            var width = lane.IsKioskLane && rotationCount == 0 ? lane.LaneWidth : label.ActualWidth;
             var border = new Border()
             {
                 Name = borderName,
@@ -107,9 +107,9 @@ namespace wot
 
         public void GetYAxis()
         {
-            if (Lane.IsKioskLane && Person.CurrentDisplayCount == 0)
+            if (Lane.GetType() == typeof(KioskDisplayLane) && Person.IsFirstRun)
             {
-                YAxis = 200.0;
+                YAxis = 200.0; //TODO: Top Margin offset for kiosk entry.
             }
             else
             {
@@ -134,20 +134,20 @@ namespace wot
             var fallDuration = timeModifier / Label.FontSize * 10;
             var fallAnimation = CreateFallAnimation(startTime, fallDuration);
             list.Add(fallAnimation);
-            TotalTime = startTime + fallDuration; 
+            TotalTime = startTime + fallDuration;
             return list;
         }
 
         private MyAnimation CreateFallAnimation(double startTime, double duration)
         {
-             var fallAnimation = new MyAnimation
+            var fallAnimation = new MyAnimation
             {
                 Name = "FallAnimation",
                 From = YAxis,
                 To = 600, //TODO: This is bottom margin. Could be height of screen or less
                 BeginTime = TimeSpan.FromSeconds(startTime),
                 Duration = new Duration(TimeSpan.FromSeconds(duration))
-                //TODO: This is how long to go from 0 to bottom margin
+                //NOTE: This is how long to go from Y Axis to bottom margin
             };
             fallAnimation.PropertyPath = new PropertyPath(Window.TopProperty);
             fallAnimation.TargetName = Border.Name;

@@ -73,6 +73,9 @@
     </ApplicationDefinition>
     <Compile Include="AnimationEventArgs.cs" />
     <Compile Include="DisplayElement.cs" />
+    <Compile Include="ViewModels\PriorityDisplayLane.cs" />
+    <Compile Include="ViewModels\KioskDisplayLane.cs" />
+    <Compile Include="ViewModels\IDisplayLane.cs" />
     <Compile Include="ViewModels\PersonViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -88,7 +91,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModels\DisplayLane.cs" />
+    <Compile Include="ViewModels\GeneralDisplayLane.cs" />
     <Compile Include="Services\NameService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

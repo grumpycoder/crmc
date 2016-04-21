@@ -7,5 +7,13 @@ namespace wot.ViewModels
     {
         public int CurrentDisplayCount { get; set; }
         public DateTime NextDisplayTime { get; set; }
+
+        public bool IsFirstRun
+        {
+            get
+            {
+                return CurrentDisplayCount == 0;
+            }
+        }
     }
 }

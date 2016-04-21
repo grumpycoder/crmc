@@ -5,31 +5,31 @@ using wot.Services;
 
 namespace wot.ViewModels
 {
-    public class DisplayLane
+    public class PriorityDisplayLane : IDisplayLane
     {
         public List<PersonViewModel> People { get; set; }
         public List<PersonViewModel> Queue { get; set; }
         public bool IsPriorityLane { get; set; }
         public bool IsKioskLane { get; set; }
-        public int LaneNumber { get; set; }
+        public int LaneIndex { get; set; }
         public double RotationDelay { get; set; }
         public double LeftMargin { get; set; }
         public double RightMargin { get; set; }
-        public double SectionWidth { get; set; }
+        public double LaneWidth { get; set; }
 
         public double CanvasWidth { get; set; }
         public int TotalLanes { get; set; }
 
-        public DisplayLane(double rotationDelay)
+        public PriorityDisplayLane(double rotationDelay)
         {
             People = new List<PersonViewModel>();
             Queue = new List<PersonViewModel>();
             RotationDelay = rotationDelay;
         }
 
-        public DisplayLane(double rotationDelay, int laneNumber, double canvasWidth, int totalLanes) : this(rotationDelay)
+        public PriorityDisplayLane(double rotationDelay, int laneIndex, double canvasWidth, int totalLanes) : this(rotationDelay)
         {
-            LaneNumber = laneNumber;
+            LaneIndex = laneIndex;
             CanvasWidth = canvasWidth;
             TotalLanes = totalLanes;
             SetMargins();
@@ -52,16 +52,16 @@ namespace wot.ViewModels
 
         public void SetMargins()
         {
-            if (IsPriorityLane)
+            if (IsPriorityLane) //TODO: Refactor IF
             {
                 LeftMargin = 0;
                 RightMargin = CanvasWidth;
             }
             else
             {
-                SectionWidth = LaneNumber != 0 ? CanvasWidth / TotalLanes : CanvasWidth;
-                LeftMargin = LaneNumber != 0 ? SectionWidth * (LaneNumber - 1) : 0;
-                RightMargin = LeftMargin + SectionWidth;
+                LaneWidth = LaneIndex != 0 ? CanvasWidth / TotalLanes : CanvasWidth;
+                LeftMargin = LaneIndex != 0 ? LaneWidth * (LaneIndex - 1) : 0;
+                RightMargin = LeftMargin + LaneWidth;
             }
         }
     }
