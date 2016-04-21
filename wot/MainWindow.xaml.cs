@@ -59,14 +59,15 @@ namespace wot
                 Lanes.Add(new KioskDisplayLane(rotationDelay: 5, laneIndex: i, canvasWidth: width, totalLanes: 4)); //TODO: Kisok delay config setting
             }
 
+            //General Lane
             var model = new GeneralDisplayLane(0.2, width); //TODO: rotation delay config setting
-            await model.LoadNamesAsync(_currentCount, DefaultTakeCount, false, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+            await model.LoadNamesAsync(_currentCount, DefaultTakeCount, WebServerUrl); //TODO: Remove dependecy on webserverurl string
             _currentCount += DefaultTakeCount;
             Lanes.Add(model);
 
             //Priority Lane
             var priorityLane = new PriorityDisplayLane(5, width); //TODO: priority name delay config setting
-            await priorityLane.LoadNamesAsync(0, DefaultTakeCount, true, WebServerUrl); //TODO: Remove dependecy on webserverurl string
+            await priorityLane.LoadNamesAsync(0, DefaultTakeCount, WebServerUrl); //TODO: Remove dependecy on webserverurl string
             Lanes.Add(priorityLane);
 
             foreach (var lane in Lanes)
