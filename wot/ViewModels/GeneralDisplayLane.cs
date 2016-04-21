@@ -50,6 +50,7 @@ namespace wot.ViewModels
         {
             LeftMargin = 0;
             RightMargin = CanvasWidth;
+            LaneWidth = CanvasWidth;
         }
     }
 }

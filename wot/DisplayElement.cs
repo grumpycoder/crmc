@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using wot.Extensions;
 using wot.ViewModels;
 
 namespace wot
@@ -95,12 +96,7 @@ namespace wot
 
         public void GetXAxis()
         {
-            var position = RandomNumber(Convert.ToInt32(Lane.LeftMargin), Convert.ToInt32(Lane.RightMargin));
-            // Adjustment to keep label from growing outside canvas area
-            if (position + Label.ActualWidth > TotalCanvasWidth)
-            {
-                position = RandomNumber(Convert.ToInt32(Lane.LeftMargin), Convert.ToInt32(TotalCanvasWidth - Label.ActualWidth));
-            }
+            var position = RandomNumber(Lane.LeftMargin.ToInt(), (Lane.RightMargin - Label.ActualWidth).ToInt());
             XAxis = position;
         }
 

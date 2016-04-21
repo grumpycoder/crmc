@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using wot.Extensions;
 using wot.ViewModels;
 
 namespace wot
@@ -100,7 +101,7 @@ namespace wot
                     }
                     await Animate(person, lane);
 
-                    var percent = Convert.ToDouble(lane.People.IndexOf(person)) / Convert.ToDouble(DefaultTakeCount) * 100;
+                    var percent = lane.People.IndexOf(person).ToDouble().PercentOf(DefaultTakeCount.ToDouble());
                     if (percent >= 90)
                     {
                         AsyncHelper.FireAndForget(
@@ -118,9 +119,10 @@ namespace wot
                         await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
                     }
                 }
+
                 //TODO: If queue list is not populated continue with existing list. Notifiy issue
-                if (!lane.Queue.Any())
-                    continue;
+                if (!lane.Queue.Any()) continue;
+
                 //TODO: If current queue count less than DefaultTakeCount assume at end of database list and start over at beginning. Need to same position for next runtime.
                 if (lane.Queue.Count < DefaultTakeCount) _currentCount = 0;
 
@@ -132,8 +134,7 @@ namespace wot
 
         private async Task<double> Animate(PersonViewModel person, IDisplayLane lane)
         {
-            var totalTime = 0.0;
-            var width = _canvas.ActualWidth;
+            var totalTime = 0.0; var width = _canvas.ActualWidth;
             await Dispatcher.InvokeAsync(() =>
             {
                 NameScope.SetNameScope(this, new NameScope());
@@ -170,7 +171,7 @@ namespace wot
         {
             Mapper.CreateMap<Person, PersonViewModel>().ReverseMap(); //TODO: Should be in mapper configuration module
 
-            var lane = Lanes.FirstOrDefault(x => x.LaneIndex == Convert.ToInt16(kiosk) && x.GetType() == typeof(KioskDisplayLane));
+            var lane = Lanes.FirstOrDefault(x => x.LaneIndex == kiosk.ToInt());
             if (lane == null) return;
 
             var pvm = Mapper.Map<Person, PersonViewModel>(person);
