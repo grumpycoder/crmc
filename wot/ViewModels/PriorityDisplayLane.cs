@@ -9,8 +9,6 @@ namespace wot.ViewModels
     {
         public List<PersonViewModel> People { get; set; }
         public List<PersonViewModel> Queue { get; set; }
-        public bool IsPriorityLane { get; set; }
-        public bool IsKioskLane { get; set; }
         public int LaneIndex { get; set; }
         public double RotationDelay { get; set; }
         public double LeftMargin { get; set; }
@@ -44,7 +42,7 @@ namespace wot.ViewModels
         {
             Console.WriteLine($"Loading secondary new names {currentCount}");
             var service = new NameService(webServerUrl);
-            Queue = await service.GetDistinct(currentCount, defaultTakeCount, IsPriorityLane);
+            Queue = await service.GetDistinct(currentCount, defaultTakeCount, true);
             return Queue;
         }
 

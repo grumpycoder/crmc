@@ -6,8 +6,6 @@ namespace wot.ViewModels
     public interface IDisplayLane
     {
         double CanvasWidth { get; set; }
-        bool IsKioskLane { get; set; }
-        bool IsPriorityLane { get; set; }
         int LaneIndex { get; set; }
         double LaneWidth { get; set; }
         int TotalLanes { get; set; }

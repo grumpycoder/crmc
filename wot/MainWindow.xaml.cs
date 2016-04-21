@@ -56,7 +56,7 @@ namespace wot
             for (var i = 1; i < 5; i++)
             {
                 //TODO: Refactor out width
-                Lanes.Add(new KioskDisplayLane(5, i, width, 4)); //TODO: Kisok delay config setting
+                Lanes.Add(new KioskDisplayLane(rotationDelay: 5, laneIndex: i, canvasWidth: width, totalLanes: 4)); //TODO: Kisok delay config setting
             }
 
             var model = new GeneralDisplayLane(0.2, width); //TODO: rotation delay config setting
@@ -83,11 +83,9 @@ namespace wot
         {
             while (true)
             {
-                var currentPersonIndex = 0;
                 foreach (var person in lane.People.ToList())
                 {
                     Console.WriteLine($"displaying {lane.LaneIndex} : {person}");
-                    currentPersonIndex++;
 
                     if (lane.GetType() == typeof(KioskDisplayLane) && (DateTime.Now >= person.NextDisplayTime))
                     {

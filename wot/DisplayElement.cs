@@ -45,7 +45,7 @@ namespace wot
         private Border CreateBorder(Label label, IDisplayLane lane, int rotationCount)
         {
             var borderName = "border" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            var width = lane.IsKioskLane && rotationCount == 0 ? lane.LaneWidth : label.ActualWidth;
+            var width = lane.GetType() == typeof(KioskDisplayLane) && rotationCount == 0 ? lane.LaneWidth : label.ActualWidth;
             var border = new Border()
             {
                 Name = borderName,
