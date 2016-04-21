@@ -52,17 +52,9 @@ namespace wot.ViewModels
 
         public void SetMargins()
         {
-            if (IsPriorityLane) //TODO: Refactor IF 
-            {
-                LeftMargin = 0;
-                RightMargin = CanvasWidth;
-            }
-            else
-            {
-                LaneWidth = LaneIndex != 0 ? CanvasWidth / TotalLanes : CanvasWidth;
-                LeftMargin = LaneIndex != 0 ? LaneWidth * (LaneIndex - 1) : 0;
-                RightMargin = LeftMargin + LaneWidth;
-            }
+            LaneWidth = LaneIndex != 0 ? CanvasWidth / TotalLanes : CanvasWidth;
+            LeftMargin = LaneIndex != 0 ? LaneWidth * (LaneIndex - 1) : 0;
+            RightMargin = LeftMargin + LaneWidth;
         }
     }
 }

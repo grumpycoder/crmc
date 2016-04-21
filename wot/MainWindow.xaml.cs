@@ -24,13 +24,13 @@ namespace wot
         private const int DefaultTakeCount = 25;
         private const string WebServerUrl = "http://localhost:11277";
         private int _currentCount;
-        private Canvas canvas;
+        private Canvas _canvas;
 
         private readonly string AudioFilePath = @"C:\Audio";
         public List<IDisplayLane> Lanes = new List<IDisplayLane>();
-        public CancellationToken cancelToken = new CancellationToken();
+        public CancellationToken CancelToken = new CancellationToken();
         public CancellationTokenSource Canceller = new CancellationTokenSource();
-        public IHubProxy hub;
+        public IHubProxy Hub;
 
         public MainWindow()
         {
@@ -49,7 +49,7 @@ namespace wot
 
         private async Task BeginRotaion()
         {
-            var width = canvas.ActualWidth;
+            var width = _canvas.ActualWidth;
             // Initialize 4 lanes each for kiosk and general
 
             //Kiosk Lanes
@@ -69,8 +69,7 @@ namespace wot
             //}
 
             //Priority Lane
-            //var priorityLane = new DisplayLane(5, 0, width, 4) { IsPriorityLane = true }; //TODO: priority name delay config setting
-            //priorityLane.SetMargins();
+            //var priorityLane = new PriorityDisplayLane(5, 0, width, 4); //TODO: priority name delay config setting
             //await priorityLane.LoadNamesAsync(0, DefaultTakeCount, true, WebServerUrl); //TODO: Remove dependecy on webserverurl string
             //Lanes.Add(priorityLane);
 
@@ -94,25 +93,23 @@ namespace wot
                     Console.WriteLine($"displaying {lane.LaneIndex} : {person}");
                     currentPersonIndex++;
 
-                    if (lane.IsKioskLane && (DateTime.Now >= person.NextDisplayTime))
+                    if (lane.GetType() == typeof(KioskDisplayLane) && (DateTime.Now >= person.NextDisplayTime))
                     {
                         person.CurrentDisplayCount += 1;
-                        var timeToCompleteAnimation = await Animate(person, lane);
-                        person.NextDisplayTime = DateTime.Now.AddSeconds(timeToCompleteAnimation);
-                        Console.WriteLine($"Displaying {person} in {timeToCompleteAnimation} seconds");
+                        await Animate(person, lane);
                     }
-                    if (!lane.IsKioskLane)
+                    if (lane.GetType() != typeof(KioskDisplayLane))
                     {
                         await Animate(person, lane);
                     }
 
                     //TASK: Code smell nested if statement.
-                    if (lane.IsKioskLane && person.CurrentDisplayCount == 3)
+                    if (lane.GetType() == typeof(KioskDisplayLane) && person.CurrentDisplayCount == 3)
                     //TODO: Remove person if greater than 3. RotationCount config setting??
                     {
                         lane.People.Remove(person);
                     }
-                    if (!lane.IsKioskLane)
+                    if (lane.GetType() != typeof(KioskDisplayLane))
                     {
                         if (currentPersonIndex >= lane.People.Count - 2) //TODO: Refresh queue list before end
                         {
@@ -120,7 +117,7 @@ namespace wot
                                 () => lane.UpdateQueueAsync(_currentCount, DefaultTakeCount, WebServerUrl),
                                 e =>
                                 {
-                                    Console.WriteLine("Error updating name queue for general names");
+                                    Console.WriteLine(@"Error updating name queue for general names");
                                     Debug.WriteLine(e);
                                 });
                             _currentCount += DefaultTakeCount;
@@ -128,7 +125,7 @@ namespace wot
                     }
                     using (Canceller.Token.Register(Thread.CurrentThread.Abort))
                     {
-                        if (!lane.IsKioskLane) await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
+                        if (lane.GetType() != typeof(KioskDisplayLane)) await Task.Delay(TimeSpan.FromSeconds(lane.RotationDelay), Canceller.Token);
                     }
                     //TODO: This is amount of time before next name displays and begins animation
                 }
@@ -146,7 +143,7 @@ namespace wot
         private async Task<double> Animate(PersonViewModel person, IDisplayLane lane)
         {
             var totalTime = 0.0;
-            var width = canvas.ActualWidth;
+            var width = _canvas.ActualWidth;
             await Dispatcher.InvokeAsync(() =>
             {
                 NameScope.SetNameScope(this, new NameScope());
@@ -171,10 +168,11 @@ namespace wot
                 var yPosition = displayElement.YAxis;
                 Canvas.SetLeft(displayElement.Border, xPosition);
                 Canvas.SetTop(displayElement.Border, yPosition);
-                canvas.Children.Add(displayElement.Border);
-                canvas.UpdateLayout();
+                _canvas.Children.Add(displayElement.Border);
+                _canvas.UpdateLayout();
                 storyboard.Begin(this);
             });
+            person.NextDisplayTime = DateTime.Now.AddSeconds(totalTime);
             return totalTime;
         }
 
@@ -182,7 +180,7 @@ namespace wot
         {
             Mapper.CreateMap<Person, PersonViewModel>().ReverseMap(); //TODO: Should be in mapper configuration module
 
-            var lane = Lanes.FirstOrDefault(x => x.LaneIndex == Convert.ToInt16(kiosk) && x.IsKioskLane);
+            var lane = Lanes.FirstOrDefault(x => x.LaneIndex == Convert.ToInt16(kiosk) && x.GetType() == typeof(KioskDisplayLane));
             if (lane == null) return;
 
             var pvm = Mapper.Map<Person, PersonViewModel>(person);
@@ -198,22 +196,22 @@ namespace wot
         private async Task InitConnectionManager()
         {
             var connection = new HubConnection("http://localhost:11277/signalr"); //TODO: signalr connection from config settings
-            hub = connection.CreateHubProxy("wot");
+            Hub = connection.CreateHubProxy("wot");
 
             connection.Start().ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
-                    Console.WriteLine("There was an error opening the connection:{0}",
-                        task.Exception.GetBaseException());
+                    Console.WriteLine(@"There was an error opening the connection:{0}",
+                        task.Exception?.GetBaseException());
                 }
                 else
                 {
-                    Console.WriteLine("Connected");
+                    Console.WriteLine(@"Connected");
                 }
-            }).Wait(cancelToken);
+            }).Wait(CancelToken);
 
-            hub.On<string, Person>("addName", (kiosk, person) => Dispatcher.Invoke(() => KioskEntry(kiosk, person)));
+            Hub.On<string, Person>("addName", (kiosk, person) => Dispatcher.Invoke(() => KioskEntry(kiosk, person)));
         }
 
         private async Task InitAudioSettings()
@@ -224,11 +222,11 @@ namespace wot
 
         protected async Task InitDisplay()
         {
-            canvas = WallCanvas;
-            canvas.Height = SystemParameters.PrimaryScreenHeight;
-            canvas.Width = SystemParameters.PrimaryScreenWidth;
+            _canvas = WallCanvas;
+            _canvas.Height = SystemParameters.PrimaryScreenHeight;
+            _canvas.Width = SystemParameters.PrimaryScreenWidth;
 
-            canvas.UpdateLayout();
+            _canvas.UpdateLayout();
 
             //HACK: Test if needed.
             Timeline.DesiredFrameRateProperty.OverrideMetadata(typeof(Timeline),
@@ -241,7 +239,7 @@ namespace wot
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
         {
-            Console.WriteLine("Window Closed");
+            Console.WriteLine(@"Window Closed");
             //Canceller.Cancel();
         }
 
@@ -249,10 +247,10 @@ namespace wot
         {
             var tagName = eventArgs.TagName;
 
-            foreach (UIElement child in canvas.Children.Cast<UIElement>().Where(child => tagName == child.Uid))
+            foreach (UIElement child in _canvas.Children.Cast<UIElement>().Where(child => tagName == child.Uid))
             {
                 child.BeginAnimation(TopProperty, null);
-                canvas.Children.Remove(child);
+                _canvas.Children.Remove(child);
                 return;
             }
         }

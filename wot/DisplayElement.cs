@@ -20,8 +20,9 @@ namespace wot
         public double XAxis { get; set; }
         public double YAxis { get; set; }
         public double TotalTime { get; set; }
+        private double _currentTime;
 
-        private readonly List<Color> fontColors = new List<Color>
+        private readonly List<Color> _fontColors = new List<Color>
         {
             Color.FromRgb(205, 238, 207),
             Color.FromRgb(247, 231, 245),
@@ -29,8 +30,6 @@ namespace wot
             Color.FromRgb(246, 244, 207),
             Color.FromRgb(246, 227, 213)
         };
-
-        private double startTime;
 
         public DisplayElement(PersonViewModel person, IDisplayLane lane, double canvasWidth)
         {
@@ -60,8 +59,8 @@ namespace wot
 
         private Label CreateLabel(PersonViewModel person)
         {
-            var minFont = 10; //TODO: Font sizes from config settings
-            var maxFont = 20;
+            var minFont = 20; //TODO: Font sizes from config settings
+            var maxFont = 40;
             var color = RandomColor();
             var fontSize = RandomNumber(minFont, maxFont);
             var name = "label" + Guid.NewGuid().ToString("N").Substring(0, 10);
@@ -91,7 +90,7 @@ namespace wot
 
         private Color RandomColor()
         {
-            return fontColors[Random.Next(0, fontColors.Count)];
+            return _fontColors[Random.Next(0, _fontColors.Count)];
         }
 
         public void GetXAxis()
@@ -120,21 +119,21 @@ namespace wot
         public List<MyAnimation> CreateAnimations()
         {
             var list = new List<MyAnimation>();
-            if (Lane.IsKioskLane && Person.CurrentDisplayCount == 0)
+            if (Lane.GetType() == typeof(KioskDisplayLane) && Person.IsFirstRun)
             {
                 var grow = CreateGrowAnimation(0, 3); //TODO: Grow animation duration config setting
-                startTime += grow.Duration.TimeSpan.Seconds;
+                _currentTime += grow.Duration.TimeSpan.Seconds;
                 list.Add(grow);
-                var shrink = CreateShrinkAnimation(startTime, 3);  //TODO: Shrink animation duration config setting
+                var shrink = CreateShrinkAnimation(_currentTime, 3);  //TODO: Shrink animation duration config setting
                 list.Add(shrink);
-                startTime += grow.Duration.TimeSpan.Seconds;
+                _currentTime += grow.Duration.TimeSpan.Seconds;
             }
             var timeModifier = 15; //TODO: Update timeModifier from config settings
 
             var fallDuration = timeModifier / Label.FontSize * 10;
-            var fallAnimation = CreateFallAnimation(startTime, fallDuration);
+            var fallAnimation = CreateFallAnimation(_currentTime, fallDuration);
             list.Add(fallAnimation);
-            TotalTime = startTime + fallDuration;
+            TotalTime = _currentTime + fallAnimation.Duration.TimeSpan.Seconds;
             return list;
         }
 
@@ -146,33 +145,34 @@ namespace wot
                 From = YAxis,
                 To = 600, //TODO: This is bottom margin. Could be height of screen or less
                 BeginTime = TimeSpan.FromSeconds(startTime),
-                Duration = new Duration(TimeSpan.FromSeconds(duration))
+                Duration = new Duration(TimeSpan.FromSeconds(duration)),
+                PropertyPath = new PropertyPath(Window.TopProperty),
+                TargetName = Border.Name
                 //NOTE: This is how long to go from Y Axis to bottom margin
             };
-            fallAnimation.PropertyPath = new PropertyPath(Window.TopProperty);
-            fallAnimation.TargetName = Border.Name;
             return fallAnimation;
         }
 
         private MyAnimation CreateShrinkAnimation(double startTime, double duration)
         {
-            var maxFont = 20;
+            var maxFont = 40;
             var shrinkAnimation = new MyAnimation
             {
                 Name = "ShrinkAnimation",
                 From = maxFont * 2,
                 To = maxFont,
                 BeginTime = TimeSpan.FromSeconds(startTime), // time to begin shrinking
-                Duration = new Duration(TimeSpan.FromSeconds(duration)) // total animation takes to shrink
+                Duration = new Duration(TimeSpan.FromSeconds(duration)),
+                PropertyPath = new PropertyPath(Control.FontSizeProperty),
+                TargetName = Label.Name
+                // total animation takes to shrink
             };
-            shrinkAnimation.PropertyPath = new PropertyPath(Control.FontSizeProperty);
-            shrinkAnimation.TargetName = Label.Name;
             return shrinkAnimation;
         }
 
         private MyAnimation CreateGrowAnimation(double startTime, double duration)
         {
-            var maxFont = 20;
+            var maxFont = 40;
             var growAnimation = new MyAnimation
             {
                 Name = "GrowAnimation",
@@ -180,9 +180,9 @@ namespace wot
                 To = maxFont * 2,
                 BeginTime = TimeSpan.FromSeconds(startTime),
                 Duration = new Duration(TimeSpan.FromSeconds(duration)),
+                PropertyPath = new PropertyPath(Control.FontSizeProperty),
+                TargetName = Label.Name,
             };
-            growAnimation.PropertyPath = new PropertyPath(Control.FontSizeProperty);
-            growAnimation.TargetName = Label.Name;
             return growAnimation;
         }
     }
