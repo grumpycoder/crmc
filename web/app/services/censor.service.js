@@ -9,5 +9,7 @@
         log.info('loaded ' + serviceId);
         var service = {
         }
+
+        return service;
     }
 })()

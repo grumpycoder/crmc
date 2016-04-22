@@ -14,6 +14,7 @@ namespace crmc.data
 
         public DbSet<Person> Persons { get; set; }
         public DbSet<WallConfiguration> WallConfigurations { get; set; }
+        public DbSet<Censor> Censors { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder builder)
         {

@@ -3,4 +3,10 @@
 }
 <div ng-controller="CensorController as vm">
     <h2>Censors</h2>
+
+    <ul>
+        <li ng-repeat="censor in vm.censors">
+            <span>{{censor.word}}</span>
+        </li>
+    </ul>
 </div>
