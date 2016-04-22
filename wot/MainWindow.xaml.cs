@@ -188,9 +188,7 @@ namespace wot
             var pvm = Mapper.Map<Person, PersonViewModel>(person);
 
             var waitUntil = await Animate(pvm, lane);
-            //TODO: Not needed. handled in display method loop
             pvm.NextDisplayTime = DateTime.Now.AddSeconds(waitUntil);
-            //await Task.Delay(TimeSpan.FromSeconds(waitUntil), cancelToken);
             lane.People.Add(pvm);
         }
 
