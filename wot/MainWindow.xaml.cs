@@ -24,11 +24,13 @@ namespace wot
     public partial class MainWindow
     {
         private const int DefaultTakeCount = 50;
-        private const string WebServerUrl = "http://localhost:11277";
+
+        private static readonly string WebServerUrl = Properties.Settings.Default.WebserverUri;
+
         private int _currentCount;
         private Canvas _canvas;
         public WallConfiguration Configuration;
-        private readonly string AudioFilePath = @"C:\Audio";
+        private static readonly string AudioFilePath = @Properties.Settings.Default.AudioFilePath;
         public List<IDisplayLane> Lanes = new List<IDisplayLane>();
         public CancellationToken CancelToken = new CancellationToken();
         public CancellationTokenSource Canceller = new CancellationTokenSource();

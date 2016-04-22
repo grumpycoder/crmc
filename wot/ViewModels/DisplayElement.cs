@@ -24,6 +24,7 @@ namespace wot.ViewModels
         private double _currentTime;
         private readonly WallConfiguration _configuration;
 
+        //TODO: Colors from data store
         private readonly List<Color> _fontColors = new List<Color>
         {
             Color.FromRgb(205, 238, 207),
