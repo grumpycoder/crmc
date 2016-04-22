@@ -13,6 +13,7 @@ namespace crmc.data
         }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<WallConfiguration> WallConfigurations { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder builder)
         {

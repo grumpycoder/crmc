@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using wot.Extensions;
+using wot.Services;
 using wot.ViewModels;
 
 namespace wot
@@ -54,12 +55,19 @@ namespace wot
                 FallAnimationDurationTimeModifier = 25,
                 ScreenBottomMargin = 600
             };
-
+            await InitConfiguration();
             await InitDisplay();
             await InitAudioSettings();
             await InitConnectionManager();
 
             AsyncHelper.FireAndForget(BeginRotaion);
+        }
+
+        private async Task InitConfiguration()
+        {
+            var service = new ConfigurationService(WebServerUrl);
+
+            Configuration = await service.GetConfigurationAsync(ConfigurationMode.Normal);
         }
 
         private async Task BeginRotaion()

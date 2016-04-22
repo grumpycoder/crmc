@@ -58,6 +58,10 @@
     <Compile Include="Migrations\201604211841321_wallconfiguration.Designer.cs">
       <DependentUpon>201604211841321_wallconfiguration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604221337234_wallconfig-active.cs" />
+    <Compile Include="Migrations\201604221337234_wallconfig-active.Designer.cs">
+      <DependentUpon>201604221337234_wallconfig-active.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -77,6 +81,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604211841321_wallconfiguration.resx">
       <DependentUpon>201604211841321_wallconfiguration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604221337234_wallconfig-active.resx">
+      <DependentUpon>201604221337234_wallconfig-active.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

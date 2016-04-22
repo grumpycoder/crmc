@@ -74,6 +74,7 @@
     <Compile Include="AnimationEventArgs.cs" />
     <Compile Include="DisplayElement.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
+    <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="ViewModels\PriorityDisplayLane.cs" />
     <Compile Include="ViewModels\KioskDisplayLane.cs" />
     <Compile Include="ViewModels\IDisplayLane.cs" />

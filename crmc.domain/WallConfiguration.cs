@@ -17,7 +17,7 @@
         public double FallAnimationDurationTimeModifier { get; set; }
 
         public virtual ConfigurationMode ConfigurationMode { get; set; }
-        public bool IsCurrent { get; set; }
+        public bool Active { get; set; }
     }
 
     public enum ConfigurationMode
