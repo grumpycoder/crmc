@@ -4,9 +4,9 @@
 (function () {
     var controllerId = 'CensorController';
 
-    angular.module('app.censors').controller(controllerId, ['$log', MainController]);
+    angular.module('app.censors').controller(controllerId, ['$log', mainController]);
 
-    function MainController(log) {
+    function mainController(log) {
         var vm = this;
 
         log.info('Censor Controller');

@@ -178,6 +178,8 @@
     <Content Include="app\censors\censors.module.js" />
     <Content Include="app\censors\manager.js" />
     <Content Include="app\core\core.module.js" />
+    <Content Include="app\services\censor.service.js" />
+    <Content Include="app\services\service.module.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
