@@ -18,6 +18,7 @@ using wot.ViewModels;
 
 namespace wot
 {
+    //TODO: Need logging!!!
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -197,6 +198,7 @@ namespace wot
         {
             Console.WriteLine($"Wall Configuration changed.");
             Configuration = config;
+            AudioManager.ChangeVolume(config.Volume);
         }
 
         #region Initializations
@@ -227,6 +229,7 @@ namespace wot
         {
             if (!Directory.GetFiles(AudioFilePath).Any(f => f.EndsWith(".mp3"))) return;
             AudioManager = new AudioManager(MediaPlayer, @Properties.Settings.Default.AudioFilePath);
+            AudioManager.ChangeVolume(Configuration.Volume);
             AudioManager.Play();
         }
 
