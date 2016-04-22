@@ -42,19 +42,6 @@ namespace wot
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Configuration = new WallConfiguration()
-            {
-                KioskDisplayRecycleCount = 3,
-                GeneralRotationDelay = 0.15,
-                PriorityRotationDelay = 5,
-                MinFontSize = 10,
-                MaxFontSize = 20,
-                KioskEntryTopMargin = 200,
-                GrowAnimationDuration = 3,
-                ShrinkAnimationDuration = 3,
-                FallAnimationDurationTimeModifier = 25,
-                ScreenBottomMargin = 600
-            };
             await InitConfiguration();
             await InitDisplay();
             await InitAudioSettings();

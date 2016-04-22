@@ -23,7 +23,7 @@ namespace wot
         public double YAxis { get; set; }
         public double TotalTime { get; set; }
         private double _currentTime;
-        private WallConfiguration _configuration;
+        private readonly WallConfiguration _configuration;
 
         private readonly List<Color> _fontColors = new List<Color>
         {
@@ -84,14 +84,10 @@ namespace wot
 
             label.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
             label.Arrange(new Rect(label.DesiredSize));
-            Console.WriteLine($"lane: {Lane.LaneWidth} - lable: {label.ActualWidth}");
-            if (Lane.GetType() == typeof(KioskDisplayLane))
-            {
-                if (label.ActualWidth > Lane.LaneWidth)
-                {
-                    Console.WriteLine($"Label to large {Person}");
-                }
-            }
+            if (Lane.GetType() != typeof(KioskDisplayLane)) return label;
+            if (!(label.ActualWidth > Lane.LaneWidth)) return label;
+
+            Console.WriteLine($"Label to large {Person}");
             return label;
         }
 

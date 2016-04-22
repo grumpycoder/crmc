@@ -21,7 +21,21 @@ namespace wot.Services
 
         public async Task<WallConfiguration> GetConfigurationAsync(ConfigurationMode mode)
         {
-            WallConfiguration config = new WallConfiguration();
+            // Creating default settings in case failure to retrieve
+            WallConfiguration config = new WallConfiguration()
+            {
+                KioskDisplayRecycleCount = 3,
+                GeneralRotationDelay = 0.15,
+                PriorityRotationDelay = 5,
+                MinFontSize = 10,
+                MaxFontSize = 20,
+                KioskEntryTopMargin = 200,
+                GrowAnimationDuration = 3,
+                ShrinkAnimationDuration = 3,
+                FallAnimationDurationTimeModifier = 25,
+                ScreenBottomMargin = 600
+            };
+
             using (var client = new HttpClient())
             {
                 var startTime = DateTime.Now;
@@ -39,6 +53,7 @@ namespace wot.Services
                 else
                 {
                     //TODO: Log response error
+                    Console.WriteLine($"Failed to retrieve configuration settings from server. Using default settings.");
                     //Log.Error("Error downloading from person repository");
                     //Log.Error("Error: {0}", response.StatusCode);
                 }
