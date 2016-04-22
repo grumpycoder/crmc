@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None"
        Closed="MainWindow_OnClosed">
+
     <Canvas x:Name="WallCanvas" Background="Black" DockPanel.Dock="Bottom">
+        <MediaElement x:Name="MediaPlayer" MediaEnded="MediaElement_MediaEnded" LoadedBehavior="Manual" />
     </Canvas>
 </Window>

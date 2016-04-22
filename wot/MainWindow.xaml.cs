@@ -30,6 +30,7 @@ namespace wot
         private int _currentCount;
         private Canvas _canvas;
         public WallConfiguration Configuration;
+        public AudioManager AudioManager;
         private static readonly string AudioFilePath = @Properties.Settings.Default.AudioFilePath;
         public List<IDisplayLane> Lanes = new List<IDisplayLane>();
         public CancellationToken CancelToken = new CancellationToken();
@@ -225,7 +226,8 @@ namespace wot
         private async Task InitAudioSettings()
         {
             if (!Directory.GetFiles(AudioFilePath).Any(f => f.EndsWith(".mp3"))) return;
-            //TODO: Audio Init
+            AudioManager = new AudioManager(MediaPlayer, @Properties.Settings.Default.AudioFilePath);
+            AudioManager.Play();
         }
 
         protected async Task InitDisplay()
@@ -244,6 +246,10 @@ namespace wot
         #endregion Initializations
 
         #region Events
+
+        private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        {
+        }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
         {

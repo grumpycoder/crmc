@@ -72,6 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AnimationEventArgs.cs" />
+    <Compile Include="Services\MediaManager.cs" />
     <Compile Include="ViewModels\DisplayElement.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="ViewModels\KioskDisplayLane.cs" />
     <Compile Include="ViewModels\IDisplayLane.cs" />
     <Compile Include="ViewModels\PersonViewModel.cs" />
+    <Compile Include="ViewModels\Song.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
