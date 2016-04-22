@@ -10,19 +10,33 @@
         var vm = this;
 
         vm.censors = [];
+        vm.searchTerm = '';
+        vm.search = search;
 
         activate();
 
         function activate() {
             log.info('Censor Controller');
-            loadCensors();
+            search();
         }
 
-        function loadCensors() {
-            vm.censors = [
-                { word: 'Name1' },
-                { word: 'Name2' }
-            ];
+        //function getCensors() {
+        //    service.query(vm.searchTerm)
+        //        .then(function (data) {
+        //            vm.censors = data;
+        //        });
+        //    //vm.censors = [
+        //    //    { word: 'Name1' },
+        //    //    { word: 'Name2' }
+        //    //];
+        //}
+
+        function search() {
+            log.info(vm.searchTerm);
+            service.query(vm.searchTerm).then(function (data) {
+                vm.censors = data;
+            });
+            log.info(vm.censorName);
         }
     }
 })()

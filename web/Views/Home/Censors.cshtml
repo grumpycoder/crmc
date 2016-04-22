@@ -3,7 +3,8 @@
 }
 <div ng-controller="CensorController as vm">
     <h2>Censors</h2>
-
+    <input type="text" ng-model="vm.searchTerm" />
+    <button class="btn btn-success" ng-click="vm.search()">Search</button>
     <ul>
         <li ng-repeat="censor in vm.censors">
             <span>{{censor.word}}</span>
