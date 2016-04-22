@@ -7,11 +7,13 @@
 
     function serviceController(log, $http) {
         log.info('loaded ' + serviceId);
-        var url = 'http://localhost:11277/api/censor';
+        var url = 'http://localhost:11277/api/censor/';
 
         var service = {
             get: get,
-            query: query
+            query: query,
+            update: update,
+            remove: remove
         }
 
         return service;
@@ -24,10 +26,22 @@
         }
 
         function query(searchTerm) {
-            log.info('searchTerm: ' + searchTerm);
             return $http.get(url + '?search=' + searchTerm)
                 .then(function (response) {
-                    log.info(response);
+                    return response.data;
+                });
+        }
+
+        function update(censor) {
+            return $http.put(url, censor)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
+
+        function remove(id) {
+            return $http.delete(url + id)
+                .then(function (response) {
                     return response.data;
                 });
         }

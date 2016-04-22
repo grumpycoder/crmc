@@ -5,9 +5,17 @@
     <h2>Censors</h2>
     <input type="text" ng-model="vm.searchTerm" />
     <button class="btn btn-success" ng-click="vm.search()">Search</button>
-    <ul>
-        <li ng-repeat="censor in vm.censors">
-            <span>{{censor.word}}</span>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="censor in vm.censors">
+
+            <span ng-hide="vm.currentEdit[censor.id]">{{censor.word}}</span>
+            <input type="text" ng-model="censor.word" ng-show="vm.currentEdit[censor.id]" />
+
+            <button class="btn" ng-hide="vm.currentEdit[censor.id]" ng-click="vm.editItem(censor)">Edit</button>
+            <button class="btn" ng-hide="vm.currentEdit[censor.id]" ng-click="vm.deleteItem(censor)">Delete</button>
+
+            <button class="btn btn-success" ng-show="vm.currentEdit[censor.id]" ng-click="vm.saveItem(censor)">Save</button>
+            <button class="btn btn-danger" ng-show="vm.currentEdit[censor.id]" ng-click="vm.cancelEdit(censor.id)">Cancel</button>
         </li>
     </ul>
 </div>
