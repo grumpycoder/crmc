@@ -1,0 +1,40 @@
+{
+  "authors": [
+    "dev@tdg5.com"
+  ],
+  "description": "Font-Awesome bower component with reduced footprint",
+  "devDependencies": {
+    "fontawesome": "~4.5.0"
+  },
+  "homepage": "https://github.com/tdg5/font-awesome-bower",
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ],
+  "keywords": [
+    "fontawesome",
+    "Font-Awesome"
+  ],
+  "license": "MIT",
+  "main": [
+    "css/font-awesome.css",
+    "fonts/FontAwesome.otf",
+    "fonts/fontawesome-webfont.eot",
+    "fonts/fontawesome-webfont.svg",
+    "fonts/fontawesome-webfont.ttf",
+    "fonts/fontawesome-webfont.woff",
+    "fonts/fontawesome-webfont.woff2"
+  ],
+  "name": "font-awesome-bower",
+  "version": "4.5.0",
+  "_release": "4.5.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "4.5.0",
+    "commit": "b58e42df3e80a8031c0d76d5acc557b4b7f4eb48"
+  },
+  "_source": "https://github.com/interval-braining/font-awesome-bower.git",
+  "_target": "~4.5.0",
+  "_originalSource": "font-awesome-bower",
+  "_direct": true
+}
