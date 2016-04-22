@@ -6,9 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using wot.Extensions;
-using wot.ViewModels;
 
-namespace wot
+namespace wot.ViewModels
 {
     public class DisplayElement
     {

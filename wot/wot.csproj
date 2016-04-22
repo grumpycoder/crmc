@@ -72,7 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AnimationEventArgs.cs" />
-    <Compile Include="DisplayElement.cs" />
+    <Compile Include="ViewModels\DisplayElement.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="ViewModels\PriorityDisplayLane.cs" />
