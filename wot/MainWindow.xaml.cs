@@ -204,7 +204,7 @@ namespace wot
 
         private async Task InitConnectionManager()
         {
-            var connection = new HubConnection("http://localhost:11277/signalr"); //TODO: signalr connection from app settings
+            var connection = new HubConnection($"{WebServerUrl}signalr");
             Hub = connection.CreateHubProxy("wot");
 
             connection.Start().ContinueWith(task =>
