@@ -12,5 +12,10 @@ namespace web.Hubs
         {
             return Clients.All.addName(kiosk, person);
         }
+
+        public Task ConfigurationChange(WallConfiguration config)
+        {
+            return Clients.All.configurationChange(config);
+        }
     }
 }

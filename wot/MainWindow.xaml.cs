@@ -192,6 +192,12 @@ namespace wot
             lane.People.Add(pvm);
         }
 
+        private void ConfigurationChange(WallConfiguration config)
+        {
+            Console.WriteLine($"Wall Configuration changed.");
+            Configuration = config;
+        }
+
         #region Initializations
 
         private async Task InitConnectionManager()
@@ -213,6 +219,7 @@ namespace wot
             }).Wait(CancelToken);
 
             Hub.On<string, Person>("addName", (kiosk, person) => Dispatcher.Invoke(() => KioskEntry(kiosk, person)));
+            Hub.On<WallConfiguration>("configurationChange", (config) => Dispatcher.Invoke(() => ConfigurationChange(config)));
         }
 
         private async Task InitAudioSettings()

@@ -16,10 +16,56 @@ namespace TestHarness
             var context = new DataContext();
 
             //NameTest();
-            HubTest();
+            //HubTest();
+            //ConfigurationTest();
 
             Console.WriteLine("Finished");
             Console.ReadLine();
+        }
+
+        private static void ConfigurationTest()
+        {
+            var connection = new HubConnection("http://localhost:11277/signalr");
+            var hub = connection.CreateHubProxy("wot");
+            connection.Start().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Console.WriteLine("There was an error opening the connection:{0}",
+                                      task.Exception.GetBaseException());
+                }
+                else
+                {
+                    Console.WriteLine("Connected");
+                }
+            }).Wait();
+
+            WallConfiguration config = new WallConfiguration()
+            {
+                KioskDisplayRecycleCount = 3,
+                GeneralRotationDelay = 0.15,
+                PriorityRotationDelay = 5,
+                MinFontSize = 10,
+                MaxFontSize = 20,
+                KioskEntryTopMargin = 200,
+                GrowAnimationDuration = 3,
+                ShrinkAnimationDuration = 3,
+                FallAnimationDurationTimeModifier = 25,
+                ScreenBottomMargin = 600
+            };
+
+            hub.Invoke("configurationChange", config).ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Console.WriteLine("There was an error calling send: {0}",
+                        task.Exception.GetBaseException());
+                }
+                else
+                {
+                    Console.WriteLine("changed config");
+                }
+            });
         }
 
         private static void HubTest()
