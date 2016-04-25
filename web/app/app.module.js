@@ -6,8 +6,10 @@
         //application modules
         'app.core',
         'app.service',
+        'app.filter',
 
         //features
-        'app.censors'
+        'app.censors',
+        'app.people'
     ]);
 })()

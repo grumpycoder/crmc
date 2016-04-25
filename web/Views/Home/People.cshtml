@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "People";
+}
+<div ng-controller="PeopleController as vm">
+    <h2>{{vm.title}}</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Email</td>
+                <td>Zipcode</td>
+                <td>Donor</td>
+                <td>Priority</td>
+                <td>Entry</td>
+                <td>Match</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="person in vm.people">
+                <td>{{person.firstname}}</td>
+                <td>{{person.lastname}}</td>
+                <td>{{person.emailAddress}}</td>
+                <td>{{person.zipcode}}</td>
+                <td>{{person.isDonor ? 'Yes' : 'No'}}</td>
+                <td>{{person.isPriority ? 'Yes' : 'No'}}</td>
+                <td>{{person.dateCreated | date: 'MM/dd/yyyy'}}</td>
+                <td>{{person.fuzzyMatchValue | percentage:1}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

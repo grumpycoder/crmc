@@ -1,0 +1,18 @@
+/*#region Override background color theme */
+/*For Bootstrap 3*/
+body {
+    /*    font-size: 13px;
+    line-height: 23px;
+    color: #666;
+    background: #111;*/
+    margin-top: 50px;
+    -webkit-font-smoothing: antialiased;
+}
+
+[ng-click], a {
+    cursor: pointer;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}

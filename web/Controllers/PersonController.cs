@@ -1,6 +1,11 @@
 ﻿using crmc.data;
+using crmc.domain;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using web.Helpers;
+using web.ViewModels;
 
 namespace web.Controllers
 {
@@ -26,6 +31,55 @@ namespace web.Controllers
         {
             var list = context.Persons.Where(x => x.IsPriority == priority).OrderBy(x => x.SortOrder).Skip(skip).Take(take).ToList();
             return Ok(list);
+        }
+
+        [HttpPost, Route("Search")]
+        public IHttpActionResult Search(PeopleSearchViewModel vm)
+        {
+            var page = vm.Page.GetValueOrDefault(0);
+            var pageSize = vm.PageSize.GetValueOrDefault(10);
+            var skipRows = (page - 1) * pageSize;
+
+            var pred = PredicateBuilder.True<Person>();
+            if (vm.IsDonor != null) pred = pred.And(p => p.IsDonor == vm.IsDonor);
+            if (vm.IsPriority != null) pred = pred.And(p => p.IsPriority == vm.IsPriority);
+            if (vm.FuzzyMatchValue != null) pred = pred.And(p => p.FuzzyMatchValue == vm.FuzzyMatchValue);
+            if (!string.IsNullOrWhiteSpace(vm.AccountId)) pred = pred.And(p => p.AccountId.Contains(vm.AccountId));
+            if (!string.IsNullOrWhiteSpace(vm.Firstname)) pred = pred.And(p => p.Firstname.Contains(vm.Firstname));
+            if (!string.IsNullOrWhiteSpace(vm.Lastname)) pred = pred.And(p => p.Lastname.Contains(vm.Lastname));
+            if (!string.IsNullOrWhiteSpace(vm.EmailAddress)) pred = pred.And(p => p.EmailAddress.Contains(vm.EmailAddress));
+            if (!string.IsNullOrWhiteSpace(vm.Zipcode)) pred = pred.And(p => p.Zipcode.StartsWith(vm.Zipcode));
+
+            List<Person> list;
+            if (vm.AllRecords)
+            {
+                list = context.Persons.AsQueryable()
+                    .Where(pred)
+                    .OrderBy(x => x.Id)
+                    .ToList();
+            }
+            else
+            {
+                list = context.Persons.AsQueryable()
+                             .Where(pred)
+                             .OrderBy(x => x.Id)
+                             .Skip(skipRows)
+                             .Take(pageSize)
+                             .ToList();
+            }
+
+            var totalCount = context.Persons.Count();
+            var filterCount = context.Persons.Where(pred).Count();
+            var totalPages = (int)Math.Ceiling((decimal)filterCount / pageSize);
+
+            vm.TotalCount = totalCount;
+            vm.FilteredCount = filterCount;
+            vm.TotalPages = totalPages;
+
+            //var list = context.Persons.OrderBy(x => x.SortOrder).Skip(10).Take(10).ToList();
+
+            vm.Items = list;
+            return Ok(vm);
         }
 
         [HttpGet, Route("Distinct")]
