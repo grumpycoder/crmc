@@ -26,10 +26,7 @@
         }
 
         function query(search) {
-            //return $http.get(url + search)
-            //    .then(function (response) {
-            //        return response.data;
-            //    });
+            log.info(search);
             return $http.post(url + 'search', search)
                 .then(function (response) {
                     return response.data;

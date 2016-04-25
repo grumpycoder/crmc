@@ -11,12 +11,13 @@
         vm.title = "People";
 
         vm.people = [];
+        vm.paged = paged;
         vm.search = search;
         vm.searchTerm = '';
 
         vm.searchModel = {
             page: 1,
-            pageSize: 10
+            pageSize: 15
         };
         var tableStateRef;
 
@@ -24,15 +25,13 @@
 
         function activate() {
             //search();
+            //tableState.sort.predicate = undefined;
         }
-
-        vm.searchModel = {}
 
         function search(tableState) {
             tableStateRef = tableState;
-            log.info(tableState);
 
-            if (typeof (tableState.sort) != "undefined") {
+            if (typeof (tableState.sort.predicate) != "undefined") {
                 vm.searchModel.orderBy = tableState.sort.predicate;
                 vm.searchModel.orderDirection = tableState.sort.reverse ? 'desc' : 'asc';
             }
@@ -47,11 +46,16 @@
                 vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue;
             }
 
-            log.info('searchModel');
-            log.info(vm.searchModel);
             service.query(vm.searchModel).then(function (data) {
                 vm.people = data.items;
+                vm.searchModel = data;
+                //log.info(vm.searchModel);
             });
+        }
+
+        function paged(pageNum) {
+            log.info(pageNum);
+            search(tableStateRef);
         }
     }
 })()

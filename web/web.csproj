@@ -208,6 +208,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
+    <Content Include="lib\angular-bootstrap\ui-bootstrap-tpls.min.js" />
     <Content Include="lib\angular-smart-table\dist\smart-table.min.js" />
     <Content Include="lib\angular\angular.min.js" />
     <Content Include="lib\bootswatch-dist\css\bootstrap.min.css" />

@@ -8,7 +8,8 @@
         //custom modules
 
         //third party modules
-        'smart-table'
+        'smart-table',
+        'ui.bootstrap'
 
     ]);
 })()

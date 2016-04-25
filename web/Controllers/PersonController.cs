@@ -38,8 +38,7 @@ namespace web.Controllers
         {
             var page = vm.Page.GetValueOrDefault(0);
             var pageSize = vm.PageSize.GetValueOrDefault(10);
-            //var skipRows = (page - 1) * pageSize;
-            var skipRows = page * pageSize;
+            var skipRows = (page - 1) * pageSize;
 
             var pred = PredicateBuilder.True<Person>();
             if (vm.IsDonor != null) pred = pred.And(p => p.IsDonor == vm.IsDonor);
