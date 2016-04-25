@@ -16,3 +16,11 @@ body {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
+
+.st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}

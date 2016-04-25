@@ -5,6 +5,7 @@
     "jquery": "2.1.4",
     "font-awesome-bower": "~4.5.0",
     "bootswatch-dist": "united",
-    "angular": "1.4.6"
+    "angular": "1.4.6",
+    "angular-smart-table": "~2.1.8"
   }
 }

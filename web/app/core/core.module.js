@@ -8,6 +8,7 @@
         //custom modules
 
         //third party modules
+        'smart-table'
 
     ]);
 })()

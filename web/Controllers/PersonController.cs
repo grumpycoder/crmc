@@ -38,7 +38,8 @@ namespace web.Controllers
         {
             var page = vm.Page.GetValueOrDefault(0);
             var pageSize = vm.PageSize.GetValueOrDefault(10);
-            var skipRows = (page - 1) * pageSize;
+            //var skipRows = (page - 1) * pageSize;
+            var skipRows = page * pageSize;
 
             var pred = PredicateBuilder.True<Person>();
             if (vm.IsDonor != null) pred = pred.And(p => p.IsDonor == vm.IsDonor);
@@ -75,8 +76,6 @@ namespace web.Controllers
             vm.TotalCount = totalCount;
             vm.FilteredCount = filterCount;
             vm.TotalPages = totalPages;
-
-            //var list = context.Persons.OrderBy(x => x.SortOrder).Skip(10).Take(10).ToList();
 
             vm.Items = list;
             return Ok(vm);

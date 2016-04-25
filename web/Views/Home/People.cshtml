@@ -4,17 +4,29 @@
 <div ng-controller="PeopleController as vm">
     <h2>{{vm.title}}</h2>
 
-    <table class="table">
+    <button class="btn" ng-click="vm.search()">Search</button>
+    @*<table class="table table-bordered table-striped table-condensed">*@
+    <table st-table="vm.people" st-pipe="vm.search" class="table table-responsive table-bordered">
         <thead>
             <tr>
-                <td>First Name</td>
-                <td>Last Name</td>
-                <td>Email</td>
-                <td>Zipcode</td>
-                <td>Donor</td>
-                <td>Priority</td>
-                <td>Entry</td>
-                <td>Match</td>
+                <th st-sort="firstname">First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Zipcode</th>
+                <th>Donor</th>
+                <th>Priority</th>
+                <th>Entry</th>
+                <th>Match</th>
+            </tr>
+            <tr>
+                <td><input st-search="firstname" class="form-control" type="text" placeholder="First Name" /></td>
+                <td><input st-search="lastname" class="form-control" type="text" placeholder="Last Name" /></td>
+                <td><input st-search="emailAddress" class="form-control" type="text" placeholder="Email Address" /></td>
+                <td><input st-search="zipCode" class="form-control" type="text" placeholder="Zipcode" /></td>
+                <td><input st-search="isDonor" class="form-control" type="text" placeholder="Donor" /></td>
+                <td><input st-search="isPriority" class="form-control" type="text" placeholder="Priority" /></td>
+                <td><input st-search="dateCreated" class="form-control" type="text" placeholder="Date Created" /></td>
+                <td><input st-search="fuzzyMatchValue" class="form-control" type="text" placeholder="Fuzzy Match" /></td>
             </tr>
         </thead>
         <tbody>

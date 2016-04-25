@@ -15,19 +15,34 @@
         vm.searchTerm = '';
 
         vm.searchModel = {
-            lastname: 'wong',
-            page: 2
+            page: 1,
+            pageSize: 10
         };
+        var tableStateRef;
 
         activate();
 
         function activate() {
-            search();
+            //search();
         }
 
         vm.searchModel = {}
 
-        function search() {
+        function search(tableState) {
+            tableStateRef = tableState;
+            log.info(tableState);
+
+            if (typeof (tableState.search.predicateObject) != "undefined") {
+                vm.searchModel.firstname = tableState.search.predicateObject.firstname;
+                vm.searchModel.lastname = tableState.search.predicateObject.lastname;
+                vm.searchModel.zipcode = tableState.search.predicateObject.zipCode;
+                vm.searchModel.emailAddress = tableState.search.predicateObject.emailAddress;
+                vm.searchModel.isDonor = tableState.search.predicateObject.isDonor;
+                vm.searchModel.isPriority = tableState.search.predicateObject.isPriority;
+                vm.searchModel.dateCreated = tableState.search.predicateObject.dateCreated;
+                vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue;
+            }
+
             service.query(vm.searchModel).then(function (data) {
                 vm.people = data.items;
             });
