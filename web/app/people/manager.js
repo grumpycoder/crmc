@@ -32,6 +32,10 @@
             tableStateRef = tableState;
             log.info(tableState);
 
+            if (typeof (tableState.sort) != "undefined") {
+                vm.searchModel.orderBy = tableState.sort.predicate;
+                vm.searchModel.orderDirection = tableState.sort.reverse ? 'desc' : 'asc';
+            }
             if (typeof (tableState.search.predicateObject) != "undefined") {
                 vm.searchModel.firstname = tableState.search.predicateObject.firstname;
                 vm.searchModel.lastname = tableState.search.predicateObject.lastname;
@@ -43,6 +47,8 @@
                 vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue;
             }
 
+            log.info('searchModel');
+            log.info(vm.searchModel);
             service.query(vm.searchModel).then(function (data) {
                 vm.people = data.items;
             });

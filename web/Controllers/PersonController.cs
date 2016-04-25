@@ -61,14 +61,12 @@ namespace web.Controllers
             }
             else
             {
-                list = context.Persons.AsQueryable()
-                             .Where(pred)
-                             .OrderBy(x => x.Id)
-                             .Skip(skipRows)
-                             .Take(pageSize)
-                             .ToList();
+                list = context.Persons
+                    .OrderBy(x => x.DateCreated)
+                    .Where(pred)
+                    .Skip(skipRows)
+                    .Take(pageSize).ToList();
             }
-
             var totalCount = context.Persons.Count();
             var filterCount = context.Persons.Where(pred).Count();
             var totalPages = (int)Math.Ceiling((decimal)filterCount / pageSize);
