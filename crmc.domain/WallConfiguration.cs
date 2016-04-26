@@ -16,10 +16,13 @@
         public double ShrinkAnimationDuration { get; set; }
         public double FallAnimationDurationTimeModifier { get; set; }
 
+        //TODO: Remove Mode
         public virtual ConfigurationMode ConfigurationMode { get; set; }
+
         public bool Active { get; set; }
     }
 
+    //TODO: Remove Mode Enum
     public enum ConfigurationMode
     {
         Normal,

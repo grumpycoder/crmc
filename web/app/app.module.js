@@ -10,6 +10,7 @@
 
         //features
         'app.censors',
-        'app.people'
+        'app.people',
+        'app.settings'
     ]);
 })()
