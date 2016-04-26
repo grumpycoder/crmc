@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Settings";
+}
+
+<div ng-controller="SettingsController as vm">
+    <h2>Settings</h2>
+
+    <ul class="list-group">
+        <li class="list-group-item">
+            Volume:
+            @*{{vm.config.volume}}*@
+            <input type="text" ng-model="vm.config.volume" />
+        </li>
+        <li class="list-group-item">
+            fallAnimationDurationTimeModifier:
+            @*{{vm.config.fallAnimationDurationTimeModifier}}*@
+            <input type="text" ng-model="vm.config.fallAnimationDurationTimeModifier" />
+        </li>
+        <li class="list-group-item">
+            generalRotationDelay:
+            @*{{vm.config.generalRotationDelay}}*@
+            <input type="text" ng-model="vm.config.generalRotationDelay" />
+        </li>
+        <li class="list-group-item">
+            growAnimationDuration:
+            @*{{vm.config.growAnimationDuration}}*@
+            <input type="text" ng-model="vm.config.growAnimationDuration" />
+        </li>
+        <li class="list-group-item">
+            kioskDisplayRecycleCount:
+            @*{{vm.config.kioskDisplayRecycleCount}}*@
+            <input type="text" ng-model="vm.config.kioskDisplayRecycleCount" />
+        </li>
+        <li class="list-group-item">
+            kioskEntryTopMargin:
+            @*{{vm.config.kioskEntryTopMargin}}*@
+            <input type="text" ng-model="vm.config.kioskEntryTopMargin" />
+        </li>
+        <li class="list-group-item">
+            maxFontSize:
+            @*{{vm.config.maxFontSize}}*@
+            <input type="text" ng-model="vm.config.maxFontSize" />
+        </li>
+        <li class="list-group-item">
+            minFontSize:
+            @*{{vm.config.minFontSize}}*@
+            <input type="text" ng-model="vm.config.minFontSize" />
+        </li>
+        <li class="list-group-item">
+            priorityRotationDelay:
+            @*{{vm.config.priorityRotationDelay}}*@
+            <input type="text" ng-model="vm.config.priorityRotationDelay" />
+        </li>
+        <li class="list-group-item">
+            screenBottomMargin:
+            @*{{vm.config.screenBottomMargin}}*@
+            <input type="text" ng-model="vm.config.screenBottomMargin" />
+        </li>
+        <li class="list-group-item">
+            shrinkAnimationDuration:
+            @*{{vm.config.shrinkAnimationDuration}}*@
+            <input type="text" ng-model="vm.config.shrinkAnimationDuration" />
+        </li>
+    </ul>
+    <button class="btn btn-primary" ng-click="vm.save()">Save</button>
+</div>

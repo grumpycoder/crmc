@@ -10,13 +10,17 @@ namespace web.Controllers
             return View();
         }
 
-        [Route(Name = "censors", Order = 1)]
         public ActionResult Censors()
         {
             return View();
         }
 
         public ActionResult People()
+        {
+            return View();
+        }
+
+        public ActionResult Settings()
         {
             return View();
         }

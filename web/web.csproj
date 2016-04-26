@@ -181,6 +181,8 @@
     <Content Include="app\app.module.js" />
     <Content Include="app\censors\censors.module.js" />
     <Content Include="app\censors\manager.js" />
+    <Content Include="app\configuration\manager.js" />
+    <Content Include="app\configuration\settings.module.js" />
     <Content Include="app\core\core.module.js" />
     <Content Include="app\filters\app.filters.js" />
     <Content Include="app\filters\filter.module.js" />
@@ -188,6 +190,7 @@
     <Content Include="app\people\people.module.js" />
     <Content Include="app\people\views\person.html" />
     <Content Include="app\services\censor.service.js" />
+    <Content Include="app\services\configuration.service.js" />
     <Content Include="app\services\people.service.js" />
     <Content Include="app\services\service.module.js" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -209,25 +212,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
-    <Content Include="lib\angular-bootstrap\ui-bootstrap-tpls.min.js" />
-    <Content Include="lib\angular-smart-table\dist\smart-table.min.js" />
-    <Content Include="lib\angular\angular.min.js" />
-    <Content Include="lib\bootswatch-dist\css\bootstrap.min.css" />
-    <Content Include="lib\bootswatch-dist\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="lib\bootswatch-dist\js\bootstrap.min.js" />
-    <Content Include="lib\font-awesome-bower\fonts\fontawesome-webfont.eot" />
-    <Content Include="lib\font-awesome-bower\fonts\fontawesome-webfont.ttf" />
-    <Content Include="lib\font-awesome-bower\fonts\fontawesome-webfont.woff" />
-    <Content Include="lib\font-awesome-bower\fonts\fontawesome-webfont.woff2" />
-    <Content Include="lib\font-awesome-bower\fonts\FontAwesome.otf" />
-    <Content Include="lib\bootswatch-dist\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="lib\bootswatch-dist\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="lib\bootswatch-dist\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="lib\bootswatch-dist\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
-    <Content Include="lib\font-awesome-bower\css\font-awesome.css" />
-    <Content Include="lib\font-awesome-bower\fonts\fontawesome-webfont.svg" />
-    <Content Include="lib\jquery\dist\jquery.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
@@ -260,6 +245,7 @@
     <Content Include="Views\Shared\_MainHeaderNavbar.cshtml" />
     <Content Include="Views\Home\Censors.cshtml" />
     <Content Include="Views\Home\People.cshtml" />
+    <Content Include="Views\Home\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
