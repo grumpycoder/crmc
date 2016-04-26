@@ -10,6 +10,7 @@
         var vm = this;
         vm.title = "People";
 
+        vm.addItem = addItem;
         vm.editItem = editItem;
         vm.deleteItem = deleteItem;
 
@@ -27,6 +28,18 @@
         activate();
 
         function activate() {
+        }
+
+        function addItem() {
+            var item = {};
+            $modal.open({
+                templateUrl: '/app/people/views/person.html',
+                controller: ['$uibModalInstance', 'peopleService', 'item', EditPersonController],
+                controllerAs: 'vm',
+                resolve: {
+                    item: function () { return item; }
+                }
+            });
         }
 
         function editItem(item) {
