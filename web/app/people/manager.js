@@ -4,11 +4,14 @@
 (function () {
     var controllerId = 'PeopleController';
 
-    angular.module('app.people').controller(controllerId, ['$log', 'peopleService', mainController]);
+    angular.module('app.people').controller(controllerId, ['$log', 'peopleService', '$uibModal', mainController]);
 
-    function mainController(log, service) {
+    function mainController(log, service, $modal) {
         var vm = this;
         vm.title = "People";
+
+        vm.editItem = editItem;
+        vm.deleteItem = deleteItem;
 
         vm.people = [];
         vm.paged = paged;
@@ -24,8 +27,24 @@
         activate();
 
         function activate() {
-            //search();
-            //tableState.sort.predicate = undefined;
+        }
+
+        function editItem(item) {
+            $modal.open({
+                templateUrl: '/app/people/views/person.html',
+                controller: ['$uibModalInstance', 'peopleService', 'item', EditPersonController],
+                controllerAs: 'vm',
+                resolve: {
+                    item: function () { return item; }
+                }
+            });
+        }
+
+        function deleteItem(person) {
+            service.remove(person.id).then(function (data) {
+                var idx = vm.people.indexOf(person);
+                vm.people.splice(idx, 1);
+            });
         }
 
         function search(tableState) {
@@ -56,6 +75,27 @@
         function paged(pageNum) {
             log.info(pageNum);
             search(tableStateRef);
+        }
+    }
+
+    function EditPersonController($modal, service, item) {
+        var vm = this;
+
+        vm.item = angular.copy(item);
+
+        vm.close = close;
+        vm.save = save;
+
+        function close() {
+            $modal.close();
+        }
+
+        function save() {
+            service.update(vm.item).then(function () {
+                vm.item.updateStatus = 2;
+                angular.extend(item, vm.item);
+                $modal.close();
+            });
         }
     }
 })()

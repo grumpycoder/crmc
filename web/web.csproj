@@ -186,6 +186,7 @@
     <Content Include="app\filters\filter.module.js" />
     <Content Include="app\people\manager.js" />
     <Content Include="app\people\people.module.js" />
+    <Content Include="app\people\views\person.html" />
     <Content Include="app\services\censor.service.js" />
     <Content Include="app\services\people.service.js" />
     <Content Include="app\services\service.module.js" />

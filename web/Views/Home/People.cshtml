@@ -4,7 +4,7 @@
 <div ng-controller="PeopleController as vm">
     <h2>{{vm.title}}</h2>
 
-    <table st-table="vm.people" st-pipe="vm.search" class="table table-responsive table-bordered">
+    <table st-table="vm.people" st-pipe="vm.search" class="table table-responsive table-striped">
         <thead>
             <tr>
                 <th st-sort="firstname">First Name</th>
@@ -15,6 +15,8 @@
                 <th>Priority</th>
                 <th>Entry</th>
                 <th>Match</th>
+                <th></th>
+                <th></th>
             </tr>
             <tr>
                 <td><input st-search="firstname" class="form-control" type="text" placeholder="First Name" /></td>
@@ -25,6 +27,8 @@
                 <td><input st-search="isPriority" class="form-control" type="text" placeholder="Priority" /></td>
                 <td><input st-search="dateCreated" class="form-control" type="text" placeholder="Date Created" /></td>
                 <td><input st-search="fuzzyMatchValue" class="form-control" type="text" placeholder="Fuzzy Match" /></td>
+                <td></td>
+                <td></td>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +41,12 @@
                 <td>{{person.isPriority ? 'Yes' : 'No'}}</td>
                 <td>{{person.dateCreated | date: 'MM/dd/yyyy'}}</td>
                 <td>{{person.fuzzyMatchValue | percentage:1}}</td>
+                <td>
+                    <button class="btn btn-sm btn-success" ng-click="vm.editItem(person)"><i class="fa fa-edit"></i></button>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-danger" ng-click="vm.deleteItem(person)"><i class="fa fa-trash"></i></button>
+                </td>
             </tr>
         </tbody>
     </table>

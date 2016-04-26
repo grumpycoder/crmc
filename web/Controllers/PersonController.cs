@@ -2,6 +2,7 @@
 using crmc.domain;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Http;
 using web.Helpers;
@@ -98,6 +99,24 @@ namespace web.Controllers
         {
             var count = context.Persons.GroupBy(x => new { x.Lastname, x.Firstname }).Count();
             return Ok(count);
+        }
+
+        public IHttpActionResult Put(Person person)
+        {
+            context.Persons.AddOrUpdate(person);
+            context.SaveChanges();
+            return Ok(person);
+        }
+
+        public IHttpActionResult Delete(int id)
+        {
+            var person = context.Persons.Find(id);
+            if (person != null)
+            {
+                context.Persons.Remove(person);
+                context.SaveChanges();
+            }
+            return Ok("Deleted successfully");
         }
     }
 }
