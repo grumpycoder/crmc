@@ -1,4 +1,5 @@
 ﻿using crmc.domain;
+using System;
 
 namespace web.ViewModels
 {
@@ -12,5 +13,6 @@ namespace web.ViewModels
         public bool? IsDonor { get; set; }
         public bool? IsPriority { get; set; }
         public decimal? FuzzyMatchValue { get; set; }
+        public DateTime? DateCreated { get; set; }
     }
 }

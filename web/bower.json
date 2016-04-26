@@ -7,6 +7,8 @@
     "bootswatch-dist": "united",
     "angular": "1.4.6",
     "angular-smart-table": "~2.1.8",
-    "angular-bootstrap": ""
+    "angular-bootstrap": "",
+    "moment": "2.10.6",
+    "lodash": "3.10.1"
   }
 }

@@ -11,8 +11,11 @@
         vm.title = "People";
 
         vm.addItem = addItem;
-        vm.editItem = editItem;
         vm.deleteItem = deleteItem;
+        vm.editItem = editItem;
+        vm.quickFilter = quickFilter;
+        vm.isLocal = null;
+        vm.daysFilter = '0';
 
         vm.people = [];
         vm.paged = paged;
@@ -23,6 +26,7 @@
             page: 1,
             pageSize: 15
         };
+
         var tableStateRef;
 
         activate();
@@ -63,6 +67,22 @@
         function search(tableState) {
             tableStateRef = tableState;
 
+            if (vm.daysFilter !== '0') vm.searchModel.dateCreated = moment().subtract(parseInt(vm.daysFilter), 'days').format('MM/DD/YYYY');
+            if (vm.daysFilter === '0') vm.searchModel.dateCreated = null;
+
+            log.info(vm.highMatch);
+
+            if (vm.highMatch) vm.searchModel.fuzzyMatchValue = 0.8;
+
+            if (vm.medMatch) vm.searchModel.fuzzyMatchValue = 0.5;
+
+            if (!vm.highMatch && !vm.medMatch) vm.searchModel.fuzzyMatchValue = null;
+
+            if (vm.isLocal) vm.searchModel.isDonor = false;
+            if (!vm.isLocal) vm.searchModel.isDonor = null;
+
+            if (!vm.searchModel.isPriority) vm.searchModel.isPriority = null;
+
             if (typeof (tableState.sort.predicate) != "undefined") {
                 vm.searchModel.orderBy = tableState.sort.predicate;
                 vm.searchModel.orderDirection = tableState.sort.reverse ? 'desc' : 'asc';
@@ -81,12 +101,14 @@
             service.query(vm.searchModel).then(function (data) {
                 vm.people = data.items;
                 vm.searchModel = data;
-                //log.info(vm.searchModel);
             });
         }
 
         function paged(pageNum) {
-            log.info(pageNum);
+            search(tableStateRef);
+        }
+
+        function quickFilter() {
             search(tableStateRef);
         }
     }
