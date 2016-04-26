@@ -2,6 +2,7 @@
 
 namespace web.Controllers
 {
+    [RoutePrefix("~/")]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -9,6 +10,7 @@ namespace web.Controllers
             return View();
         }
 
+        [Route(Name = "censors", Order = 1)]
         public ActionResult Censors()
         {
             return View();
