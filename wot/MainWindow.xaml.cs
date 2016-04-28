@@ -199,7 +199,10 @@ namespace wot
         {
             Console.WriteLine($"Wall Configuration changed.");
             Configuration = config;
-            AudioManager.ChangeVolume(config.Volume);
+            Dispatcher.InvokeAsync(() =>
+            {
+                AudioManager.ChangeVolume(Configuration.Volume);
+            });
         }
 
         #region Initializations
