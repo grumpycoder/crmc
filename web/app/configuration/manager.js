@@ -10,6 +10,7 @@
         var vm = this;
 
         vm.config = {};
+        var hub = $.connection.wot;
         vm.save = save;
 
         activate();
@@ -26,6 +27,9 @@
 
         function activate() {
             log.info('settings controller active');
+            $.connection.hub.start().done(function () {
+                log.info('hub connection successful');
+            });
             getSettings();
         }
 
@@ -42,6 +46,7 @@
                     vm.config = data;
                     log.info('save configuration');
                     log.info(vm.config);
+                    hub.server.configurationChange(vm.config);
                 });
         }
     }
