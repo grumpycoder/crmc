@@ -40,6 +40,8 @@
             service.update(vm.config)
                 .then(function (data) {
                     vm.config = data;
+                    log.info('save configuration');
+                    log.info(vm.config);
                 });
         }
     }
