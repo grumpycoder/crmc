@@ -37,5 +37,19 @@ namespace web.Controllers
             context.SaveChanges();
             return Ok(config);
         }
+
+        [HttpGet]
+        public IHttpActionResult Get()
+        {
+            var list = context.WallConfigurations.FirstOrDefault();
+            return Ok(list);
+        }
+
+        public IHttpActionResult Put(WallConfiguration config)
+        {
+            context.WallConfigurations.AddOrUpdate(config);
+            context.SaveChanges();
+            return Ok(config);
+        }
     }
 }
