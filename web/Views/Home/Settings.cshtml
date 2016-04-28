@@ -1,66 +1,71 @@
 ﻿@{
     ViewBag.Title = "Settings";
 }
+@*<style>
+        .vertical-slider {
+            margin-top: 10px;
+        }
 
+            .vertical-slider .slider.slider-vertical {
+                width: 100%;
+            }
+    </style>*@
 <div ng-controller="SettingsController as vm">
     <h2>Settings</h2>
 
     <ul class="list-group">
         <li class="list-group-item">
-            Volume:
-            @*{{vm.config.volume}}*@
-            <input type="text" ng-model="vm.config.volume" />
+            <label class="control-lable">Volume</label>
+            <rzslider rz-slider-model="vm.config.volume"
+                      rz-slider-options="{floor: 0, ceil: 100}"></rzslider>
         </li>
         <li class="list-group-item">
-            fallAnimationDurationTimeModifier:
-            @*{{vm.config.fallAnimationDurationTimeModifier}}*@
-            <input type="text" ng-model="vm.config.fallAnimationDurationTimeModifier" />
+            <label class="control-lable">Min Max FontSize</label>
+            <rzslider rz-slider-model="vm.config.minFontSize"
+                      rz-slider-high="vm.config.maxFontSize"
+                      rz-slider-options="{floor: 1, ceil: 40}"></rzslider>
         </li>
         <li class="list-group-item">
-            generalRotationDelay:
-            @*{{vm.config.generalRotationDelay}}*@
-            <input type="text" ng-model="vm.config.generalRotationDelay" />
+            <label class="control-lable">kioskEntryTopMargin</label>
+            <rzslider rz-slider-model="vm.config.kioskEntryTopMargin"
+                      rz-slider-options="{floor: 0, ceil: 1000}"></rzslider>
         </li>
         <li class="list-group-item">
-            growAnimationDuration:
-            @*{{vm.config.growAnimationDuration}}*@
-            <input type="text" ng-model="vm.config.growAnimationDuration" />
+            <label class="control-lable">screenBottomMargin</label>
+            <rzslider rz-slider-model="vm.config.screenBottomMargin"
+                      rz-slider-options="{floor: 0, ceil: 100}"></rzslider>
         </li>
         <li class="list-group-item">
-            kioskDisplayRecycleCount:
-            @*{{vm.config.kioskDisplayRecycleCount}}*@
-            <input type="text" ng-model="vm.config.kioskDisplayRecycleCount" />
+            <label class="control-lable">generalRotationDelay</label>
+            <rzslider rz-slider-model="vm.config.generalRotationDelay"
+                      rz-slider-options="{floor:0.0, ceil:10.0, step:0.01, precision:2}"></rzslider>
         </li>
         <li class="list-group-item">
-            kioskEntryTopMargin:
-            @*{{vm.config.kioskEntryTopMargin}}*@
-            <input type="text" ng-model="vm.config.kioskEntryTopMargin" />
+            <label class="control-lable">priorityRotationDelay</label>
+            <rzslider rz-slider-model="vm.config.priorityRotationDelay"
+                      rz-slider-options="{floor:0.0, ceil:10.0, step:0.1, precision:1}"></rzslider>
         </li>
         <li class="list-group-item">
-            maxFontSize:
-            @*{{vm.config.maxFontSize}}*@
-            <input type="text" ng-model="vm.config.maxFontSize" />
+            <label class="control-lable">kioskDisplayRecycleCount</label>
+            <rzslider rz-slider-model="vm.config.kioskDisplayRecycleCount"
+                      rz-slider-options="{floor: 0, ceil: 10}"></rzslider>
         </li>
         <li class="list-group-item">
-            minFontSize:
-            @*{{vm.config.minFontSize}}*@
-            <input type="text" ng-model="vm.config.minFontSize" />
+            <label class="control-lable">growAnimationDuration</label>
+            <rzslider rz-slider-model="vm.config.growAnimationDuration"
+                      rz-slider-options="{floor: 0, ceil: 20}"></rzslider>
         </li>
         <li class="list-group-item">
-            priorityRotationDelay:
-            @*{{vm.config.priorityRotationDelay}}*@
-            <input type="text" ng-model="vm.config.priorityRotationDelay" />
+            <label class="control-lable">shrinkAnimationDuration</label>
+            <rzslider rz-slider-model="vm.config.shrinkAnimationDuration"
+                      rz-slider-options="{floor: 0, ceil: 20}"></rzslider>
         </li>
         <li class="list-group-item">
-            screenBottomMargin:
-            @*{{vm.config.screenBottomMargin}}*@
-            <input type="text" ng-model="vm.config.screenBottomMargin" />
-        </li>
-        <li class="list-group-item">
-            shrinkAnimationDuration:
-            @*{{vm.config.shrinkAnimationDuration}}*@
-            <input type="text" ng-model="vm.config.shrinkAnimationDuration" />
+            <label class="control-lable">fallAnimationDurationTimeModifier</label>
+            <rzslider rz-slider-model="vm.config.fallAnimationDurationTimeModifier"
+                      rz-slider-options="{floor: 0, ceil: 30}"></rzslider>
         </li>
     </ul>
+
     <button class="btn btn-primary" ng-click="vm.save()">Save</button>
 </div>
