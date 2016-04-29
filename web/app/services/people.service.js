@@ -13,7 +13,8 @@
             get: get,
             query: query,
             update: update,
-            remove: remove
+            remove: remove,
+            getCurrentStats: getCurrentStats
         }
 
         return service;
@@ -41,6 +42,13 @@
 
         function remove(id) {
             return $http.delete(url + id)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
+
+        function getCurrentStats() {
+            return $http.get(url + 'stat')
                 .then(function (response) {
                     return response.data;
                 });

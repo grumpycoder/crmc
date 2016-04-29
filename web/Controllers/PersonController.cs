@@ -2,6 +2,7 @@
 using crmc.domain;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Http;
@@ -30,7 +31,7 @@ namespace web.Controllers
         [HttpGet]
         public IHttpActionResult Get(int take, int skip, bool priority)
         {
-            var list = context.Persons.Where(x => x.IsPriority == priority).OrderBy(x => x.SortOrder).Skip(skip).Take(take).ToList();
+            var list = context.Persons.Where(x => x.IsPriority == priority).OrderByDescending(x => x.DateCreated).Skip(skip).Take(take).ToList();
             return Ok(list);
         }
 
@@ -104,6 +105,10 @@ namespace web.Controllers
 
         public IHttpActionResult Put(Person person)
         {
+            if (person.Id == 0)
+            {
+                person.DateCreated = DateTime.Now;
+            }
             context.Persons.AddOrUpdate(person);
             context.SaveChanges();
             return Ok(person);
@@ -118,6 +123,22 @@ namespace web.Controllers
                 context.SaveChanges();
             }
             return Ok("Deleted successfully");
+        }
+
+        [HttpGet, Route("Stat")]
+        public IHttpActionResult Stat()
+        {
+            var totalCount = context.Persons.Count();
+            var todayCount = context.Persons.Count(x => x.DateCreated >= DbFunctions.TruncateTime(DateTime.Now));
+            var monthCount = context.Persons.Count(x => x.DateCreated.Month == DateTime.Now.Month);
+
+            var visitorStat = new VisitorStatViewModel()
+            {
+                TotalCount = totalCount,
+                TodayCount = todayCount,
+                MonthCount = monthCount
+            };
+            return Ok(visitorStat);
         }
     }
 }

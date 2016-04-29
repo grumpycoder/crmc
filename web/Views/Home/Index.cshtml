@@ -5,14 +5,66 @@
     <h2>{{vm.title}}</h2>
 
     <div class="row">
-        <div class="col-md-2">
-            <span>Visitors Today {{vm.visitsTodayCount}}</span>
+        <div class="col-md-12">
+
+            <ul class="today-datas">
+                <li class="bgreen">
+                    <a href="/people">
+                        <div class="pull-left">
+                            <i class="fa fa-group"></i>
+                        </div>
+                        <div class="datas-text pull-right">
+                            <span class="bold">{{vm.stat.todayCount}}</span> Visitors Today
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li class="bviolet">
+                    <a href="/people">
+                        <div class="pull-left">
+                            <i class="fa fa-group"></i>
+                        </div>
+                        <div class="datas-text pull-right">
+                            <span class="bold">{{vm.stat.monthCount}}</span> Visitors This Month
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li class="borange">
+                    <a href="/people">
+                        <div class="pull-left">
+                            <i class="fa fa-group"></i>
+                        </div>
+                        <div class="datas-text pull-right">
+                            <span class="bold">{{vm.stat.totalCount}}</span> Total Visitors
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <div class="col-md-2">
-            <span>Visitors This Month {{vm.visitsMonthCount}}</span>
-        </div>
-        <div class="col-md-2">
-            <span>Visitors Today {{vm.totalVisits}}</span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Zip Code</th>
+                        <th>Date Added</th>
+                        <th>Fuzzy Match</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="p in vm.people">
+                        <td style="text-align: left;">{{p.firstname}} {{p.lastname}}</td>
+                        <td>{{p.zipcode}}</td>
+                        <td>{{p.dateCreated | date: 'MM/dd/yyyy'}}</td>
+                        <td>{{p.fuzzyMatchValue | percentage:1}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
