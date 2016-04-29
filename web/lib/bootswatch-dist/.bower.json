@@ -43,13 +43,14 @@
     "Gruntfile.js",
     ".gitignore"
   ],
-  "_release": "d06f575fcd",
+  "_release": "b3faec2df3",
   "_resolution": {
     "type": "branch",
-    "branch": "united",
-    "commit": "d06f575fcdf4e16359e8d11d737e43b20e58b9c0"
+    "branch": "cosmo",
+    "commit": "b3faec2df3d77341e9d0173bb4e625b3d6acbb7a"
   },
   "_source": "https://github.com/dbtek/bootswatch-dist.git",
-  "_target": "united",
-  "_originalSource": "bootswatch-dist"
+  "_target": "cosmo",
+  "_originalSource": "bootswatch-dist",
+  "_direct": true
 }
