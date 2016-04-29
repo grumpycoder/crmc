@@ -187,6 +187,8 @@
     <Content Include="app\core\core.module.js" />
     <Content Include="app\filters\app.filters.js" />
     <Content Include="app\filters\filter.module.js" />
+    <Content Include="app\home\home.js" />
+    <Content Include="app\home\home.module.js" />
     <Content Include="app\people\manager.js" />
     <Content Include="app\people\people.module.js" />
     <Content Include="app\people\views\person.html" />

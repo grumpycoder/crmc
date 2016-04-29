@@ -9,6 +9,7 @@
         'app.filter',
 
         //features
+        'app.home',
         'app.censors',
         'app.people',
         'app.settings'
