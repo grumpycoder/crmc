@@ -8,22 +8,16 @@
 
     function mainController(log, $timeout, service) {
         var vm = this;
+        vm.title = 'Settings';
 
         vm.config = {};
         var hub = $.connection.wot;
+
+        vm.lastSaved = {};
         vm.save = save;
+        vm.undo = undo;
 
         activate();
-
-        vm.minRangeSlider = {
-            minValue: 10,
-            maxValue: 90,
-            options: {
-                floor: 0,
-                ceil: 100,
-                step: 1
-            }
-        };
 
         function activate() {
             log.info('settings controller active');
@@ -36,6 +30,7 @@
         function getSettings() {
             service.get().then(function (data) {
                 vm.config = data;
+                vm.lastSaved = angular.copy(vm.config);
                 log.info(vm.config);
             });
         }
@@ -48,6 +43,11 @@
                     log.info(vm.config);
                     hub.server.configurationChange(vm.config);
                 });
+        }
+
+        function undo() {
+            log.info(vm.lastSaved);
+            vm.config = vm.lastSaved;
         }
     }
 })()
