@@ -1,4 +1,5 @@
-﻿<div class="navbar navbar-default navbar-fixed-top">
+﻿@using web.Helpers
+<div class="navbar navbar-default navbar-fixed-top">
     <div class="container container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -13,9 +14,9 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Censor Words", "Censors", "Home")</li>
-                <li>@Html.ActionLink("People", "People", "Home")</li>
-                <li>@Html.ActionLink("Settings", "Settings", "Home")</li>
+                <li>@Html.IconActionLink("fa fa-ban", "Censors", "Censors", "Home")</li>
+                <li>@Html.IconActionLink("fa fa-users", "People", "People", "Home")</li>
+                <li>@Html.IconActionLink("fa fa-cog", "Settings", "Settings", "Home")</li>
             </ul>
         </div>
     </div>
