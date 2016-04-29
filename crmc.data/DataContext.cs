@@ -13,6 +13,11 @@ namespace crmc.data
             Database.Log = msg => Debug.WriteLine(msg);
         }
 
+        public static DataContext Create()
+        {
+            return new DataContext();
+        }
+
         public DbSet<Person> Persons { get; set; }
         public DbSet<WallConfiguration> WallConfigurations { get; set; }
         public DbSet<Censor> Censors { get; set; }
