@@ -12,6 +12,7 @@
         'app.home',
         'app.censors',
         'app.people',
-        'app.settings'
+        'app.settings',
+        'app.users'
     ]);
 })()

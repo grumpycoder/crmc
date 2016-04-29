@@ -222,6 +222,8 @@
     <Content Include="app\services\configuration.service.js" />
     <Content Include="app\services\people.service.js" />
     <Content Include="app\services\service.module.js" />
+    <Content Include="app\users\users.js" />
+    <Content Include="app\users\users.module.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -277,6 +279,7 @@
     <Content Include="Views\Home\People.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Home\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
