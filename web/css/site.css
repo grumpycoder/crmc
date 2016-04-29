@@ -28,3 +28,9 @@ body {
 .pagination {
     margin: 0;
 }
+
+* {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
