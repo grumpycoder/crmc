@@ -184,8 +184,11 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CensorController.cs" />
     <Compile Include="Controllers\ConfigurationController.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\VisitorStatViewModel.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Helpers\PredicateBuilder.cs" />
@@ -239,6 +242,7 @@
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
+    <Content Include="images\kioskbackground.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
@@ -272,6 +276,7 @@
     <Content Include="Views\Home\Censors.cshtml" />
     <Content Include="Views\Home\People.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

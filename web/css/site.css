@@ -1,10 +1,4 @@
-/*#region Override background color theme */
-/*For Bootstrap 3*/
 body {
-    /*    font-size: 13px;
-    line-height: 23px;
-    color: #666;
-    background: #111;*/
     margin-top: 60px;
     -webkit-font-smoothing: antialiased;
 }
@@ -29,11 +23,10 @@ body {
     margin: 0;
 }
 
-/** {
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
-    border-radius: 0 !important;
-}*/
+a, a:hover {
+    color: white;
+    text-decoration: none;
+}
 
 .page-title-subtle {
     color: white;

@@ -18,6 +18,25 @@
                 <li>@Html.IconActionLink("fa fa-users", "People", "People", "Home")</li>
                 <li>@Html.IconActionLink("fa fa-cog", "Settings", "Settings", "Home")</li>
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <span class="navbar-text">
+                            Welcome @(ViewData["FullName"])!
+                        </span>
+                        using (Html.BeginForm("LogOff", "Auth", FormMethod.Post, new { @class = "navbar-text", id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out"></i>&nbsp; <span>Logout</span></a>
+                        }
+                    }
+                    else
+                    {
+                        @Html.IconActionLink("fa fa-login", "Login", "Login", "Auth")
+                    }
+                </li>
+            </ul>
         </div>
     </div>
 </div>
