@@ -24,12 +24,12 @@
 
         function activate() {
             log.info('Censor Controller');
-            search();
         }
 
         function search() {
             service.query(vm.searchTerm).then(function (data) {
                 vm.censors = data;
+                log.info(vm.censors);
             });
         }
 
