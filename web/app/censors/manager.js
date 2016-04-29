@@ -8,6 +8,7 @@
 
     function mainController(log, service) {
         var vm = this;
+        vm.title = 'Censors';
 
         vm.editItem = editItem;
         vm.cancelEdit = cancelEdit;
