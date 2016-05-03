@@ -10,13 +10,22 @@
         var url = 'http://localhost:11277/api/users/';
 
         var service = {
+            availableRoles: availableRoles,
             create: create,
             get: get,
             query: query,
-            remove: remove
+            remove: remove,
+            update: update
         }
 
         return service;
+
+        function availableRoles() {
+            return $http.get(url + 'roles')
+                .then(function (response) {
+                    return response.data;
+                });
+        }
 
         function create(user) {
             //return $http.post(url, user)
@@ -41,6 +50,13 @@
 
         function query(searchTerm) {
             return $http.get(url + '?search=' + searchTerm)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
+
+        function update(user) {
+            return $http.post(url + 'update', user)
                 .then(function (response) {
                     return response.data;
                 });

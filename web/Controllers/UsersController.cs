@@ -8,10 +8,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.ModelBinding;
 using web.ViewModels;
 
 namespace web.Controllers
 {
+    [RoutePrefix("api/users")]
     public class UsersController : ApiController
     {
         private ApplicationUserManager _userManager;
@@ -89,6 +91,49 @@ namespace web.Controllers
             //return Ok(person);
         }
 
+        [HttpPost, Route("Update")]
+        public IHttpActionResult Put([FromBody]UserViewModel vm)
+        {
+            //TODO: Should use UserViewModel in place of ApplicationUser
+
+            return Ok(vm);
+
+            //ModelState.AddModelError("", "Failed to remove user roles");
+            //return BadRequest(ModelState);
+
+            //foreach (var role in existingUser.Roles.Except(vm.Roles))
+            //{
+            //}
+
+            //var currentRoles = await UserManager.GetRolesAsync(vm.Id);
+
+            ////Remove existing roles not assigned
+
+            ////Add missing roles
+
+            //var rolesNotExists = vm.Roles.Select(x => x.RoleId).Except(RoleManager.Roles.Select(x => x.Id)).ToArray();
+
+            //if (rolesNotExists.Any())
+            //{
+            //    ModelState.AddModelError("", string.Format("Roles '{0}' does not exixts in the system", string.Join(",", rolesNotExists)));
+            //    return BadRequest(ModelState);
+            //}
+
+            //IdentityResult removeResult = await UserManager.RemoveFromRolesAsync(vm.Id, currentRoles.ToArray());
+            //if (!removeResult.Succeeded)
+            //{
+            //    ModelState.AddModelError("", "Failed to remove user roles");
+            //    return BadRequest(ModelState);
+            //}
+
+            //IdentityResult addResult = await UserManager.AddToRolesAsync(vm.Id, rolesToAssign);
+            //if (!addResult.Succeeded)
+            //{
+            //    ModelState.AddModelError("", "Failed to add user roles");
+            //    return BadRequest(ModelState);
+            //}
+        }
+
         public async Task<IHttpActionResult> Delete(string id)
         {
             var user = await UserManager.FindByIdAsync(id);
@@ -101,8 +146,7 @@ namespace web.Controllers
         }
 
         [HttpGet]
-        [Route("api/roles")]
-        //public async Task<IHttpActionResult> Roles()
+        [Route("roles")]
         public IHttpActionResult Roles()
         {
             var roles = RoleManager.Roles.ToArray();

@@ -10,14 +10,16 @@
         vm.title = 'Users';
 
         vm.addItem = addItem;
+        vm.availableRoles = [];
         vm.cancelEdit = cancelEdit;
         vm.currentEdit = {};
         vm.deleteItem = deleteItem;
         vm.editItem = editItem;
+        vm.saveItem = saveItem;
         vm.search = search;
 
         vm.user = {
-            username: '',
+            userName: '',
             roles: ['user'],
             fullName: '',
             password: '1P@ssword'
@@ -29,10 +31,13 @@
 
         function activate() {
             log.info(controllerId + ' activated');
+            getAvailableRoles();
         }
 
         function addItem() {
-            vm.user.fullName = parseFullName(vm.user.username);
+            vm.user.fullName = parseFullName(vm.user.userName);
+            vm.user.emailAddress = vm.user.userName + '@splcenter.org';
+
             service.create(vm.user)
                 .then(function (data) {
                     vm.user = data;
@@ -55,6 +60,36 @@
         function editItem(user) {
             vm.currentEdit[user.id] = true;
             vm.itemToEdit = angular.copy(user);
+        }
+
+        function getAvailableRoles() {
+            service.availableRoles()
+                .then(function (data) {
+                    vm.availableRoles = data;
+                });
+        }
+
+        function saveItem(user) {
+            vm.currentEdit[user.id] = false;
+            //angular.extend(vm.itemToEdit, vm.user);
+            //angular.extend(vm.user, vm.itemToEdit);
+
+            log.info(vm.itemToEdit.roles);
+            var u = {};
+            angular.extend(u, vm.user);
+            u.id = vm.itemToEdit.id;
+            u.email = vm.itemToEdit.userName + '@splcenter.org';
+            u.userName = vm.itemToEdit.userName;
+            u.fullName = vm.itemToEdit.fullName;
+            //u.roles = vm.itemToEdit.roles;
+
+            
+            log.info(u);
+
+            service.update(u)
+                .then(function (data) {
+                    user = data;
+                });
         }
 
         function search(tableState) {
