@@ -1,18 +1,17 @@
 ﻿@using web.Helpers
-<div class="navbar navbar-default navbar-fixed-top">
-    <div class="container container-fluid">
+
+<nav class="navbar navbar-default" role="navigation">
+    <div>
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">
-                <i class="fa fa-home"></i>
-                <span>CRMC Admin</span>
-            </a>
+            <a class="navbar-brand" href="#">CRMC Admin</a>
         </div>
-        <div class="navbar-collapse collapse">
+        <div id="navbarCollapse" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li>@Html.IconActionLink("fa fa-ban", "Censors", "Censors", "Home")</li>
                 <li>@Html.IconActionLink("fa fa-users", "People", "People", "Home")</li>
@@ -40,4 +39,4 @@
             </ul>
         </div>
     </div>
-</div>
+</nav>
