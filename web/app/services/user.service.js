@@ -56,7 +56,7 @@
         }
 
         function update(user) {
-            return $http.post(url + 'update', user)
+            return $http.put(url, user)
                 .then(function (response) {
                     return response.data;
                 });

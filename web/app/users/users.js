@@ -71,24 +71,16 @@
 
         function saveItem(user) {
             vm.currentEdit[user.id] = false;
-            //angular.extend(vm.itemToEdit, vm.user);
-            //angular.extend(vm.user, vm.itemToEdit);
+            var roles = [];
 
-            log.info(vm.itemToEdit.roles);
-            var u = {};
-            angular.extend(u, vm.user);
-            u.id = vm.itemToEdit.id;
-            u.email = vm.itemToEdit.userName + '@splcenter.org';
-            u.userName = vm.itemToEdit.userName;
-            u.fullName = vm.itemToEdit.fullName;
-            //u.roles = vm.itemToEdit.roles;
+            _.forEach(user.roles, function (role) {
+                roles.push(role.name);
+            });
+            user.roles = roles;
 
-            
-            log.info(u);
-
-            service.update(u)
+            service.update(user)
                 .then(function (data) {
-                    user = data;
+                    angular.extend(user, data);
                 });
         }
 

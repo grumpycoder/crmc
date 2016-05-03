@@ -91,47 +91,38 @@ namespace web.Controllers
             //return Ok(person);
         }
 
-        [HttpPost, Route("Update")]
-        public IHttpActionResult Put([FromBody]UserViewModel vm)
+        public async Task<IHttpActionResult> Put([FromBody]UserViewModel vm)
         {
-            //TODO: Should use UserViewModel in place of ApplicationUser
+            //TODO: Automapper model to viewmodel
+            var user = await UserManager.FindByIdAsync(vm.Id);
+
+            var currentRoles = await UserManager.GetRolesAsync(vm.Id);
+            var rolesNotExists = vm.Roles.Except(RoleManager.Roles.Select(x => x.Name)).ToArray();
+
+            if (rolesNotExists.Any())
+            {
+                ModelState.AddModelError("", $"Roles '{string.Join(",", rolesNotExists)}' does not exixts in the system");
+                return BadRequest(ModelState);
+            }
+            var removeResult = await UserManager.RemoveFromRolesAsync(vm.Id, currentRoles.ToArray());
+
+            if (!removeResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to remove user roles");
+                return BadRequest(ModelState);
+            }
+            var addResult = await UserManager.AddToRolesAsync(vm.Id, vm.Roles);
+
+            if (!addResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to add user roles");
+                return BadRequest(ModelState);
+            }
+
+            user.FullName = vm.FullName;
+            await UserManager.UpdateAsync(user);
 
             return Ok(vm);
-
-            //ModelState.AddModelError("", "Failed to remove user roles");
-            //return BadRequest(ModelState);
-
-            //foreach (var role in existingUser.Roles.Except(vm.Roles))
-            //{
-            //}
-
-            //var currentRoles = await UserManager.GetRolesAsync(vm.Id);
-
-            ////Remove existing roles not assigned
-
-            ////Add missing roles
-
-            //var rolesNotExists = vm.Roles.Select(x => x.RoleId).Except(RoleManager.Roles.Select(x => x.Id)).ToArray();
-
-            //if (rolesNotExists.Any())
-            //{
-            //    ModelState.AddModelError("", string.Format("Roles '{0}' does not exixts in the system", string.Join(",", rolesNotExists)));
-            //    return BadRequest(ModelState);
-            //}
-
-            //IdentityResult removeResult = await UserManager.RemoveFromRolesAsync(vm.Id, currentRoles.ToArray());
-            //if (!removeResult.Succeeded)
-            //{
-            //    ModelState.AddModelError("", "Failed to remove user roles");
-            //    return BadRequest(ModelState);
-            //}
-
-            //IdentityResult addResult = await UserManager.AddToRolesAsync(vm.Id, rolesToAssign);
-            //if (!addResult.Succeeded)
-            //{
-            //    ModelState.AddModelError("", "Failed to add user roles");
-            //    return BadRequest(ModelState);
-            //}
         }
 
         public async Task<IHttpActionResult> Delete(string id)
