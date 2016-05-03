@@ -1,0 +1,131 @@
+﻿@model web.ViewModels.LoginViewModel
+@{ Layout = null;}
+@{ ViewBag.Title = "Login"; }
+
+<link href="~/lib/bootswatch-dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/lib/font-awesome-bower/css/font-awesome.css" rel="stylesheet" />
+<style>
+    body {
+        background-image: url('../../images/kioskbackground.png');
+        -ms-background-size: auto;
+        background-size: auto;
+        padding: 0;
+        margin-top: 300px;
+    }
+
+    .wrap {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+
+    p.form-title {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+        color: #FFFFFF;
+        margin-top: 5%;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+    }
+
+    form {
+        width: 250px;
+        margin: 0 auto;
+    }
+
+        form.login input[type="text"], form.login input[type="password"] {
+            width: 100%;
+            margin: 0;
+            padding: 5px 10px;
+            background: 0;
+            border: 0;
+            border-bottom: 1px solid #FFFFFF;
+            outline: 0;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: #FFFFFF;
+            outline: 0;
+        }
+
+        form.login input[type="submit"] {
+            width: 100%;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-top: 16px;
+            outline: 0;
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
+
+            form.login input[type="submit"]:hover {
+                -webkit-transition: background-color 0.5s ease;
+                -moz-transition: background-color 0.5s ease;
+                -ms-transition: background-color 0.5s ease;
+                -o-transition: background-color 0.5s ease;
+                transition: background-color 0.5s ease;
+            }
+
+        form.login .remember-forgot {
+            float: left;
+            width: 100%;
+            margin: 10px 0 0 0;
+        }
+
+        form.login .forgot-pass-content {
+            min-height: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        form.login label, form.login a {
+            font-size: 12px;
+            font-weight: 400;
+            color: #FFFFFF;
+        }
+
+        form.login a {
+            -webkit-transition: color 0.5s ease;
+            -moz-transition: color 0.5s ease;
+            -ms-transition: color 0.5s ease;
+            -o-transition: color 0.5s ease;
+            transition: color 0.5s ease;
+        }
+
+            form.login a:hover {
+                color: #2ecc71;
+            }
+
+    .field-validation-error, .validation-summary-errors {
+        color: red;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="wrap">
+            <p class="form-title">
+                Sign In
+            </p>
+            @using (Html.BeginForm("Login", "Auth", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.ValidationMessageFor(m => m.Username)
+                @Html.ValidationMessageFor(m => m.Password)
+                @Html.TextBoxFor(m => m.Username, new { @placeholder = "Username" })
+
+                @Html.PasswordFor(m => m.Password, new { @placeholder = "Password" })
+                <input type="submit" value="Sign In" class="btn btn-success btn-sm" />
+
+            }
+        </div>
+    </div>
+</div>

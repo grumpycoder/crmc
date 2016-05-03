@@ -9,7 +9,7 @@
 
         //third party modules
         'smart-table',
-        'ui.bootstrap'
-
+        'ui.bootstrap',
+        'rzModule'
     ]);
 })()

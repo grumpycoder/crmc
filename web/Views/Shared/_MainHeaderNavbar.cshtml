@@ -1,4 +1,5 @@
-﻿<div class="navbar navbar-default navbar-fixed-top">
+﻿@using web.Helpers
+<div class="navbar navbar-default navbar-fixed-top">
     <div class="container container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -13,8 +14,29 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Censor Words", "Censors", "Home")</li>
-                <li>@Html.ActionLink("People", "People", "Home")</li>
+                <li>@Html.IconActionLink("fa fa-ban", "Censors", "Censors", "Home")</li>
+                <li>@Html.IconActionLink("fa fa-users", "People", "People", "Home")</li>
+                <li>@Html.IconActionLink("fa fa-cog", "Settings", "Settings", "Home")</li>
+                <li>@Html.IconActionLink("fa fa-group", "Users", "Users", "Home")</li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <span class="navbar-text">
+                            Welcome @(ViewData["FullName"])!
+                        </span>
+                        using (Html.BeginForm("LogOff", "Auth", FormMethod.Post, new { @class = "navbar-text", id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out"></i>&nbsp; <span>Logout</span></a>
+                        }
+                    }
+                    else
+                    {
+                        @Html.IconActionLink("fa fa-login", "Login", "Login", "Auth")
+                    }
+                </li>
             </ul>
         </div>
     </div>

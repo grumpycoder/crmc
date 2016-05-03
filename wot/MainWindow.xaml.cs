@@ -59,6 +59,7 @@ namespace wot
             var service = new ConfigurationService(WebServerUrl);
 
             Configuration = await service.GetConfigurationAsync(ConfigurationMode.Normal);
+            //TODO: Check configuration bottom margin for exceeding height of canvas and make height of canvas
         }
 
         private async Task BeginRotaion()
@@ -198,7 +199,10 @@ namespace wot
         {
             Console.WriteLine($"Wall Configuration changed.");
             Configuration = config;
-            AudioManager.ChangeVolume(config.Volume);
+            Dispatcher.InvokeAsync(() =>
+            {
+                AudioManager.ChangeVolume(Configuration.Volume);
+            });
         }
 
         #region Initializations

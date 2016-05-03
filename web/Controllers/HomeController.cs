@@ -2,7 +2,8 @@
 
 namespace web.Controllers
 {
-    public class HomeController : Controller
+    [RoutePrefix("~/")]
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {
@@ -15,6 +16,16 @@ namespace web.Controllers
         }
 
         public ActionResult People()
+        {
+            return View();
+        }
+
+        public ActionResult Settings()
+        {
+            return View();
+        }
+
+        public ActionResult Users()
         {
             return View();
         }

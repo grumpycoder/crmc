@@ -120,7 +120,7 @@ namespace wot.Services
 
         public void ChangeVolume(double value)
         {
-            player.Volume = (double)value;
+            player.Volume = (double)value / 100;
         }
 
         public void RefreshPlaylist()

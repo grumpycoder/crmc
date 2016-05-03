@@ -9,7 +9,10 @@
         'app.filter',
 
         //features
+        'app.home',
         'app.censors',
-        'app.people'
+        'app.people',
+        'app.settings',
+        'app.users'
     ]);
 })()

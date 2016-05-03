@@ -4,9 +4,12 @@
   "dependencies": {
     "jquery": "2.1.4",
     "font-awesome-bower": "~4.5.0",
-    "bootswatch-dist": "united",
+    "bootswatch-dist": "cosmo",
     "angular": "1.4.6",
     "angular-smart-table": "~2.1.8",
-    "angular-bootstrap": ""
+    "angular-bootstrap": "",
+    "moment": "2.10.6",
+    "lodash": "3.10.1",
+    "angularjs-slider": "~2.13.0"
   }
 }
