@@ -23,6 +23,7 @@
                         <thead>
                             <tr>
                                 <th>User</th>
+                                <th>Full Name</th>
                                 <th>Roles</th>
                                 <td></td>
                             </tr>
@@ -30,8 +31,12 @@
                         <tbody>
                             <tr ng-repeat="user in vm.users">
                                 <td>
-                                    <span ng-hide="vm.currentEdit[user.id]">{{user.userName}}</span>
-                                    <input type="text" class="form-control" ng-model="user.userName" ng-show="vm.currentEdit[user.id]" />
+                                    <span>{{user.userName}}</span>
+                                </td>
+                                <td>
+                                    <span ng-hide="vm.currentEdit[user.id]">{{user.fullName}}</span>
+
+                                    <input type="text" ng-model="user.fullName" ng-show="vm.currentEdit[user.id]" />
                                 </td>
                                 <td>
                                     <ul class="list-inline" ng-hide="vm.currentEdit[user.id]">
@@ -39,6 +44,9 @@
                                             <span class="label label-info">{{role}}</span>
                                         </li>
                                     </ul>
+                                    <tags-input ng-model="vm.itemToEdit.roles" placeholder="Add a role" ng-show="vm.currentEdit[user.id]" display-property="name">
+                                        <auto-complete source="vm.availableRoles" min-length="1" load-on-down-arrow="true"></auto-complete>
+                                    </tags-input>
                                 </td>
                                 <td style="text-align: right;">
                                     <button class="btn bg-default" ng-hide="vm.currentEdit[user.id]" ng-click="vm.editItem(user)">Edit</button>

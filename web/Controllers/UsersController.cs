@@ -1,5 +1,7 @@
-﻿using crmc.domain;
+﻿using crmc.data;
+using crmc.domain;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace web.Controllers
     public class UsersController : ApiController
     {
         private ApplicationUserManager _userManager;
+        private ApplicationRoleManager _roleManager;
 
         public UsersController()
         {
@@ -27,6 +30,15 @@ namespace web.Controllers
         {
             get { return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
             private set { _userManager = value; }
+        }
+
+        protected ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+            }
+            private set { _roleManager = value; }
         }
 
         private IAuthenticationManager AuthenticationManager
@@ -86,6 +98,15 @@ namespace web.Controllers
             }
 
             return Ok("User deleted");
+        }
+
+        [HttpGet]
+        [Route("api/roles")]
+        //public async Task<IHttpActionResult> Roles()
+        public IHttpActionResult Roles()
+        {
+            var roles = RoleManager.Roles.ToArray();
+            return Ok(roles);
         }
 
         protected async Task<IHttpActionResult> GetErrorResult(IdentityResult result)
