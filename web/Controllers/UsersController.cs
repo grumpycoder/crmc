@@ -51,7 +51,7 @@ namespace web.Controllers
         {
             var existing = UserManager.FindByName(vm.UserName);
 
-            if (existing == null)
+            if (existing != null)
             {
                 return BadRequest("Username already exists");
             }
