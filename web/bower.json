@@ -8,8 +8,8 @@
     "angular": "1.4.6",
     "angular-smart-table": "~2.1.8",
     "angular-bootstrap": "",
-    "moment": "2.10.6",
     "lodash": "3.10.1",
-    "angularjs-slider": "~2.13.0"
+    "angularjs-slider": "~2.13.0",
+    "moment": "~2.13.0"
   }
 }
