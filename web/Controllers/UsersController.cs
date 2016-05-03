@@ -77,6 +77,17 @@ namespace web.Controllers
             //return Ok(person);
         }
 
+        public async Task<IHttpActionResult> Delete(string id)
+        {
+            var user = await UserManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                await UserManager.DeleteAsync(user);
+            }
+
+            return Ok("User deleted");
+        }
+
         protected async Task<IHttpActionResult> GetErrorResult(IdentityResult result)
         {
             if (result == null)

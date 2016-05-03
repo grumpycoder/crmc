@@ -10,6 +10,7 @@
         vm.title = 'Users';
 
         vm.addItem = addItem;
+        vm.deleteItem = deleteItem;
         vm.search = search;
 
         vm.user = {
@@ -35,6 +36,13 @@
                     vm.users.unshift(angular.copy(vm.user));
                     //TODO: show error user already exists
                 });
+        }
+
+        function deleteItem(user) {
+            service.remove(user.id).then(function (data) {
+                var idx = vm.users.indexOf(user);
+                vm.users.splice(idx, 1);
+            });
         }
 
         function search(tableState) {

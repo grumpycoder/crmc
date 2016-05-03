@@ -12,7 +12,8 @@
         var service = {
             create: create,
             get: get,
-            query: query
+            query: query,
+            remove: remove
         }
 
         return service;
@@ -40,6 +41,13 @@
 
         function query(searchTerm) {
             return $http.get(url + '?search=' + searchTerm)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
+
+        function remove(id) {
+            return $http.delete(url + id)
                 .then(function (response) {
                     return response.data;
                 });
