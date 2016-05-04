@@ -11,6 +11,8 @@
         'smart-table',
         'ui.bootstrap',
         'rzModule',
-        'ngTagsInput'
+        'ngTagsInput',
+        'switcher',
+        'ngMessages'
     ]);
 })()

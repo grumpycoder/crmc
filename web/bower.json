@@ -11,6 +11,11 @@
     "lodash": "3.10.1",
     "angularjs-slider": "~2.13.0",
     "moment": "~2.13.0",
-    "ng-tags-input": "3.0.0"
+    "ng-tags-input": "3.0.0",
+    "angular-switcher": "",
+    "angular-messages": "^1.5.5"
+  },
+  "resolutions": {
+    "jquery": ">= 1.9.0"
   }
 }
