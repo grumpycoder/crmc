@@ -2,5 +2,70 @@
     ViewBag.Title = "Users";
 }
 <div ng-controller="UserController as vm" ng-cloak>
-    <h2>{{vm.title}}</h2>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="panel-title">{{vm.title}}</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="vm.user.username" placeholder="New username...">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary" ng-click="vm.addItem()"
+                                    tooltip="Click here to add new user" tooltip-placement="right">
+                                <span class="fa fa-plus"></span> Add
+                            </button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table st-table="vm.users" st-pipe="vm.search" class="table table-responsive table-striped">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Full Name</th>
+                                <th>Roles</th>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in vm.users">
+                                <td>
+                                    <span>{{user.userName}}</span>
+                                </td>
+                                <td>
+                                    <span ng-hide="vm.currentEdit[user.id]">{{user.fullName}}</span>
+
+                                    <input type="text" ng-model="user.fullName" ng-show="vm.currentEdit[user.id]" />
+                                </td>
+                                <td>
+                                    <ul class="list-inline" ng-hide="vm.currentEdit[user.id]">
+                                        <li ng-repeat="role in user.roles">
+                                            <span class="label label-info">{{role.name}}</span>
+                                        </li>
+                                    </ul>
+                                    <tags-input ng-model="user.roles" placeholder="Add a role" ng-show="vm.currentEdit[user.id]" display-property="name">
+                                        <auto-complete source="vm.availableRoles" min-length="1" load-on-down-arrow="true"></auto-complete>
+                                    </tags-input>
+                                </td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <button class="btn  btn-success" ng-hide="vm.currentEdit[user.id]" ng-click="vm.editItem(user)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn  btn-danger" ng-hide="vm.currentEdit[user.id]" ng-click="vm.deleteItem(user)"><i class="fa fa-trash"></i></button>
+
+                                    <button class="btn  btn-success" ng-show="vm.currentEdit[user.id]" ng-click="vm.saveItem(user)">Save</button>
+                                    <button class="btn  btn-warning" ng-show="vm.currentEdit[user.id]" ng-click="vm.cancelEdit(user.id)">Cancel</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

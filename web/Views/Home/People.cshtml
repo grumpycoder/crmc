@@ -22,16 +22,17 @@
                         <label class="btn btn-default" ng-model="vm.daysFilter" uib-btn-radio="'60'">60 days</label>
                         <label class="btn btn-default" ng-model="vm.daysFilter" uib-btn-radio="'0'">All</label>
                     </div>
+
                     <div class="btn-group" ng-click="vm.quickFilter()">
                         <label class="btn btn-primary" ng-model="vm.highMatch" uib-btn-checkbox>High Match</label>
                         <label class="btn btn-primary" ng-model="vm.medMatch" uib-btn-checkbox>Medium Match</label>
                     </div>
+
                     <div class="btn-group" ng-click="vm.quickFilter()">
                         <label class="btn btn-warning" ng-model="vm.searchModel.isPriority" uib-btn-checkbox>Priority</label>
                         <label class="btn btn-warning" ng-model="vm.isLocal" uib-btn-checkbox>Local</label>
                     </div>
                     <div class="pull-right">
-                        <button class="btn" ng-click="vm.addItem()"><i class="fa fa-plus"></i> Add Person</button>
                     </div>
                 </div>
             </div>
@@ -51,8 +52,6 @@
                                 <th>Entry</th>
                                 <th>Match</th>
                                 <th></th>
-                                <th>
-                                </th>
                             </tr>
                             <tr>
                                 <td><input st-search="firstname" class="form-control" type="text" placeholder="First Name" /></td>
@@ -63,8 +62,7 @@
                                 <td><input st-search="isPriority" class="form-control" type="text" placeholder="Priority" /></td>
                                 <td><input st-search="dateCreated" class="form-control" type="text" placeholder="Date Created" /></td>
                                 <td><input st-search="fuzzyMatchValue" class="form-control" type="text" placeholder="Fuzzy Match" /></td>
-                                <td></td>
-                                <td></td>
+                                <td colspan="2"><button class="btn" ng-click="vm.addItem()"><i class="fa fa-plus"></i></button></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,11 +75,9 @@
                                 <td>{{person.isPriority ? 'Yes' : 'No'}}</td>
                                 <td>{{person.dateCreated | date: 'MM/dd/yyyy'}}</td>
                                 <td>{{person.fuzzyMatchValue | percentage:1}}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-success" ng-click="vm.editItem(person)"><i class="fa fa-edit"></i></button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-danger" ng-click="vm.deleteItem(person)"><i class="fa fa-trash"></i></button>
+                                <td style="white-space: nowrap;">
+                                    <button class="btn btn-success" ng-click="vm.editItem(person)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-danger" ng-click="vm.deleteItem(person)"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                         </tbody>

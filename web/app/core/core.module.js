@@ -10,6 +10,9 @@
         //third party modules
         'smart-table',
         'ui.bootstrap',
-        'rzModule'
+        'rzModule',
+        'ngTagsInput',
+        'switcher',
+        'ngMessages'
     ]);
 })()

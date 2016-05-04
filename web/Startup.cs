@@ -34,6 +34,11 @@ namespace web
                 await roleManager.CreateAsync(new IdentityRole("admin"));
             }
 
+            if (roleManager.FindByName("user") == null)
+            {
+                await roleManager.CreateAsync(new IdentityRole("user"));
+            }
+
             if (userManager.FindByName("admin") == null)
             {
                 var user = new ApplicationUser()

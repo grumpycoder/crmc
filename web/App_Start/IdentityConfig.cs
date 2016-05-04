@@ -73,6 +73,12 @@ namespace web
         public ApplicationRoleManager(IRoleStore<IdentityRole, string> store) : base(store)
         {
         }
+
+        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
+        {
+            var manager = new ApplicationRoleManager(new ApplicationRoleStore(context.Get<DataContext>()));
+            return manager;
+        }
     }
 
     public class ApplicationUserStore : UserStore<ApplicationUser>

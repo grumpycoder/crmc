@@ -1,8 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System.Data.Entity;
+using System.Web.Mvc;
+using System.Web.Security;
+using web.Filters;
 
 namespace web.Controllers
 {
-    [RoutePrefix("~/")]
+    [RoutePrefix("~/"), Authorize]
     public class HomeController : BaseController
     {
         public ActionResult Index()
@@ -25,7 +28,13 @@ namespace web.Controllers
             return View();
         }
 
+        [AuthorizeRoles(Roles = "admin")]
         public ActionResult Users()
+        {
+            return View();
+        }
+
+        public ActionResult UnAuthorized()
         {
             return View();
         }

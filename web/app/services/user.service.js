@@ -1,26 +1,41 @@
-﻿//censor.service.js
+﻿//user.service.js
 //mark.lawrence
 
 (function () {
-    var serviceId = 'censorService';
+    var serviceId = 'userService';
     angular.module('app.service').factory(serviceId, ['$log', '$http', serviceController]);
 
     function serviceController(log, $http) {
         log.info('loaded ' + serviceId);
-        var url = 'http://localhost:11277/api/censor/';
+        var url = 'http://localhost:11277/api/users/';
 
         var service = {
+            availableRoles: availableRoles,
             create: create,
             get: get,
             query: query,
-            update: update,
-            remove: remove
+            remove: remove,
+            update: update
         }
 
         return service;
 
-        function create(censor) {
-            return $http.post(url, censor)
+        function availableRoles() {
+            return $http.get(url + 'roles')
+                .then(function (response) {
+                    return response.data;
+                });
+        }
+
+        function create(user) {
+            //return $http.post(url, user)
+            //   .then(function (response) {
+            //       return response.data;
+            //   }).catch(function (error) {
+            //       return error;
+            //   }
+            //   );
+            return $http.post(url, user)
                 .then(function (response) {
                     return response.data;
                 });
@@ -40,8 +55,8 @@
                 });
         }
 
-        function update(censor) {
-            return $http.put(url, censor)
+        function update(user) {
+            return $http.put(url, user)
                 .then(function (response) {
                     return response.data;
                 });
