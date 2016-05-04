@@ -3,9 +3,9 @@
 
     var controllerId = 'HomeController';
 
-    angular.module('app.home').controller(controllerId, ['$log', 'peopleService', HomeController]);
+    angular.module('app.home').controller(controllerId, ['$log', 'peopleService', 'censorService', 'storage', mainController]);
 
-    function HomeController(log, service) {
+    function mainController(log, peopleService, censorService, storage) {
         var vm = this;
         vm.title = 'Home';
 
@@ -16,16 +16,21 @@
 
         function activate() {
             log.info(controllerId + ' active');
+
+            censorService.query('')
+                    .then(function (data) {
+                        storage.set('censors', JSON.stringify(data));
+                    });
             refresh();
         }
 
         function refresh() {
-            service.getCurrentStats()
+            peopleService.getCurrentStats()
                 .then(function (data) {
                     vm.stat = data;
                 });
 
-            service.get()
+            peopleService.get()
                 .then(function (data) {
                     vm.people = data;
                 });
