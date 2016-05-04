@@ -7,6 +7,12 @@
             <div class="col-md-6">
                 <label for="" class="control-label">First Name</label>
                 <input type="text" class="form-control" ng-model="vm.item.firstname">
+                <span ng-messages="form.firstname.$error" ng-show="form.firstname.$invalid">
+                    <span class="help-block text-danger" ng-message="required">Required</span>
+                    <span class="help-block text-danger" ng-message="minlength">Too short</span>
+                    <span class="help-block text-danger" ng-message="maxlength">Too long</span>
+                    <span class="help-block text-danger" ng-message="pattern">Invalid characters</span>
+                </span>
             </div>
             <div class="col-md-6">
                 <label for="" class="control-label">Last Name</label>
@@ -16,7 +22,7 @@
                        ng-minlength="2"
                        ng-maxlength="50"
                        ng-class="{error: vm.item.lastname.$invalid && !vm.item.lastname.$pristine}">
-                <span ng-messages="from.lastname.$error" ng-show="form.lastname.$invalid">
+                <span ng-messages="form.lastname.$error" ng-show="form.lastname.$invalid">
                     <span class="help-block text-danger" ng-message="required">Required</span>
                     <span class="help-block text-danger" ng-message="minlength">Too short</span>
                     <span class="help-block text-danger" ng-message="maxlength">Too long</span>
@@ -34,29 +40,24 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-12">
-
-                <label for="" class="control-label">Zipcode</label>
-                <input type="number" class="form-control" ng-model="vm.item.zipcode">
-            </div>
-        </div>
-        <div class="form-group">
             <div class="col-md-6">
-                <switcher ng-model="vm.item.isDonor" true-label="Donor"
-                          false-label="Not Donor"></switcher>
-                <switcher ng-model="vm.item.isPriority" true-label="Priority"
-                          false-label="Not Priority"></switcher>
+                <label for="" class="control-label">Zipcode</label>
+                <input type="text" class="form-control" ng-model="vm.item.zipcode">
             </div>
             <div class="col-md-6">
                 <label for="" class="control-label">Fuzzy Match</label>
                 <input type="text" class="form-control" ng-model="vm.item.fuzzyMatchValue">
             </div>
         </div>
-
         <div class="form-group">
-            <span>
-                {{form.$valid}}
-            </span>
+            <div class="col-md-6">
+                <switcher ng-model="vm.item.isDonor" true-label="Donor"
+                          false-label="Not Donor"></switcher>
+            </div>
+            <div class="col-md-6">
+                <switcher ng-model="vm.item.isPriority" true-label="Priority"
+                          false-label="Not Priority"></switcher>
+            </div>
         </div>
     </div>
     <div class="modal-footer">
