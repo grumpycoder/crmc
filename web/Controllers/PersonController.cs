@@ -103,12 +103,16 @@ namespace web.Controllers
             return Ok(count);
         }
 
+        public IHttpActionResult Post(Person person)
+        {
+            context.Persons.Add(person);
+            context.SaveChanges();
+            return Ok(person);
+        }
+
         public IHttpActionResult Put(Person person)
         {
-            if (person.Id == 0)
-            {
-                person.DateCreated = DateTime.Now;
-            }
+            person.DateCreated = DateTime.Now;
             context.Persons.AddOrUpdate(person);
             context.SaveChanges();
             return Ok(person);

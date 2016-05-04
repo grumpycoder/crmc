@@ -10,6 +10,7 @@
         var url = 'http://localhost:11277/api/person/';
 
         var service = {
+            create: create,
             get: get,
             query: query,
             update: update,
@@ -18,6 +19,13 @@
         }
 
         return service;
+
+        function create(censor) {
+            return $http.put(url, censor)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
 
         function get() {
             return $http.get(url)
@@ -33,8 +41,8 @@
                 });
         }
 
-        function update(censor) {
-            return $http.put(url, censor)
+        function update(person) {
+            return $http.put(url, person)
                 .then(function (response) {
                     return response.data;
                 });

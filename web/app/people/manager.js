@@ -35,21 +35,25 @@
         }
 
         function addItem() {
-            var item = {};
+            var item = {
+                fuzzyMatchValue: 0.0
+            };
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['$uibModalInstance', 'peopleService', 'item', EditPersonController],
+                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
                     item: function () { return item; }
                 }
+            }).result.then(function (data) {
+                vm.people.unshift(data);
             });
         }
 
         function editItem(item) {
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['$uibModalInstance', 'peopleService', 'item', EditPersonController],
+                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
                     item: function () { return item; }
@@ -111,7 +115,7 @@
         }
     }
 
-    function EditPersonController($modal, service, item) {
+    function editPersonController(log, $modal, service, item) {
         var vm = this;
 
         vm.item = angular.copy(item);
@@ -120,15 +124,20 @@
         vm.save = save;
 
         function close() {
-            $modal.close();
+            $modal.dismiss();
         }
 
         function save() {
-            service.update(vm.item).then(function () {
-                vm.item.updateStatus = 2;
-                angular.extend(item, vm.item);
-                $modal.close();
-            });
+            if (vm.item.id) {
+                service.update(vm.item).then(function () {
+                    angular.extend(item, vm.item);
+                    $modal.close(vm.item);
+                });
+            } else {
+                service.create(vm.item).then(function (data) {
+                    $modal.close(data);
+                });
+            }
         }
     }
 })()
