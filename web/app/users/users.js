@@ -19,7 +19,7 @@
         vm.search = search;
 
         vm.user = {
-            userName: '',
+            username: '',
             roles: ['user'],
             fullName: '',
             password: '1P@ssword'
@@ -35,7 +35,7 @@
         }
 
         function addItem() {
-            vm.user.fullName = parseFullName(vm.user.userName);
+            vm.user.fullName = parseFullName(vm.user.username);
             vm.user.emailAddress = vm.user.userName + '@splcenter.org';
 
             service.create(vm.user)

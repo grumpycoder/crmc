@@ -10,14 +10,20 @@
         <div class="panel-body">
             <div class="row">
 
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="vm.user.username" placeholder="New username...">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary" ng-click="vm.addItem()"
+                                    tooltip="Click here to add new user" tooltip-placement="right">
+                                <span class="fa fa-plus"></span> Add
+                            </button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div>
+            <div class="row">
                 <div class="col-md-12">
-                    <form class="form-inline form-group">
-                        <input type="text" class="form-control" placeholder="New username" ng-model="vm.user.username" ng-keyup="vm.clearInput($event)">
-                        <button type="submit" class="btn btn-primary" ng-click="vm.addItem()"
-                                tooltip="Click here to add new user" tooltip-placement="right">
-                            <span class="fa fa-plus"></span> Add
-                        </button>
-                    </form>
 
                     <table st-table="vm.users" st-pipe="vm.search" class="table table-responsive table-striped">
                         <thead>
@@ -48,9 +54,9 @@
                                         <auto-complete source="vm.availableRoles" min-length="1" load-on-down-arrow="true"></auto-complete>
                                     </tags-input>
                                 </td>
-                                <td style="text-align: right;">
-                                    <button class="btn bg-default" ng-hide="vm.currentEdit[user.id]" ng-click="vm.editItem(user)">Edit</button>
-                                    <button class="btn btn-danger" ng-hide="vm.currentEdit[user.id]" ng-click="vm.deleteItem(user)">Delete</button>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <button class="btn btn-sm btn-success" ng-hide="vm.currentEdit[user.id]" ng-click="vm.editItem(user)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" ng-hide="vm.currentEdit[user.id]" ng-click="vm.deleteItem(user)"><i class="fa fa-trash"></i></button>
 
                                     <button class="btn btn-success" ng-show="vm.currentEdit[user.id]" ng-click="vm.saveItem(user)">Save</button>
                                     <button class="btn btn-warning" ng-show="vm.currentEdit[user.id]" ng-click="vm.cancelEdit(user.id)">Cancel</button>
