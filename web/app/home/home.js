@@ -14,13 +14,20 @@
 
         activate();
 
+        var censors = [];
+
         function activate() {
             log.info(controllerId + ' active');
 
-            censorService.query('')
-                    .then(function (data) {
-                        storage.set('censors', JSON.stringify(data));
-                    });
+            censors = JSON.parse(storage.get('censors'));
+            if (!censors) {
+                censorService.query('')
+                        .then(function (data) {
+                            storage.set('censors', JSON.stringify(data));
+                            censors = JSON.parse(storage.get('censors'));
+                        });
+            }
+
             refresh();
         }
 

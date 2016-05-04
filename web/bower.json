@@ -13,7 +13,10 @@
     "moment": "~2.13.0",
     "ng-tags-input": "3.0.0",
     "angular-switcher": "",
-    "angular-messages": "^1.5.5"
+    "angular-messages": "^1.5.5",
+    "bower": "*",
+    "install": "^1.0.4",
+    "clj-fuzzy": "^0.3.1"
   },
   "resolutions": {
     "jquery": ">= 1.9.0"
