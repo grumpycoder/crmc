@@ -20,7 +20,7 @@
         activate();
 
         function activate() {
-            log.info('settings controller active');
+            log.info(controllerId + ' actived');
             $.connection.hub.start().done(function () {
                 log.info('hub connection successful');
             });
@@ -31,7 +31,6 @@
             service.get().then(function (data) {
                 vm.config = data;
                 vm.lastSaved = angular.copy(vm.config);
-                log.info(vm.config);
             });
         }
 
@@ -39,14 +38,11 @@
             service.update(vm.config)
                 .then(function (data) {
                     vm.config = data;
-                    log.info('save configuration');
-                    log.info(vm.config);
                     hub.server.configurationChange(vm.config);
                 });
         }
 
         function undo() {
-            log.info(vm.lastSaved);
             vm.config = vm.lastSaved;
         }
     }

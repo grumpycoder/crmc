@@ -70,8 +70,6 @@
             if (vm.daysFilter !== '0') vm.searchModel.dateCreated = moment().subtract(parseInt(vm.daysFilter), 'days').format('MM/DD/YYYY');
             if (vm.daysFilter === '0') vm.searchModel.dateCreated = null;
 
-            log.info(vm.highMatch);
-
             if (vm.highMatch) vm.searchModel.fuzzyMatchValue = 0.8;
 
             if (vm.medMatch) vm.searchModel.fuzzyMatchValue = 0.5;

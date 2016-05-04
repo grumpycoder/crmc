@@ -6,7 +6,7 @@
     angular.module('app.service').factory(serviceId, ['$log', '$http', serviceController]);
 
     function serviceController(log, $http) {
-        log.info('loaded ' + serviceId);
+        log.info(serviceId + ' loaded');
         var url = 'http://localhost:11277/api/users/';
 
         var service = {

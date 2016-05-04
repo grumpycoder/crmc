@@ -24,13 +24,12 @@
         activate();
 
         function activate() {
-            log.info('Censor Controller');
+            log.info(controllerId + ' activated');
         }
 
         function search() {
             service.query(vm.searchTerm).then(function (data) {
                 vm.censors = data;
-                log.info(vm.censors);
             });
         }
 
@@ -39,7 +38,6 @@
         }
 
         function create() {
-            log.info('create');
             var item = {};
             $modal.open({
                 templateUrl: '/app/censors/views/censor.html',
@@ -49,7 +47,6 @@
                     item: function () { return item; }
                 }
             }).result.then(function (data) {
-                log.info(data);
                 vm.censors.unshift(data);
             });
         }
