@@ -23,10 +23,10 @@ body {
     margin: 0;
 }
 
-a, a:hover {
+/*a, a:hover {
     color: white;
     text-decoration: none;
-}
+}*/
 
 .page-title-subtle {
     color: white;

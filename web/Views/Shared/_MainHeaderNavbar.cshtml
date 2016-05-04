@@ -1,4 +1,5 @@
-﻿@using web.Helpers
+﻿@using System.Web.UI.WebControls
+@using web.Helpers
 
 <nav class="navbar navbar-default" role="navigation">
     <div>
@@ -29,7 +30,11 @@
                             using (Html.BeginForm("LogOff", "Auth", FormMethod.Post, new { @class = "navbar-text", id = "logoutForm" }))
                             {
                                 @Html.AntiForgeryToken()
-                                <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out"></i>&nbsp; <span>Logout</span></a>
+                                <a href="javascript:document.getElementById('logoutForm').submit()" style="color: #ffffff; text-decoration: none;"><i class="fa fa-sign-out"></i>&nbsp; <span>Logout</span></a>
+
+                                @*<button class="btn">Logout</button>*@
+                                @*@Html.IconActionLink("fa fa-sign-out", "Logout", "LogOff", "Auth")*@
+                                @*<a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out"></i>&nbsp; <span>Logout</span></a>*@
                             }
                         }
                         else

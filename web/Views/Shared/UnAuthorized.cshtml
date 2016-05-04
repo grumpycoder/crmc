@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "UnAuthorized";
+}
+
+<h2>Unauthorized Access!</h2>
+<p>Oops! You don't have permission to access this page.</p>
+
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Home")
+    or
+    @Html.ActionLink("Login as different user", "Login", "Auth")
+</div>  

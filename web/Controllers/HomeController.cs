@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Web.Mvc;
 using System.Web.Security;
+using web.Filters;
 
 namespace web.Controllers
 {
@@ -27,8 +28,13 @@ namespace web.Controllers
             return View();
         }
 
-        [Authorize(Roles = "admin")]
+        [AuthorizeRoles(Roles = "admin")]
         public ActionResult Users()
+        {
+            return View();
+        }
+
+        public ActionResult UnAuthorized()
         {
             return View();
         }
