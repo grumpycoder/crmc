@@ -40,7 +40,7 @@
             };
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', editPersonController],
+                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
                     item: function () { return item; }
@@ -53,7 +53,7 @@
         function editItem(item) {
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', editPersonController],
+                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
                     item: function () { return item; }
@@ -115,16 +115,30 @@
         }
     }
 
-    function editPersonController(log, $modal, service, item) {
+    function editPersonController(log, $modal, service, item, storage) {
         var vm = this;
+        var censors = JSON.parse(storage.get('censors'));
 
         vm.item = angular.copy(item);
 
         vm.close = close;
         vm.save = save;
+        vm.matchValue = matchValue;
 
         function close() {
             $modal.dismiss();
+        }
+
+        function matchValue() {
+            var value = 0.0;
+            var fn = vm.item.firstname + ' ' + vm.item.lastname;
+            _.forEach(censors, function (censor) {
+                var idx = clj_fuzzy.metrics.dice(fn, censor.word);
+                if (idx > value) value = idx;
+            });
+            //return value;
+            log.info(value);
+            vm.item.fuzzyMatchValue = value;
         }
 
         function save() {

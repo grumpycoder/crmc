@@ -13,6 +13,7 @@
         'rzModule',
         'ngTagsInput',
         'switcher',
-        'ngMessages'
+        'ngMessages',
+        'angularLocalStorage'
     ]);
 })()

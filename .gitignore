@@ -243,4 +243,7 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-/web/lib
+#/web/*lib
+bower_components
+lib
+

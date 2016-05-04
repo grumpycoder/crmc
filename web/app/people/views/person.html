@@ -6,7 +6,12 @@
         <div class="form-group">
             <div class="col-md-6">
                 <label for="" class="control-label">First Name</label>
-                <input type="text" class="form-control" ng-model="vm.item.firstname">
+                <input type="text" class="form-control" name="firstname" ng-model="vm.item.firstname" ng-change="vm.matchValue()"
+                       ng-required="true"
+                       ng-pattern="/^[a-zA-Z, .`-]*$/"
+                       ng-minlength="2"
+                       ng-maxlength="50"
+                       ng-class="{error: form.firstname.$invalid && !form.firstname.$pristine}">
                 <span ng-messages="form.firstname.$error" ng-show="form.firstname.$invalid">
                     <span class="help-block text-danger" ng-message="required">Required</span>
                     <span class="help-block text-danger" ng-message="minlength">Too short</span>
@@ -16,12 +21,12 @@
             </div>
             <div class="col-md-6">
                 <label for="" class="control-label">Last Name</label>
-                <input type="text" name="lastname" class="form-control" ng-model="vm.item.lastname"
+                <input type="text" name="lastname" class="form-control" ng-model="vm.item.lastname" ng-change="vm.matchValue()"
                        ng-required="true"
                        ng-pattern="/^[a-zA-Z, .`-]*$/"
                        ng-minlength="2"
                        ng-maxlength="50"
-                       ng-class="{error: vm.item.lastname.$invalid && !vm.item.lastname.$pristine}">
+                       ng-class="{error: form.lastname.$invalid && !form.lastname.$pristine}">
                 <span ng-messages="form.lastname.$error" ng-show="form.lastname.$invalid">
                     <span class="help-block text-danger" ng-message="required">Required</span>
                     <span class="help-block text-danger" ng-message="minlength">Too short</span>
@@ -46,7 +51,7 @@
             </div>
             <div class="col-md-6">
                 <label for="" class="control-label">Fuzzy Match</label>
-                <input type="text" class="form-control" ng-model="vm.item.fuzzyMatchValue">
+                <input type="text" class="form-control" readonly="readonly" value="{{vm.item.fuzzyMatchValue | percentage: 1}}">
             </div>
         </div>
         <div class="form-group">
