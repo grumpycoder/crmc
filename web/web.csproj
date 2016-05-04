@@ -215,6 +215,7 @@
     <Content Include="app\app.module.js" />
     <Content Include="app\censors\censors.module.js" />
     <Content Include="app\censors\manager.js" />
+    <Content Include="app\censors\views\censor.html" />
     <Content Include="app\configuration\manager.js" />
     <Content Include="app\configuration\settings.module.js" />
     <Content Include="app\core\core.module.js" />

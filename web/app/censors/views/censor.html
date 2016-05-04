@@ -1,0 +1,25 @@
+﻿<form novalidate="" id="form" name="form">
+    <div class="modal-header">
+        <h3 class="modal-title">New Censor Word<i class="fa fa-asterisk fa-pull-right red-text" ng-show="form.$dirty"></i></h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <input type="text" class="form-control" name="word" placeholder="New word..." ng-model="vm.item.word" ng-required="true">
+                    <span ng-messages="form.name.$error" ng-show="form.word.$invalid">
+                        <span class="help-block text-danger" ng-message="required">Required</span>
+                        <span class="help-block text-danger" ng-message="minlength">Too short</span>
+                        <span class="help-block text-danger" ng-message="maxlength">Too long</span>
+                        <span class="help-block text-danger" ng-message="pattern">Invalid characters</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="vm.save()" ng-disabled="!form.$dirty && form.$invalid">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="vm.close()">Cancel</button>
+    </div>
+</form>

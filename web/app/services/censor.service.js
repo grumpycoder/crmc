@@ -10,6 +10,7 @@
         var url = 'http://localhost:11277/api/censor/';
 
         var service = {
+            create: create,
             get: get,
             query: query,
             update: update,
@@ -17,6 +18,13 @@
         }
 
         return service;
+
+        function create(censor) {
+            return $http.post(url, censor)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
 
         function get() {
             return $http.get(url)

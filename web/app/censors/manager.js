@@ -4,14 +4,15 @@
 (function () {
     var controllerId = 'CensorController';
 
-    angular.module('app.censors').controller(controllerId, ['$log', 'censorService', mainController]);
+    angular.module('app.censors').controller(controllerId, ['$log', '$uibModal', 'censorService', mainController]);
 
-    function mainController(log, service) {
+    function mainController(log, $modal, service) {
         var vm = this;
         vm.title = 'Censors';
 
-        vm.editItem = editItem;
         vm.cancelEdit = cancelEdit;
+        vm.create = create;
+        vm.editItem = editItem;
         vm.deleteItem = deleteItem;
         vm.saveItem = saveItem;
 
@@ -29,7 +30,6 @@
         function search() {
             service.query(vm.searchTerm).then(function (data) {
                 vm.censors = data;
-                log.info(vm.censors);
             });
         }
 
@@ -37,11 +37,20 @@
             vm.currentEdit[id] = false;
         }
 
-        function editItem(censor) {
-            log.info('edit');
-            log.info(censor);
-            vm.currentEdit[censor.id] = true;
-            vm.itemToEdit = angular.copy(censor);
+        function create() {
+            log.info('create');
+            var item = {};
+            $modal.open({
+                templateUrl: '/app/censors/views/censor.html',
+                controller: ['$uibModalInstance', 'censorService', 'item', createCensorController],
+                controllerAs: 'vm',
+                resolve: {
+                    item: function () { return item; }
+                }
+            }).result.then(function (data) {
+                log.info(data);
+                vm.censors.unshift(data);
+            });
         }
 
         function deleteItem(censor) {
@@ -52,10 +61,35 @@
                 });
         }
 
+        function editItem(censor) {
+            vm.currentEdit[censor.id] = true;
+            vm.itemToEdit = angular.copy(censor);
+        }
+
         function saveItem(censor) {
             vm.currentEdit[censor.id] = false;
             service.update(censor).then(function (data) {
                 censor = data;
+            });
+        }
+    }
+
+    function createCensorController($modal, service, item) {
+        var vm = this;
+
+        vm.item = angular.copy(item);
+
+        vm.close = close;
+        vm.save = save;
+
+        function close() {
+            $modal.dismiss();
+        }
+
+        function save() {
+            service.create(vm.item).then(function (data) {
+                vm.item = data;
+                $modal.close(vm.item);
             });
         }
     }
