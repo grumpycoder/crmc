@@ -3,9 +3,11 @@
 
     var controllerId = 'UserController';
 
-    angular.module('app.users').controller(controllerId, ['$log', 'userService', mainController]);
+    angular.module('app.users').controller(controllerId, mainController);
 
-    function mainController(log, service) {
+    mainController.$inject = ['$log', 'userService', 'defaults'];
+
+    function mainController(log, service, defaults) {
         var vm = this;
         vm.title = 'Users';
 
@@ -19,10 +21,10 @@
         vm.search = search;
 
         vm.user = {
-            username: '',
+            //userName: null,
             roles: ['user'],
             fullName: '',
-            password: '1P@ssword'
+            password: defaults.GENERIC_PASSWORD
         }
 
         var tableStateRef;
@@ -35,13 +37,15 @@
         }
 
         function addItem() {
-            vm.user.fullName = parseFullName(vm.user.username);
-            vm.user.emailAddress = vm.user.userName + '@splcenter.org';
+            vm.user.fullName = parseFullName(vm.user.userName);
+            vm.user.email = vm.user.userName + defaults.EMAIL_SUFFIX;
 
             service.create(vm.user)
                 .then(function (data) {
-                    vm.user = data;
+                    //TODO: mapping would allow removal of extend method
+                    vm.user = angular.extend(vm.user, data);
                     vm.users.unshift(angular.copy(vm.user));
+                    vm.user.userName = null;
                     //TODO: show error user already exists
                 });
         }
@@ -86,8 +90,12 @@
 
         function search(tableState) {
             tableStateRef = tableState;
+            var searchTerm;
 
-            service.get()
+            if (typeof (tableState.search.predicateObject) != "undefined") {
+                searchTerm = tableState.search.predicateObject.searchTerm;
+            }
+            service.query(searchTerm)
                 .then(function (data) {
                     vm.users = data;
                 });

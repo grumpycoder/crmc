@@ -3,9 +3,11 @@
 
     var controllerId = 'HomeController';
 
-    angular.module('app.home').controller(controllerId, ['$log', 'peopleService', 'censorService', 'storage', mainController]);
+    angular.module('app.home').controller(controllerId, mainController);
 
-    function mainController(log, peopleService, censorService, storage) {
+    mainController.$inject = ['$log', 'peopleService', 'censorService', 'storage', 'config'];
+
+    function mainController(log, peopleService, censorService, storage, config) {
         var vm = this;
         vm.title = 'Home';
 
@@ -18,7 +20,8 @@
 
         function activate() {
             log.info(controllerId + ' active');
-
+            log.info(config);
+            log.info(config.apiEndPoints);
             censors = JSON.parse(storage.get('censors'));
             if (!censors) {
                 censorService.query('')

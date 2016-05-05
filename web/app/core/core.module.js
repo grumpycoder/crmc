@@ -4,6 +4,8 @@
 (function () {
     angular.module('app.core', [
         //angular modules
+        'ngMessages',
+        'angularLocalStorage',
 
         //custom modules
 
@@ -12,8 +14,7 @@
         'ui.bootstrap',
         'rzModule',
         'ngTagsInput',
-        'switcher',
-        'ngMessages',
-        'angularLocalStorage'
+        'switcher'
+
     ]);
 })()

@@ -3,11 +3,13 @@
 
 (function () {
     var serviceId = 'peopleService';
-    angular.module('app.service').factory(serviceId, ['$log', '$http', serviceController]);
+    angular.module('app.service').factory(serviceId, serviceController);
 
-    function serviceController(log, $http) {
+    serviceController.$inject = ['$log', '$http', 'config'];
+
+    function serviceController(log, $http, config) {
         log.info(serviceId + ' loaded');
-        var url = 'http://localhost:11277/api/person/';
+        var url = config.apiUrl + config.apiEndPoints.Person;
 
         var service = {
             create: create,
@@ -35,7 +37,7 @@
         }
 
         function query(search) {
-            return $http.post(url + 'search', search)
+            return $http.post(url + '/search', search)
                 .then(function (response) {
                     return response.data;
                 });
@@ -56,7 +58,7 @@
         }
 
         function getCurrentStats() {
-            return $http.get(url + 'stat')
+            return $http.get(url + '/stat')
                 .then(function (response) {
                     return response.data;
                 });

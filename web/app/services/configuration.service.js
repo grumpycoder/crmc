@@ -3,11 +3,13 @@
 
 (function () {
     var serviceId = 'configurationService';
-    angular.module('app.service').factory(serviceId, ['$log', '$http', serviceController]);
+    angular.module('app.service').factory(serviceId, serviceController);
 
-    function serviceController(log, $http) {
+    serviceController.$inject = ['$log', '$http', 'config'];
+
+    function serviceController(log, $http, config) {
         log.info(serviceId + ' loaded ');
-        var url = 'http://localhost:11277/api/configuration/';
+        var url = config.apiUrl + config.apiEndPoints.Configuration;
 
         var service = {
             get: get,

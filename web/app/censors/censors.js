@@ -4,7 +4,9 @@
 (function () {
     var controllerId = 'CensorController';
 
-    angular.module('app.censors').controller(controllerId, ['$log', '$uibModal', 'censorService', mainController]);
+    angular.module('app.censors').controller(controllerId, mainController);
+
+    mainController.$inject = ['$log', '$uibModal', 'censorService'];
 
     function mainController(log, $modal, service) {
         var vm = this;
@@ -18,7 +20,6 @@
 
         vm.censors = [];
         vm.currentEdit = {};
-        vm.searchTerm = '';
         vm.search = search;
 
         activate();
@@ -27,8 +28,12 @@
             log.info(controllerId + ' activated');
         }
 
-        function search() {
-            service.query(vm.searchTerm).then(function (data) {
+        function search(tableState) {
+            var searchTerm = '';
+            if (typeof (tableState.search.predicateObject) != "undefined") {
+                searchTerm = tableState.search.predicateObject.searchTerm;
+            }
+            service.query(searchTerm).then(function (data) {
                 vm.censors = data;
             });
         }

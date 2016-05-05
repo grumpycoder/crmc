@@ -8,7 +8,7 @@
         'app.service',
         'app.filter',
 
-        //features
+        //feature areas
         'app.home',
         'app.censors',
         'app.people',

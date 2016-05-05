@@ -4,7 +4,9 @@
 (function () {
     var controllerId = 'PeopleController';
 
-    angular.module('app.people').controller(controllerId, ['$log', 'peopleService', '$uibModal', mainController]);
+    angular.module('app.people').controller(controllerId, mainController);
+
+    mainController.$inject = ['$log', 'peopleService', '$uibModal'];
 
     function mainController(log, service, $modal) {
         var vm = this;
@@ -85,6 +87,7 @@
 
             if (!vm.searchModel.isPriority) vm.searchModel.isPriority = null;
 
+            //TODO: Sort not implemented
             if (typeof (tableState.sort.predicate) != "undefined") {
                 vm.searchModel.orderBy = tableState.sort.predicate;
                 vm.searchModel.orderDirection = tableState.sort.reverse ? 'desc' : 'asc';
@@ -117,6 +120,8 @@
 
     function editPersonController(log, $modal, service, item, storage) {
         var vm = this;
+
+        //TODO: Can be made global??
         var censors = JSON.parse(storage.get('censors'));
 
         vm.item = angular.copy(item);

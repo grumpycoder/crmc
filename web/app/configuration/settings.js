@@ -4,7 +4,9 @@
 (function () {
     var controllerId = 'SettingsController';
 
-    angular.module('app.settings').controller(controllerId, ['$log', '$timeout', 'configurationService', mainController]);
+    angular.module('app.settings').controller(controllerId, mainController);
+
+    mainController.$inject = ['$log', '$timeout', 'configurationService'];
 
     function mainController(log, $timeout, service) {
         var vm = this;

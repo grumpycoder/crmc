@@ -3,11 +3,13 @@
 
 (function () {
     var serviceId = 'censorService';
-    angular.module('app.service').factory(serviceId, ['$log', '$http', serviceController]);
+    angular.module('app.service').factory(serviceId, serviceController);
 
-    function serviceController(log, $http) {
+    serviceController.$inject = ['$log', '$http', 'config'];
+
+    function serviceController(log, $http, config) {
         log.info(serviceId + ' loaded');
-        var url = 'http://localhost:11277/api/censor/';
+        var url = config.apiUrl + config.apiEndPoints.Censor;
 
         var service = {
             create: create,
@@ -34,7 +36,7 @@
         }
 
         function query(searchTerm) {
-            return $http.get(url + '?search=' + searchTerm)
+            return $http.get(url + '/?search=' + searchTerm)
                 .then(function (response) {
                     return response.data;
                 });

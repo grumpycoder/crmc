@@ -214,16 +214,17 @@
   <ItemGroup>
     <Content Include="app\app.module.js" />
     <Content Include="app\censors\censors.module.js" />
-    <Content Include="app\censors\manager.js" />
+    <Content Include="app\censors\censors.js" />
     <Content Include="app\censors\views\censor.html" />
-    <Content Include="app\configuration\manager.js" />
+    <Content Include="app\core\config.js" />
+    <Content Include="app\configuration\settings.js" />
     <Content Include="app\configuration\settings.module.js" />
     <Content Include="app\core\core.module.js" />
     <Content Include="app\filters\app.filters.js" />
     <Content Include="app\filters\filter.module.js" />
     <Content Include="app\home\home.js" />
     <Content Include="app\home\home.module.js" />
-    <Content Include="app\people\manager.js" />
+    <Content Include="app\people\people.js" />
     <Content Include="app\people\people.module.js" />
     <Content Include="app\people\views\person.html" />
     <Content Include="app\services\censor.service.js" />

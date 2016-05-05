@@ -61,6 +61,19 @@ namespace web.Controllers
             return Ok(users);
         }
 
+        public IHttpActionResult Get(string searchTerm)
+        {
+            var users = UserManager.Users.Where(x => x.UserName.Contains(searchTerm) || x.FullName.Contains(searchTerm)).ToList().Select(u => new UserViewModel()
+            {
+                Id = u.Id,
+                UserName = u.UserName,
+                Email = u.Email,
+                FullName = u.FullName,
+                Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray()
+            });
+            return Ok(users);
+        }
+
         public async Task<IHttpActionResult> Post(UserViewModel vm)
         {
             var existing = UserManager.FindByName(vm.UserName);
@@ -74,6 +87,7 @@ namespace web.Controllers
             {
                 UserName = vm.UserName,
                 Email = vm.Email,
+                FullName = vm.FullName
             };
 
             IdentityResult addUserResult = await UserManager.CreateAsync(user, vm.Password);
@@ -84,11 +98,9 @@ namespace web.Controllers
             }
 
             IdentityResult addResult = await UserManager.AddToRolesAsync(user.Id, vm.Roles);
-
+            //TODO: Need automapping
+            vm.Id = user.Id;
             return Ok(vm);
-            //context.Persons.AddOrUpdate(person);
-            //context.SaveChanges();
-            //return Ok(person);
         }
 
         public async Task<IHttpActionResult> Put([FromBody]UserViewModel vm)
