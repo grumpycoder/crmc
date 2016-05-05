@@ -10,6 +10,7 @@
     <link href="~/lib/angularjs-slider/dist/rzslider.min.css" rel="stylesheet" />
     <link href="~/lib/ng-tags-input/ng-tags-input.min.css" rel="stylesheet" />
     <link href="~/lib/angular-switcher/dist/angular-switcher.min.css" rel="stylesheet" />
+    <link href="~/lib/toastr/toastr.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
 </head>
 <body>
@@ -20,6 +21,7 @@
         @RenderBody()
     </div>
 
+    <!-- Vendor Libraries -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootswatch-dist/js/bootstrap.min.js"></script>
     <script src="~/lib/lodash/lodash.min.js"></script>
@@ -27,8 +29,6 @@
     <script src="~/lib/clj-fuzzy/src-js/clj-fuzzy.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-
-    <!-- Vendor Libraries -->
     <script src="~/lib/angular/angular.min.js"></script>
     <script src="~/lib/angular-messages/angular-messages.min.js"></script>
     <script src="~/lib/angularLocalStorage/dist/angularLocalStorage.min.js"></script>
@@ -38,31 +38,44 @@
     <script src="~/lib/angularjs-slider/dist/rzslider.min.js"></script>
     <script src="~/lib/ng-tags-input/ng-tags-input.min.js"></script>
     <script src="~/lib/angular-switcher/dist/angular-switcher.min.js"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
 
-    <!-- App -->
+    <!-- Bootstrapping -->
     <script src="~/app/app.module.js"></script>
-    <script src="~/app/core/core.module.js"></script>
-    <script src="~/app/core/config.js"></script>
-    <script src="~/app/core/contants.js"></script>
-    <script src="~/app/services/service.module.js"></script>
+
+    <!-- Reusable Blocks/Modules -->
+    <script src="~/app/blocks/logger/logger.module.js"></script>
+    <script src="~/app/blocks/logger/logger.js"></script>
     <script src="~/app/filters/filter.module.js"></script>
 
-    <!-- App Services -->
+    <!-- core module -->
+    <script src="~/app/core/core.module.js"></script>
+    <script src="~/app/core/constants.js"></script>
+    <script src="~/app/core/config.js"></script>
+    <script src="~/app/services/service.module.js"></script>
     <script src="~/app/filters/app.filters.js"></script>
     <script src="~/app/services/censor.service.js"></script>
     <script src="~/app/services/people.service.js"></script>
     <script src="~/app/services/user.service.js"></script>
     <script src="~/app/services/configuration.service.js"></script>
 
-    <!-- App Modules -->
+    <!--home-->
     <script src="~/app/home/home.module.js"></script>
     <script src="~/app/home/home.js"></script>
+
+    <!--censors-->
     <script src="~/app/censors/censors.module.js"></script>
     <script src="~/app/censors/censors.js"></script>
+
+    <!--people-->
     <script src="~/app/people/people.module.js"></script>
     <script src="~/app/people/people.js"></script>
+
+    <!--settings-->
     <script src="~/app/configuration/settings.module.js"></script>
     <script src="~/app/configuration/settings.js"></script>
+
+    <!--users admin-->
     <script src="~/app/users/users.module.js"></script>
     <script src="~/app/users/users.js"></script>
 

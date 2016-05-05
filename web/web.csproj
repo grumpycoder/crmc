@@ -213,12 +213,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.module.js" />
+    <Content Include="app\blocks\logger\logger.js" />
+    <Content Include="app\blocks\logger\logger.module.js" />
     <Content Include="app\censors\censors.module.js" />
     <Content Include="app\censors\censors.js" />
     <Content Include="app\censors\views\censor.html" />
     <Content Include="app\core\config.js" />
     <Content Include="app\configuration\settings.js" />
     <Content Include="app\configuration\settings.module.js" />
+    <Content Include="app\core\constants.js" />
     <Content Include="app\core\core.module.js" />
     <Content Include="app\filters\app.filters.js" />
     <Content Include="app\filters\filter.module.js" />

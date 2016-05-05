@@ -8,6 +8,7 @@
         'angularLocalStorage',
 
         //custom modules
+        'blocks.logger',
 
         //third party modules
         'smart-table',
