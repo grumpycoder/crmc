@@ -9,6 +9,7 @@
 
         //custom modules
         'blocks.logger',
+        'blocks.exception',
 
         //third party modules
         'smart-table',

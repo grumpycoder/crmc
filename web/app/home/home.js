@@ -5,12 +5,11 @@
 
     angular.module('app.home').controller(controllerId, mainController);
 
-    mainController.$inject = ['peopleService', 'censorService', 'storage', 'config', 'logger'];
+    mainController.$inject = ['peopleService', 'censorService', 'storage', 'logger'];
 
-    function mainController(peopleService, censorService, storage, config, logger) {
+    function mainController(peopleService, censorService, storage, logger) {
         var vm = this;
         vm.title = 'Home';
-        var log = logger.log;
 
         vm.stat = {};
         vm.people = [];
@@ -20,7 +19,7 @@
         var censors = [];
 
         function activate() {
-            log(controllerId + ' active');
+            logger.log(controllerId + ' active');
             censors = JSON.parse(storage.get('censors'));
             if (!censors) {
                 censorService.query('')

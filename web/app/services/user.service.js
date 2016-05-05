@@ -2,13 +2,13 @@
 //mark.lawrence
 
 (function () {
+    'use strict';
+
     var serviceId = 'userService';
     angular.module('app.service').factory(serviceId, serviceController);
 
-    serviceController.$inject = ['$log', '$http', 'config'];
-
-    function serviceController(log, $http, config) {
-        log.info(serviceId + ' loaded');
+    function serviceController(logger, $http, config) {
+        logger.log(serviceId + ' loaded');
         var url = config.apiUrl + config.apiEndPoints.User;
 
         var service = {
@@ -23,49 +23,35 @@
         return service;
 
         function availableRoles() {
-            return $http.get(url + '/roles')
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.get(url + '/roles').then(_success);
         }
 
         function create(user) {
-            return $http.post(url, user)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.post(url, user).then(_success);
         }
 
         function get() {
-            return $http.get(url)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.get(url).then(_success);
         }
 
         function query(searchTerm) {
             if (searchTerm != undefined) {
-                return $http.get(url + '?searchTerm=' + searchTerm)
-                    .then(function(response) {
-                        return response.data;
-                    });
+                return $http.get(url + '?searchTerm=' + searchTerm).then(_success);
             } else {
                 return get(url);
             }
         }
 
         function update(user) {
-            return $http.put(url, user)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.put(url, user).then(_success);
         }
 
         function remove(id) {
-            return $http.delete(url + '/' + id)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.delete(url + '/' + id).then(_success);
+        }
+
+        function _success(response) {
+            return response.data;
         }
     }
 })()

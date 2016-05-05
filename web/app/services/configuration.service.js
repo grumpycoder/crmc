@@ -2,13 +2,13 @@
 //mark.lawrence
 
 (function () {
+    'use strict';
+
     var serviceId = 'configurationService';
     angular.module('app.service').factory(serviceId, serviceController);
 
-    serviceController.$inject = ['$log', '$http', 'config'];
-
-    function serviceController(log, $http, config) {
-        log.info(serviceId + ' loaded ');
+    function serviceController(logger, $http, config) {
+        logger.log(serviceId + ' loaded ');
         var url = config.apiUrl + config.apiEndPoints.Configuration;
 
         var service = {
@@ -19,17 +19,15 @@
         return service;
 
         function get() {
-            return $http.get(url)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.get(url).then(_success);
         }
 
         function update(config) {
-            return $http.put(url, config)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.put(url, config).then(_success);
+        }
+
+        function _success(response) {
+            return response.data;
         }
     }
 })()

@@ -213,6 +213,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.module.js" />
+    <Content Include="app\blocks\exception\exception-handler.provider.js" />
+    <Content Include="app\blocks\exception\exception.js" />
+    <Content Include="app\blocks\exception\exception.module.js" />
     <Content Include="app\blocks\logger\logger.js" />
     <Content Include="app\blocks\logger\logger.module.js" />
     <Content Include="app\censors\censors.module.js" />

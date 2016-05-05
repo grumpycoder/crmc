@@ -25,22 +25,22 @@
         /////////////////////
 
         function error(message, data, title) {
-            if (showToasts) toastr.error(message, title);
+            toastr.error(message, title);
             $log.error('Error: ' + message, data);
         }
 
-        function info(message, data, title, showToast) {
+        function info(message, data, title) {
             toastr.info(message, title);
             $log.info('Info: ' + message, data);
         }
 
         function success(message, data, title) {
-            if (showToasts) toastr.success(message, title);
+            toastr.success(message, title);
             $log.info('Success: ' + message, data);
         }
 
         function warning(message, data, title) {
-            if (showToasts) toastr.warning(message, title);
+            toastr.warning(message, title);
             $log.warn('Warning: ' + message, data);
         }
     }

@@ -6,9 +6,9 @@
 
     angular.module('app.censors').controller(controllerId, mainController);
 
-    mainController.$inject = ['$log', '$uibModal', 'censorService'];
+    mainController.$inject = ['logger', '$uibModal', 'censorService'];
 
-    function mainController(log, $modal, service) {
+    function mainController(logger, $modal, service) {
         var vm = this;
         vm.title = 'Censors';
 
@@ -25,7 +25,7 @@
         activate();
 
         function activate() {
-            log.info(controllerId + ' activated');
+            logger.log(controllerId + ' activated');
         }
 
         function search(tableState) {

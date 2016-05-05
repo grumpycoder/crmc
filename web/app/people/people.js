@@ -8,7 +8,7 @@
 
     mainController.$inject = ['$log', 'peopleService', '$uibModal'];
 
-    function mainController(log, service, $modal) {
+    function mainController(logger, service, $modal) {
         var vm = this;
         vm.title = "People";
 
@@ -34,6 +34,7 @@
         activate();
 
         function activate() {
+            logger.log(controllerId + ' activated');
         }
 
         function addItem() {
@@ -141,8 +142,6 @@
                 var idx = clj_fuzzy.metrics.dice(fn, censor.word);
                 if (idx > value) value = idx;
             });
-            //return value;
-            log.info(value);
             vm.item.fuzzyMatchValue = value;
         }
 

@@ -2,13 +2,13 @@
 //mark.lawrence
 
 (function () {
+    'use strict';
+
     var serviceId = 'censorService';
     angular.module('app.service').factory(serviceId, serviceController);
 
-    serviceController.$inject = ['$log', '$http', 'config'];
-
-    function serviceController(log, $http, config) {
-        log.info(serviceId + ' loaded');
+    function serviceController(logger, $http, config) {
+        logger.log(serviceId + ' loaded');
         var url = config.apiUrl + config.apiEndPoints.Censor;
 
         var service = {
@@ -22,38 +22,31 @@
         return service;
 
         function create(censor) {
-            return $http.post(url, censor)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.post(url, censor).then(_success);
         }
 
         function get() {
-            return $http.get(url)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.get(url).then(_success);
         }
 
         function query(searchTerm) {
-            return $http.get(url + '/?search=' + searchTerm)
-                .then(function (response) {
-                    return response.data;
-                });
+            if (searchTerm == undefined) {
+                return get();
+            } else {
+                return $http.get(url + '/?search=' + searchTerm).then(_success);
+            }
         }
 
         function update(censor) {
-            return $http.put(url, censor)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.put(url, censor).then(_success);
         }
 
         function remove(id) {
-            return $http.delete(url + id)
-                .then(function (response) {
-                    return response.data;
-                });
+            return $http.delete(url + '/' + id).then(_success);
+        }
+
+        function _success(response) {
+            return response.data;
         }
     }
 })()

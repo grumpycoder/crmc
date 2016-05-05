@@ -6,9 +6,9 @@
 
     angular.module('app.settings').controller(controllerId, mainController);
 
-    mainController.$inject = ['$log', '$timeout', 'configurationService'];
+    mainController.$inject = ['logger', '$timeout', 'configurationService'];
 
-    function mainController(log, $timeout, service) {
+    function mainController(logger, $timeout, service) {
         var vm = this;
         vm.title = 'Settings';
 
@@ -22,9 +22,9 @@
         activate();
 
         function activate() {
-            log.info(controllerId + ' actived');
+            logger.log(controllerId + ' actived');
             $.connection.hub.start().done(function () {
-                log.info('hub connection successful');
+                logger.info('hub connection successful');
             });
             getSettings();
         }
@@ -40,7 +40,9 @@
             service.update(vm.config)
                 .then(function (data) {
                     vm.config = data;
-                    hub.server.configurationChange(vm.config);
+                    hub.server.configurationChange(vm.config).then(function () {
+                        logger.info('Changes saved and sent to WOT');
+                    });
                 });
         }
 
