@@ -19,7 +19,6 @@
         vm.editItem = editItem;
         vm.quickFilter = quickFilter;
         vm.isLocal = null;
-        vm.daysFilter = '0';
 
         vm.people = [];
         vm.paged = paged;
@@ -76,19 +75,14 @@
         function search(tableState) {
             tableStateRef = tableState;
 
-            if (vm.daysFilter !== '0') vm.searchModel.dateCreated = moment().subtract(parseInt(vm.daysFilter), 'days').format('MM/DD/YYYY');
-            if (vm.daysFilter === '0') vm.searchModel.dateCreated = null;
-
-            if (vm.highMatch) vm.searchModel.fuzzyMatchValue = 0.8;
-
-            if (vm.medMatch) vm.searchModel.fuzzyMatchValue = 0.5;
-
-            if (!vm.highMatch && !vm.medMatch) vm.searchModel.fuzzyMatchValue = null;
-
             if (vm.isLocal) vm.searchModel.isDonor = false;
             if (!vm.isLocal) vm.searchModel.isDonor = null;
 
             if (!vm.searchModel.isPriority) vm.searchModel.isPriority = null;
+
+            vm.searchModel.dateCreated = vm.daysFilter
+                ? moment().subtract(parseInt(vm.daysFilter), 'days').format('MM/DD/YYYY')
+                : null;
 
             //TODO: Sort not implemented
             if (typeof (tableState.sort.predicate) != "undefined") {
@@ -96,14 +90,24 @@
                 vm.searchModel.orderDirection = tableState.sort.reverse ? 'desc' : 'asc';
             }
             if (typeof (tableState.search.predicateObject) != "undefined") {
+                vm.daysFilter = tableState.search.predicateObject.dateCreated ? null : vm.daysFilter;
+                vm.searchModel.dateCreated = vm.daysFilter
+                    ? vm.searchModel.dateCreated
+                    : tableState.search.predicateObject.dateCreated;
+
+                vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue
+                    ? null
+                    : vm.searchModel.fuzzyMatchValue;
+                vm.searchModel.fuzzyMatchValue = vm.searchModel.fuzzyMatchValue
+                    ? vm.searchModel.fuzzyMatchValue
+                    : tableState.search.predicateObject.fuzzyMatchValue / 100;
+
                 vm.searchModel.firstname = tableState.search.predicateObject.firstname;
                 vm.searchModel.lastname = tableState.search.predicateObject.lastname;
                 vm.searchModel.zipcode = tableState.search.predicateObject.zipCode;
                 vm.searchModel.emailAddress = tableState.search.predicateObject.emailAddress;
                 vm.searchModel.isDonor = tableState.search.predicateObject.isDonor;
                 vm.searchModel.isPriority = tableState.search.predicateObject.isPriority;
-                vm.searchModel.dateCreated = tableState.search.predicateObject.dateCreated;
-                vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue;
             }
 
             service.query(vm.searchModel).then(function (data) {
