@@ -6,10 +6,12 @@
 
     angular.module('app.people').controller(controllerId, mainController);
 
-    mainController.$inject = ['$log', 'peopleService', '$uibModal'];
+    mainController.$inject = ['$log', 'peopleService', '$uibModal', 'config'];
 
-    function mainController(logger, service, $modal) {
+    function mainController(logger, service, $modal, config) {
         var vm = this;
+        var keyCodes = config.keyCodes;
+
         vm.title = "People";
 
         vm.addItem = addItem;

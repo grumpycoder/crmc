@@ -9,11 +9,7 @@
         </div>
         <div class="panel-body">
             <div class="row">
-
-                <div class="col-md-6">
-                </div>
                 <div class="col-md-12">
-
                     <table st-table="vm.censors" st-pipe="vm.search" class="table table-responsive table-striped">
                         <thead>
                             <tr>
@@ -21,7 +17,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td><input st-search="searchTerm" class="form-control" type="text" placeholder="Word" ng-keyup="vm.clearSearch($event)" /></td>
+                                <td><input st-search="searchTerm" st-clear-key class="form-control" type="text" placeholder="Word" /></td>
                                 <td>
                                     <div class="pull-right">
                                         <button class="btn btn-default" ng-click="vm.create()"><i class="fa fa-plus"></i> Add Word</button>

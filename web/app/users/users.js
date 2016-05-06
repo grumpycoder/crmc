@@ -15,7 +15,7 @@
         vm.addItem = addItem;
         vm.availableRoles = [];
         vm.cancelEdit = cancelEdit;
-        vm.clearSearch = clearSearch;
+        vm.clearCreate = clearCreate;
         vm.currentEdit = {};
         vm.deleteItem = deleteItem;
         vm.editItem = editItem;
@@ -94,19 +94,20 @@
             tableStateRef = tableState;
             var searchTerm;
 
-            if (typeof (tableState.search.predicateObject) != "undefined") {
+            if (typeof (tableState.search.predicateObject) != 'undefined') {
                 searchTerm = tableState.search.predicateObject.searchTerm;
+                logger.log('setting predicate');
             }
+
             service.query(searchTerm)
                 .then(function (data) {
                     vm.users = data;
                 });
         }
 
-        function clearSearch($event) {
+        function clearCreate($event) {
             if ($event.keyCode === keyCodes.esc) {
-                tableStateRef.search.predicateObject.searchTerm = undefined;
-                search(tableStateRef);
+                vm.user.userName = '';
             }
         }
 

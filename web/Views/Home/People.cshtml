@@ -54,14 +54,14 @@
                                 <th></th>
                             </tr>
                             <tr>
-                                <td><input st-search="firstname" class="form-control" type="text" placeholder="First Name" /></td>
-                                <td><input st-search="lastname" class="form-control" type="text" placeholder="Last Name" /></td>
-                                <td><input st-search="emailAddress" class="form-control" type="text" placeholder="Email Address" /></td>
-                                <td><input st-search="zipCode" class="form-control" type="text" placeholder="Zipcode" /></td>
-                                <td><input st-search="isDonor" class="form-control" type="text" placeholder="Donor" /></td>
-                                <td><input st-search="isPriority" class="form-control" type="text" placeholder="Priority" /></td>
-                                <td><input st-search="dateCreated" class="form-control" type="text" placeholder="Date Created" /></td>
-                                <td><input st-search="fuzzyMatchValue" class="form-control" type="text" placeholder="Fuzzy Match" /></td>
+                                <td><input st-search="firstname" st-clear-key class="form-control" type="text" placeholder="First Name" ng-keyup="vm.clearSearch($event)" /></td>
+                                <td><input st-search="lastname" st-clear-key class="form-control" type="text" placeholder="Last Name" /></td>
+                                <td><input st-search="emailAddress" st-clear-key class="form-control" type="text" placeholder="Email Address" /></td>
+                                <td><input st-search="zipCode" st-clear-key class="form-control" type="text" placeholder="Zipcode" /></td>
+                                <td><input st-search="isDonor" st-clear-key class="form-control" type="text" placeholder="Donor" /></td>
+                                <td><input st-search="isPriority" st-clear-key class="form-control" type="text" placeholder="Priority" /></td>
+                                <td><input st-search="dateCreated" st-clear-key class="form-control" type="text" placeholder="Date Created" /></td>
+                                <td><input st-search="fuzzyMatchValue" st-clear-key class="form-control" type="text" placeholder="Fuzzy Match" /></td>
                                 <td colspan="2"><button class="btn" ng-click="vm.addItem()"><i class="fa fa-plus"></i></button></td>
                             </tr>
                         </thead>
