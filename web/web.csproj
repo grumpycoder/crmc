@@ -226,6 +226,8 @@
     <Content Include="app\configuration\settings.module.js" />
     <Content Include="app\core\constants.js" />
     <Content Include="app\core\core.module.js" />
+    <Content Include="app\directives\clear-key.directive.js" />
+    <Content Include="app\directives\smart-table.directive.js" />
     <Content Include="app\filters\app.filters.js" />
     <Content Include="app\filters\filter.module.js" />
     <Content Include="app\home\home.js" />

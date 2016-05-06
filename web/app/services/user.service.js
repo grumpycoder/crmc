@@ -35,7 +35,7 @@
         }
 
         function query(searchTerm) {
-            if (searchTerm != undefined) {
+            if (searchTerm != undefined && searchTerm.length > 0) {
                 return $http.get(url + '?searchTerm=' + searchTerm).then(_success);
             } else {
                 return get(url);
