@@ -12,7 +12,7 @@
 
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="vm.user.userName" placeholder="New username...">
+                        <input type="text" class="form-control" ng-model="vm.user.userName" placeholder="New username..." ng-keyup="vm.clearSearch($event)">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-primary" ng-click="vm.addItem()" ng-disabled="!vm.user.userName"
                                     tooltip="Click here to add new user" tooltip-placement="right">
@@ -34,7 +34,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="2"><input st-search="searchTerm" class="form-control" type="text" placeholder="Username or full name..." /></td>
+                                <td colspan="2"><input st-search="searchTerm" class="form-control" type="text" placeholder="Username or full name..." ng-keyup="vm.clearSearch($event)" /></td>
                                 <td></td>
                                 <td></td>
                             </tr>

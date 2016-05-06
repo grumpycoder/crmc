@@ -6,12 +6,13 @@
 
     angular.module('app.censors').controller(controllerId, mainController);
 
-    mainController.$inject = ['logger', '$uibModal', 'censorService'];
+    mainController.$inject = ['logger', '$uibModal', 'censorService', 'config'];
 
-    function mainController(logger, $modal, service) {
+    function mainController(logger, $modal, service, config) {
         var vm = this;
         vm.title = 'Censors';
 
+        var keyCodes = config.keyCodes;
         vm.cancelEdit = cancelEdit;
         vm.create = create;
         vm.editItem = editItem;
@@ -19,8 +20,11 @@
         vm.saveItem = saveItem;
 
         vm.censors = [];
+        vm.clearSearch = clearSearch;
         vm.currentEdit = {};
         vm.search = search;
+
+        var tableStateRef;
 
         activate();
 
@@ -29,6 +33,8 @@
         }
 
         function search(tableState) {
+            tableStateRef = tableState;
+
             var searchTerm = '';
             if (typeof (tableState.search.predicateObject) != "undefined") {
                 searchTerm = tableState.search.predicateObject.searchTerm;
@@ -74,6 +80,13 @@
             service.update(censor).then(function (data) {
                 censor = data;
             });
+        }
+
+        function clearSearch($event) {
+            if ($event.keyCode === keyCodes.esc) {
+                tableStateRef.search.predicateObject.searchTerm = undefined;
+                search(tableStateRef);
+            }
         }
     }
 

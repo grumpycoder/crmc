@@ -5,15 +5,17 @@
 
     angular.module('app.users').controller(controllerId, mainController);
 
-    mainController.$inject = ['$log', 'userService', 'defaults'];
+    mainController.$inject = ['logger', 'userService', 'defaults', 'config'];
 
-    function mainController(log, service, defaults) {
+    function mainController(logger, service, defaults, config) {
         var vm = this;
         vm.title = 'Users';
+        var keyCodes = config.keyCodes;
 
         vm.addItem = addItem;
         vm.availableRoles = [];
         vm.cancelEdit = cancelEdit;
+        vm.clearSearch = clearSearch;
         vm.currentEdit = {};
         vm.deleteItem = deleteItem;
         vm.editItem = editItem;
@@ -32,7 +34,7 @@
         activate();
 
         function activate() {
-            log.info(controllerId + ' activated');
+            logger.log(controllerId + ' activated');
             getAvailableRoles();
         }
 
@@ -99,6 +101,13 @@
                 .then(function (data) {
                     vm.users = data;
                 });
+        }
+
+        function clearSearch($event) {
+            if ($event.keyCode === keyCodes.esc) {
+                tableStateRef.search.predicateObject.searchTerm = undefined;
+                search(tableStateRef);
+            }
         }
 
         function parseFullName(name) {
