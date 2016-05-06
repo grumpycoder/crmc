@@ -43,7 +43,7 @@
             };
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
+                controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
                     item: function () { return item; }
@@ -56,7 +56,7 @@
         function editItem(item) {
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['$log', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
+                controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
                     item: function () { return item; }
@@ -119,7 +119,7 @@
         }
     }
 
-    function editPersonController(log, $modal, service, item, storage) {
+    function editPersonController(logger, $modal, service, item, storage) {
         var vm = this;
 
         //TODO: Can be made global??
@@ -137,7 +137,8 @@
 
         function matchValue() {
             var value = 0.0;
-            var fn = vm.item.firstname + ' ' + vm.item.lastname;
+            var fn = getFullName(vm.item);// vm.item.firstname + ' ' + vm.item.lastname;
+
             _.forEach(censors, function (censor) {
                 var idx = clj_fuzzy.metrics.dice(fn, censor.word);
                 if (idx > value) value = idx;
@@ -145,14 +146,20 @@
             vm.item.fuzzyMatchValue = value;
         }
 
+        function getFullName(item) {
+            return item.firstname + ' ' + item.lastname;
+        }
+
         function save() {
             if (vm.item.id) {
                 service.update(vm.item).then(function () {
                     angular.extend(item, vm.item);
+                    logger.info('Successfully updated ' + getFullName(item));
                     $modal.close(vm.item);
                 });
             } else {
                 service.create(vm.item).then(function (data) {
+                    logger.info('Successfully created ' + vm.item.fullName);
                     $modal.close(data);
                 });
             }

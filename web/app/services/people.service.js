@@ -23,7 +23,7 @@
         return service;
 
         function create(censor) {
-            return $http.put(url, censor).then(_success);
+            return $http.post(url, censor).then(_success);
         }
 
         function get() {

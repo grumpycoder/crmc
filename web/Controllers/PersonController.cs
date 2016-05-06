@@ -24,7 +24,7 @@ namespace web.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            var list = context.Persons.OrderBy(x => x.SortOrder).Skip(10).Take(10).ToList();
+            var list = context.Persons.OrderByDescending(x => x.DateCreated).Take(10).ToList();
             return Ok(list);
         }
 
@@ -105,6 +105,7 @@ namespace web.Controllers
 
         public IHttpActionResult Post(Person person)
         {
+            person.DateCreated = DateTime.Now;
             context.Persons.Add(person);
             context.SaveChanges();
             return Ok(person);
@@ -112,7 +113,6 @@ namespace web.Controllers
 
         public IHttpActionResult Put(Person person)
         {
-            person.DateCreated = DateTime.Now;
             context.Persons.AddOrUpdate(person);
             context.SaveChanges();
             return Ok(person);
