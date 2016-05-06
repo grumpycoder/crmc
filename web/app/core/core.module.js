@@ -16,7 +16,8 @@
         'ui.bootstrap',
         'rzModule',
         'ngTagsInput',
-        'switcher'
+        'switcher',
+        'nzToggle'
 
     ]);
 })()

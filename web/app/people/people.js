@@ -75,9 +75,6 @@
         function search(tableState) {
             tableStateRef = tableState;
 
-            if (vm.isLocal) vm.searchModel.isDonor = false;
-            if (!vm.isLocal) vm.searchModel.isDonor = null;
-
             if (!vm.searchModel.isPriority) vm.searchModel.isPriority = null;
 
             vm.searchModel.dateCreated = vm.daysFilter
@@ -95,18 +92,17 @@
                     ? vm.searchModel.dateCreated
                     : tableState.search.predicateObject.dateCreated;
 
-                vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue
-                    ? null
-                    : vm.searchModel.fuzzyMatchValue;
-                vm.searchModel.fuzzyMatchValue = vm.searchModel.fuzzyMatchValue
-                    ? vm.searchModel.fuzzyMatchValue
-                    : tableState.search.predicateObject.fuzzyMatchValue / 100;
+                if (tableState.search.predicateObject.fuzzyMatchValue) {
+                    vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue / 100;
+                } else {
+                    vm.searchModel.fuzzyMatchValue = null;
+                }
 
+                vm.searchModel.isDonor = tableState.search.predicateObject.isDonor;
                 vm.searchModel.firstname = tableState.search.predicateObject.firstname;
                 vm.searchModel.lastname = tableState.search.predicateObject.lastname;
                 vm.searchModel.zipcode = tableState.search.predicateObject.zipCode;
                 vm.searchModel.emailAddress = tableState.search.predicateObject.emailAddress;
-                vm.searchModel.isDonor = tableState.search.predicateObject.isDonor;
                 vm.searchModel.isPriority = tableState.search.predicateObject.isPriority;
             }
 

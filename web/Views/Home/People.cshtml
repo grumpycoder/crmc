@@ -33,13 +33,6 @@
                         <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.9" uncheckable>High Match</label>
                         <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.6" uncheckable>Medium Match</label>
                     </div>
-
-                    <div class="btn-group" ng-click="vm.quickFilter()">
-                        <label class="btn btn-warning" ng-model="vm.searchModel.isPriority" uib-btn-checkbox>Priority</label>
-                        <label class="btn btn-warning" ng-model="vm.isLocal" uib-btn-checkbox>Local</label>
-                    </div>
-                    <div class="pull-right">
-                    </div>
                 </div>
             </div>
 
@@ -60,12 +53,24 @@
                                 <th></th>
                             </tr>
                             <tr>
-                                <td><input st-search="firstname" st-clear-key class="form-control" type="text" placeholder="First Name" ng-keyup="vm.clearSearch($event)" /></td>
+                                <td><input st-search="firstname" st-clear-key class="form-control" type="text" placeholder="First Name" /></td>
                                 <td><input st-search="lastname" st-clear-key class="form-control" type="text" placeholder="Last Name" /></td>
                                 <td><input st-search="emailAddress" st-clear-key class="form-control" type="text" placeholder="Email Address" /></td>
                                 <td><input st-search="zipCode" st-clear-key class="form-control" type="text" placeholder="Zipcode" /></td>
-                                <td><input st-search="isDonor" st-clear-key class="form-control" type="text" placeholder="Donor" /></td>
-                                <td><input st-search="isPriority" st-clear-key class="form-control" type="text" placeholder="Priority" /></td>
+                                <td>
+                                    <select st-search="isDonor" st-input-event="change" class="form-control" uib-tooltip="Selecting 'No' should return mostly only local names from kiosks">
+                                        <option value="">All</option>
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select st-search="isPriority" st-input-event="change" class="form-control">
+                                        <option value="">All</option>
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </td>
                                 <td>
                                     <span class="input-group half">
                                         <input st-search="dateCreated" st-clear-key ng-model="dt" class="form-control" type="text" placeholder="Date Created" uib-datepicker-popup="MM/dd/yyyy" is-open="newStatus.opened" st-input-event="focus" />
