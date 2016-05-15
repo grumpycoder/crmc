@@ -232,6 +232,8 @@
     <Content Include="app\filters\filter.module.js" />
     <Content Include="app\home\home.js" />
     <Content Include="app\home\home.module.js" />
+    <Content Include="app\kiosk-app.module.js" />
+    <Content Include="app\kiosk\kiosk.module.js" />
     <Content Include="app\people\people.js" />
     <Content Include="app\people\people.module.js" />
     <Content Include="app\people\views\person.html" />
@@ -290,6 +292,8 @@
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Home\Users.cshtml" />
     <Content Include="Views\Shared\UnAuthorized.cshtml" />
+    <Content Include="Views\Home\Kiosk.cshtml" />
+    <Content Include="Views\Shared\_Layout-Kiosk.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
