@@ -1,0 +1,32 @@
+﻿<div class="row">
+    <div class="col-md-8 col-md-offset-2" style="margin-top: 350px;">
+        <p>
+            By placing my name on the Wall of Tolerance, I pledge to take a stand against hate,
+            injustice and intolerance. I will work in my daily life for justice, equality and human rights
+            &mdash; the ideals for which the Civil Rights martyrs died.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" style="margin-top: 20px;">
+        <p class="text-center text-capitalize displayName">{{vm.person.firstname}} {{vm.person.lastname}}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-center" style="margin-top: 50px;">
+        <button class="btn btn-pledge btn-lg" ng-click="vm.save()">I Pledge</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <button class="btn btn-danger btn-lg btn-custom pull-left" ng-click="vm.goBack()">
+            <i class="fa fa-angle-left"></i> GO BACK
+        </button>
+        <button class="btn btn-danger btn-lg btn-custom pull-right"
+                ng-click="vm.cancel()">
+            START OVER <i class="fa fa-angle-right"></i>
+        </button>
+    </div>
+</div>
