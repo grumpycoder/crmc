@@ -237,6 +237,7 @@
     <Content Include="app\kiosk\app.module.js" />
     <Content Include="app\kiosk\keyboard.html" />
     <Content Include="app\kiosk\kiosk.js" />
+    <Content Include="app\kiosk\views\partial-config.html" />
     <Content Include="app\kiosk\views\partial-pledge.html" />
     <Content Include="app\kiosk\views\partial-finish.html" />
     <Content Include="app\kiosk\views\partial-list.html" />

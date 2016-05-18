@@ -30,6 +30,9 @@
                         resolve: {
                             censors: function (censorService) {
                                 return censorService.get();
+                            },
+                            config: function (configurationService) {
+                                return configurationService.get();
                             }
                         }
                     })
@@ -57,6 +60,11 @@
                     {
                         url: 'finish',
                         templateUrl: 'app/kiosk/views/partial-finish.html'
+                    })
+            .state('home.config',
+                    {
+                        url: 'configuration',
+                        templateUrl: 'app/kiosk/views/partial-config.html'
                     })
         ;
 

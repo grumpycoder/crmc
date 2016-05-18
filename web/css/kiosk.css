@@ -61,7 +61,6 @@
     display: none;
 }
 
-
 body {
     background-image: url('images/kioskbackground-16x9.png');
     background-repeat: no-repeat;
@@ -168,7 +167,6 @@ input.form-control {
     background-color: white;
 }
 
-
 .grid {
     width: 850px;
     margin: 20px auto 0 auto;
@@ -208,11 +206,11 @@ td {
     background-color: #7a7a7a;
 }
 
-.kiosk-counter{
-    font-size:3em; 
-    font-weight:bold; 
-    text-align:center; 
-    color:#d12229;
+.kiosk-counter {
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    color: #d12229;
 }
 
 /* ------- pagination -------- */
@@ -269,4 +267,16 @@ div {
 
 * {
     -ms-scroll-chaining: none;
+}
+
+li.list-group-item {
+    background-color: transparent;
+}
+
+rzslider .rz-pointer {
+    background-color: #2780e3;
+}
+
+rzslider .rz-bar.rz-selection {
+    background-color: #2780e3;
 }

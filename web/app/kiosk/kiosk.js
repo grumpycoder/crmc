@@ -5,23 +5,31 @@
     var controllerId = 'KioskController';
     angular.module('app').controller(controllerId, mainController);
 
-    mainController.$inject = ['$scope', '$log', '$state', '$timeout', 'peopleService', 'censors'];
+    mainController.$inject = ['$scope', '$log', '$state', '$timeout', 'peopleService', 'configurationService', 'censors', 'config'];
 
-    function mainController($scope, logger, $state, $timeout, peopleService, censors) {
+    function mainController($scope, logger, $state, $timeout, peopleService, configurationService, censors, config) {
         var vm = this;
         var tableStateRef;
         var prevSelection = null;
         var timer;
         var waitTime = 5000;
+        var keyCode = '';
+        var hub = $.connection.wot;
 
         vm.title = 'welcome';
         vm.people = [];
-
+        vm.config = config;
         vm.searchModel = {
             page: 1,
             pageSize: 13
         };
         vm.showValidationErrors = false;
+        vm.kiosk = localStorage.getItem('kiosk') ? localStorage.getItem('kiosk') : '1';
+        vm.availableKiosks = ['1', '2', '3', '4'];
+
+        $.connection.hub.start().done(function () {
+            logger.info('hub connection successful');
+        });
 
         vm.toggleName = function (person) {
             if (prevSelection) {
@@ -72,6 +80,11 @@
         vm.paged = function () {
             prevSelection = null;
             vm.search(tableStateRef);
+        }
+
+        vm.updateKiosk = function () {
+            logger.info('changed kiosk', vm.kiosk);
+            localStorage.setItem('kiosk', vm.kiosk);
         }
 
         vm.search = function (tableState) {
@@ -153,9 +166,10 @@
         vm.finish = function () {
             $state.go('home.finish').then(function () {
                 logger.info('sending to hub');
-                //TODO: Send to hub service
-                logger.info(vm.person);
-                resetTimer();
+                hub.server.addName(vm.kiosk, vm.person).then(function () {
+                    logger.info('Sent person to WOT', vm.person);
+                    resetTimer();
+                });
             });
         }
 
@@ -163,6 +177,34 @@
             peopleService.create(vm.person).then(function (data) {
                 vm.finish();
             });
+        }
+
+        vm.unlockSettings = function (key) {
+            logger.info('keyCode', keyCode, false);
+            if (keyCode.length > 4) {
+                keyCode = key;
+            }
+            else {
+                keyCode += key.toString();
+            }
+
+            if (keyCode === '12') {
+                $state.go('home.config').then(function () {
+                    keyCode = '';
+                    logger.info('current kiosk', vm.kiosk);
+                });
+            }
+        }
+
+        vm.saveConfig = function () {
+            configurationService.update(vm.config)
+                .then(function (data) {
+                    vm.config = data;
+                    toastr.success('Settings Saved!');
+                    hub.server.configurationChange(vm.config).then(function () {
+                        logger.info('Changes saved and sent to WOT');
+                    });
+                });
         }
 
         function matchValue(person) {
