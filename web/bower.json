@@ -21,7 +21,8 @@
     "angularLocalStorage": "^0.3.2",
     "nz-toggle": "ng-toggle#^2.1.0",
     "angular-ui-router": "^0.2.18",
-    "humanize-plus": "^1.8.2"
+    "humanize-plus": "^1.8.2",
+    "angular-animate": "^1.5.5"
   },
   "resolutions": {
     "jquery": ">= 1.9.0",

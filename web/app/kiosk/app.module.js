@@ -5,6 +5,7 @@
         //Angular Modules
         'ui.router',
         'ngMessages',
+        'ngAnimate',
 
         //application modules
         'app.core',
