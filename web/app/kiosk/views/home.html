@@ -1,0 +1,27 @@
+﻿<button class="btn btn-hidden" ng-click="vm.unlockSettings(1)" style="position: absolute; top: 0; left: 0; opacity: 1;">Settings1</button>
+<button class="btn btn-hidden" ng-click="vm.unlockSettings(2)" style="position: absolute; top: 0; right: 0; opacity: 1;">Settings2</button>
+<button class="btn btn-hidden" ng-click="vm.unlockSettings(3)" style="position: absolute; bottom: 0; left: 0; opacity: 1;">Settings3</button>
+<button class="btn btn-hidden" ng-click="vm.unlockSettings(4)" style="position: absolute; bottom: 0; right: 0; opacity: 1;">Settings4</button>
+
+<div ui-view id="main-view" class="myanimation" spinner-start-active="true">
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" style="margin-top: 525px;">
+            <p>The Wall of Tolerance displays the names of people who have pledged to fight hate and to promote tolerance.</p>
+            <p>We invite you to take the pledge as well. To start touch one of the buttons below.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" style="margin-top: 30px;">
+            <div class="welcome-buttons">
+                <button class="btn btn-danger btn-block btn-lg" ng-click="vm.gotoCreate()">
+                    I want to add my name to the wall
+                </button>
+                <button class="btn btn-block btn-lg btn-transparent" ng-click="vm.gotoSearch()">
+                    My name is already on the wall
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -226,12 +226,24 @@
     <Content Include="app\configuration\settings.module.js" />
     <Content Include="app\core\constants.js" />
     <Content Include="app\core\core.module.js" />
+    <Content Include="app\directives\blacklist.directive.js" />
     <Content Include="app\directives\clear-key.directive.js" />
     <Content Include="app\directives\smart-table.directive.js" />
     <Content Include="app\filters\app.filters.js" />
     <Content Include="app\filters\filter.module.js" />
     <Content Include="app\home\home.js" />
     <Content Include="app\home\home.module.js" />
+    <Content Include="app\app.kiosk.module.js" />
+    <Content Include="app\kiosk\app.module.js" />
+    <Content Include="app\kiosk\keyboard.html" />
+    <Content Include="app\kiosk\kiosk.js" />
+    <Content Include="app\kiosk\views\partial-config.html" />
+    <Content Include="app\kiosk\views\partial-pledge.html" />
+    <Content Include="app\kiosk\views\partial-finish.html" />
+    <Content Include="app\kiosk\views\partial-list.html" />
+    <Content Include="app\kiosk\views\partial-create.html" />
+    <Content Include="app\kiosk\views\partial-search.html" />
+    <Content Include="app\kiosk\views\home.html" />
     <Content Include="app\people\people.js" />
     <Content Include="app\people\people.module.js" />
     <Content Include="app\people\views\person.html" />
@@ -242,6 +254,11 @@
     <Content Include="app\services\user.service.js" />
     <Content Include="app\users\users.js" />
     <Content Include="app\users\users.module.js" />
+    <Content Include="css\animate.css" />
+    <Content Include="css\images\kioskbackground-16x9.png" />
+    <Content Include="css\keyboard.css" />
+    <Content Include="css\kiosk-animations.css" />
+    <Content Include="css\kiosk.css" />
     <Content Include="css\site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -252,6 +269,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
+    <Content Include="fonts\HelveticaNeueLTStd-Lt.otf" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="images\kioskbackground.png" />
     <Content Include="Scripts\bootstrap.js" />
@@ -265,6 +283,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\keyboard.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
@@ -290,6 +309,7 @@
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Home\Users.cshtml" />
     <Content Include="Views\Shared\UnAuthorized.cshtml" />
+    <Content Include="Views\Home\Kiosk.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
