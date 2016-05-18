@@ -6,6 +6,7 @@
         'ui.router',
         'ngMessages',
         'ngAnimate',
+        'angularLocalStorage',
 
         //application modules
         'app.core',
