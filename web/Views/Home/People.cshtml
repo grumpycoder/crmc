@@ -42,14 +42,14 @@
                     <table st-table="vm.people" st-pipe="vm.search" class="table table-responsive table-striped">
                         <thead>
                             <tr>
-                                <th st-sort="firstname">First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Zipcode</th>
-                                <th>Donor</th>
-                                <th>Priority</th>
-                                <th>Entry</th>
-                                <th>Match</th>
+                                <th class="sort-header" st-sort="Firstname">First Name</th>
+                                <th class="sort-header" st-sort="Lastname">Last Name</th>
+                                <th class="sort-header" st-sort="EmailAddress">Email</th>
+                                <th class="sort-header" st-sort="Zipcode">Zipcode</th>
+                                <th class="sort-header" st-sort="isDonor">Donor</th>
+                                <th class="sort-header" st-sort="IsPriority">Priority</th>
+                                <th class="sort-header" st-sort="DateCreated">Entry</th>
+                                <th class="sort-header" st-sort="FuzzyMatchValue">Match</th>
                                 <th></th>
                             </tr>
                             <tr>

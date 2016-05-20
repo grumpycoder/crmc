@@ -27,7 +27,9 @@
 
         vm.searchModel = {
             page: 1,
-            pageSize: 15
+            pageSize: 15,
+            orderBy: 'Firstname',
+            orderDirection: 'desc'
         };
 
         var tableStateRef;
@@ -74,7 +76,6 @@
 
         function search(tableState) {
             tableStateRef = tableState;
-
             if (!vm.searchModel.isPriority) vm.searchModel.isPriority = null;
 
             vm.searchModel.dateCreated = vm.daysFilter

@@ -19,6 +19,10 @@ body {
     content: '\25BC';
 }
 
+th.sort-header {
+    cursor: pointer;
+}
+
 .pagination {
     margin: 0;
 }

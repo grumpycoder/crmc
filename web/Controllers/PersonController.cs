@@ -2,9 +2,12 @@
 using crmc.domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Web.Http;
 using web.Helpers;
 using web.ViewModels;
@@ -63,11 +66,23 @@ namespace web.Controllers
             }
             else
             {
-                list = context.Persons
-                    .OrderBy(x => x.DateCreated)
-                    .Where(pred)
-                    .Skip(skipRows)
-                    .Take(pageSize).ToList();
+                if (vm.OrderDirection == "desc")
+                {
+                    list = context.Persons
+                        .OrderBy(vm.OrderBy ?? "DateCreated", "desc")
+                        //.OrderBy(x => x.DateCreated)
+                        .Where(pred)
+                        .Skip(skipRows)
+                        .Take(pageSize).ToList();
+                }
+                else
+                {
+                    list = context.Persons
+                        .OrderBy(vm.OrderBy ?? "DateCreated", "asc")
+                        .Where(pred)
+                        .Skip(skipRows)
+                        .Take(pageSize).ToList();
+                }
             }
             var totalCount = context.Persons.Count();
             var filterCount = context.Persons.Where(pred).Count();
