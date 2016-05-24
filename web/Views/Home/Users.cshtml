@@ -3,74 +3,98 @@
 }
 <div ng-controller="UserController as vm" ng-cloak>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <span class="panel-title">{{vm.title}}</span>
-        </div>
-        <div class="panel-body">
-            <div class="row">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            {{vm.title}}
+            <small>{{vm.description}}</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">User Manager</li>
+        </ol>
+    </section>
 
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" clear-key ng-model="vm.user.userName" placeholder="New username...">
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary" ng-click="vm.addItem()" ng-disabled="!vm.user.userName"
-                                    tooltip="Click here to add new user" tooltip-placement="right">
-                                <span class="fa fa-plus"></span> Add
-                            </button>
-                        </span>
-                    </div><!-- /input-group -->
-                </div><!-- /.col-lg-6 -->
-            </div>
-            <div class="row">
-                <div class="col-md-12">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">Users</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="row">
 
-                    <table st-table="vm.users" st-pipe="vm.search" class="table table-responsive table-striped">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Full Name</th>
-                                <th>Roles</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><input st-search="searchTerm" st-clear-key class="form-control" type="text" placeholder="Username or full name..." /></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="user in vm.users">
-                                <td>
-                                    <span>{{user.userName}}</span>
-                                </td>
-                                <td>
-                                    <span ng-hide="vm.currentEdit[user.id]">{{user.fullName}}</span>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" clear-key ng-model="vm.user.userName" placeholder="New username...">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary" ng-click="vm.addItem()" ng-disabled="!vm.user.userName"
+                                                tooltip="Click here to add new user" tooltip-placement="right">
+                                            <span class="fa fa-plus"></span> Add
+                                        </button>
+                                    </span>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                        </div>
 
-                                    <input type="text" ng-model="user.fullName" ng-show="vm.currentEdit[user.id]" />
-                                </td>
-                                <td>
-                                    <ul class="list-inline" ng-hide="vm.currentEdit[user.id]">
-                                        <li ng-repeat="role in user.roles">
-                                            <span class="label label-info">{{role.name}}</span>
-                                        </li>
-                                    </ul>
-                                    <tags-input ng-model="user.roles" placeholder="Add a role" ng-show="vm.currentEdit[user.id]" display-property="name">
-                                        <auto-complete source="vm.availableRoles" min-length="1" load-on-down-arrow="true"></auto-complete>
-                                    </tags-input>
-                                </td>
-                                <td style="text-align: right; white-space: nowrap;">
-                                    <button class="btn  btn-success" ng-hide="vm.currentEdit[user.id]" ng-click="vm.editItem(user)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn  btn-danger" ng-hide="vm.currentEdit[user.id]" ng-click="vm.deleteItem(user)"><i class="fa fa-trash"></i></button>
+                        <table st-table="vm.users" st-pipe="vm.search" class="table table-responsive table-striped">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Full Name</th>
+                                    <th>Roles</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><input st-search="searchTerm" st-clear-key class="form-control" type="text" placeholder="Filter Username or full name..." /></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="user in vm.users">
+                                    <td>
+                                        <span>{{user.userName}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-hide="vm.currentEdit[user.id]">{{user.fullName}}</span>
 
-                                    <button class="btn  btn-success" ng-show="vm.currentEdit[user.id]" ng-click="vm.saveItem(user)">Save</button>
-                                    <button class="btn  btn-warning" ng-show="vm.currentEdit[user.id]" ng-click="vm.cancelEdit(user.id)">Cancel</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <input type="text" ng-model="user.fullName" ng-show="vm.currentEdit[user.id]" />
+                                    </td>
+                                    <td>
+                                        <ul class="list-inline" ng-hide="vm.currentEdit[user.id]">
+                                            <li ng-repeat="role in user.roles">
+                                                <span class="label label-info">{{role.name}}</span>
+                                            </li>
+                                        </ul>
+                                        <tags-input ng-model="user.roles" placeholder="Add a role" ng-show="vm.currentEdit[user.id]" display-property="name">
+                                            <auto-complete source="vm.availableRoles" min-length="1" load-on-down-arrow="true"></auto-complete>
+                                        </tags-input>
+                                    </td>
+                                    <td style="text-align: right; white-space: nowrap;">
+                                        <button class="btn  btn-success" ng-hide="vm.currentEdit[user.id]" ng-click="vm.editItem(user)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn  btn-danger" ng-hide="vm.currentEdit[user.id]" ng-click="vm.deleteItem(user)"><i class="fa fa-trash"></i></button>
+
+                                        <button class="btn  btn-success" ng-show="vm.currentEdit[user.id]" ng-click="vm.saveItem(user)">Save</button>
+                                        <button class="btn  btn-warning" ng-show="vm.currentEdit[user.id]" ng-click="vm.cancelEdit(user.id)">Cancel</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                    </div>
+                    <!-- ./box-footer -->
+                    <div class="overlay" ng-show="vm.isBusy">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
                 </div>
+                <!-- /.box -->
             </div>
         </div>
-    </div>
+    </section>
+    <!-- /.content -->
 </div>

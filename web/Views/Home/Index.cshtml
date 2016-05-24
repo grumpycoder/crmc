@@ -2,68 +2,102 @@
     ViewBag.Title = "Home Page";
 }
 <div ng-controller="HomeController as vm" ng-cloak>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Dashboard
+            <small>Version 2.0</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+        </ol>
+    </section>
 
-    <div class="row">
-        <div class="col-md-12">
+    <!-- Main content -->
+    <section class="content">
+        <!-- Info boxes -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-aqua"><i class="ion ion-ios-people-outline"></i></span>
 
-            <ul class="today-datas">
-                <li class="bgreen">
-                    <a href="/people">
-                        <div class="pull-left">
-                            <i class="fa fa-group"></i>
-                        </div>
-                        <div class="datas-text pull-right">
-                            <span class="bold">{{vm.stat.todayCount}}</span> Visitors Today
-                        </div>
-                        <div class="clearfix"></div>
-                    </a>
-                </li>
-                <li class="bviolet">
-                    <a href="/people">
-                        <div class="pull-left">
-                            <i class="fa fa-group"></i>
-                        </div>
-                        <div class="datas-text pull-right">
-                            <span class="bold">{{vm.stat.monthCount}}</span> Visitors This Month
-                        </div>
-                        <div class="clearfix"></div>
-                    </a>
-                </li>
-                <li class="borange">
-                    <a href="/people">
-                        <div class="pull-left">
-                            <i class="fa fa-group"></i>
-                        </div>
-                        <div class="datas-text pull-right">
-                            <span class="bold">{{vm.stat.totalCount}}</span> Total Visitors
-                        </div>
-                        <div class="clearfix"></div>
-                    </a>
-                </li>
-            </ul>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Visitors Today</span>
+                        <span class="info-box-number">{{vm.stat.todayCount}}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Visitors This Month</span>
+                        <span class="info-box-number">41,410</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion ion-ios-people-outline"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Visitors</span>
+                        <span class="info-box-number">{{vm.stat.monthCount}}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
         </div>
-    </div>
+        <!-- /.row -->
 
-    <div class="row">
-        <div class="col-md-6">
-            <table class="table table-condensed table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Zip Code</th>
-                        <th>Date Added</th>
-                        <th>Fuzzy Match</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-ng-repeat="p in vm.people">
-                        <td style="text-align: left;">{{p.firstname}} {{p.lastname}}</td>
-                        <td>{{p.zipcode}}</td>
-                        <td>{{p.dateCreated | date: 'MM/dd/yyyy'}}</td>
-                        <td>{{p.fuzzyMatchValue | percentage:1}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Latest Pledges</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table no-margin">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Zip Code</th>
+                                        <th>Date Added</th>
+                                        <th>Fuzzy Match</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="p in vm.people">
+                                        <td style="text-align: left;">{{p.firstname}} {{p.lastname}}</td>
+                                        <td>{{p.zipcode}}</td>
+                                        <td>{{p.dateCreated | date: 'MM/dd/yyyy'}}</td>
+                                        <td>{{p.fuzzyMatchValue | percentage:1}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <div class="box-footer clearfix">
+                        <a href="/people" class="btn btn-sm btn-default btn-flat pull-right">View All People</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+    <!-- /.content -->
 </div>

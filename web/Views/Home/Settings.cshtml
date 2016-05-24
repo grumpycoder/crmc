@@ -2,68 +2,91 @@
     ViewBag.Title = "Settings";
 }
 <div ng-controller="SettingsController as vm" ng-cloak>
-    <div class="panel panel-danger">
-        <div class="panel-heading">
-            <span class="panel-title">{{vm.title}}</span>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            {{vm.title}}
+            <small>{{vm.description}}</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Settings</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <label class="control-label">Volume</label>
+                                <rzslider rz-slider-model="vm.config.volume"
+                                          rz-slider-options="{floor: 0, ceil: 100}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-lable">Min and Max FontSize</label>
+                                <rzslider rz-slider-model="vm.config.minFontSize"
+                                          rz-slider-high="vm.config.maxFontSize"
+                                          rz-slider-options="{floor: 1, ceil: 40}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="Point on screen where kiosk names will animate in initally">Kiosk Entry TopMargin</label>
+                                <rzslider rz-slider-model="vm.config.kioskEntryTopMargin"
+                                          rz-slider-options="{floor: 0, ceil: 1000}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="Bottom location of screen where names fall off">Screen Bottom Margin</label>
+                                <rzslider rz-slider-model="vm.config.screenBottomMargin"
+                                          rz-slider-options="{floor: 0, ceil: 100}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="How often names are added to display">Rotation Delay</label>
+                                <rzslider rz-slider-model="vm.config.generalRotationDelay"
+                                          rz-slider-options="{floor:0.0, ceil:10.0, step:0.01, precision:2}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="How often priority names are added to display">Priority Rotation Delay</label>
+                                <rzslider rz-slider-model="vm.config.priorityRotationDelay"
+                                          rz-slider-options="{floor:0.0, ceil:10.0, step:0.1, precision:1}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="how many times kiosk names rotate thru screen after initial entry">Kiosk Display Recycle Count</label>
+                                <rzslider rz-slider-model="vm.config.kioskDisplayRecycleCount"
+                                          rz-slider-options="{floor: 0, ceil: 10}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="Time it takes for name to grow to largest font size">Grow Animation Time</label>
+                                <rzslider rz-slider-model="vm.config.growAnimationDuration"
+                                          rz-slider-options="{floor: 0, ceil: 20}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="Time it takes for name to shrink from largest to smallest font size">Shrink Animation Time</label>
+                                <rzslider rz-slider-model="vm.config.shrinkAnimationDuration"
+                                          rz-slider-options="{floor: 0, ceil: 20}"></rzslider>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="control-label" uib-tooltip="Time modifier for fall animation. Smaller time modifier results in slower fall rate.">Fall Animation Time Modifier</label>
+                                <rzslider rz-slider-model="vm.config.fallAnimationDurationTimeModifier"
+                                          rz-slider-options="{floor: 0, ceil: 30}"></rzslider>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button class="btn btn-primary" ng-click="vm.save()">Save</button>
+                        <button class="btn btn-primary" ng-click="vm.undo()">Undo</button>
+                    </div>
+                    <!-- ./box-footer -->
+                    <div class="overlay" ng-show="vm.isBusy">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+                <!-- /.box -->
+            </div>
         </div>
-        <div class="panel-body">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <label class="control-label">Volume</label>
-                    <rzslider rz-slider-model="vm.config.volume"
-                              rz-slider-options="{floor: 0, ceil: 100}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-lable">Min and Max FontSize</label>
-                    <rzslider rz-slider-model="vm.config.minFontSize"
-                              rz-slider-high="vm.config.maxFontSize"
-                              rz-slider-options="{floor: 1, ceil: 40}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="Point on screen where kiosk names will animate in initally">Kiosk Entry TopMargin</label>
-                    <rzslider rz-slider-model="vm.config.kioskEntryTopMargin"
-                              rz-slider-options="{floor: 0, ceil: 1000}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="Bottom location of screen where names fall off">Screen Bottom Margin</label>
-                    <rzslider rz-slider-model="vm.config.screenBottomMargin"
-                              rz-slider-options="{floor: 0, ceil: 100}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="How often names are added to display">Rotation Delay</label>
-                    <rzslider rz-slider-model="vm.config.generalRotationDelay"
-                              rz-slider-options="{floor:0.0, ceil:10.0, step:0.01, precision:2}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="How often priority names are added to display">Priority Rotation Delay</label>
-                    <rzslider rz-slider-model="vm.config.priorityRotationDelay"
-                              rz-slider-options="{floor:0.0, ceil:10.0, step:0.1, precision:1}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="how many times kiosk names rotate thru screen after initial entry">Kiosk Display Recycle Count</label>
-                    <rzslider rz-slider-model="vm.config.kioskDisplayRecycleCount"
-                              rz-slider-options="{floor: 0, ceil: 10}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="Time it takes for name to grow to largest font size">Grow Animation Time</label>
-                    <rzslider rz-slider-model="vm.config.growAnimationDuration"
-                              rz-slider-options="{floor: 0, ceil: 20}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="Time it takes for name to shrink from largest to smallest font size">Shrink Animation Time</label>
-                    <rzslider rz-slider-model="vm.config.shrinkAnimationDuration"
-                              rz-slider-options="{floor: 0, ceil: 20}"></rzslider>
-                </li>
-                <li class="list-group-item">
-                    <label class="control-label" uib-tooltip="Time modifier for fall animation. Smaller time modifier results in slower fall rate.">Fall Animation Time Modifier</label>
-                    <rzslider rz-slider-model="vm.config.fallAnimationDurationTimeModifier"
-                              rz-slider-options="{floor: 0, ceil: 30}"></rzslider>
-                </li>
-            </ul>
-        </div>
-        <div class="panel-footer">
-            <button class="btn btn-primary" ng-click="vm.save()">Save</button>
-            <button class="btn btn-primary" ng-click="vm.undo()">Undo</button>
-        </div>
-    </div>
+    </section>
+    <!-- /.content -->
 </div>

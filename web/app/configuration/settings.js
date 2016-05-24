@@ -10,10 +10,12 @@
 
     function mainController(logger, $timeout, service) {
         var vm = this;
-        vm.title = 'Settings';
+        vm.title = 'Settings Configuration';
 
         vm.config = {};
         var hub = $.connection.wot;
+
+        vm.isBusy = false;
 
         vm.lastSaved = {};
         vm.save = save;
@@ -37,12 +39,16 @@
         }
 
         function save() {
+            vm.isBusy = true;
             service.update(vm.config)
                 .then(function (data) {
                     vm.config = data;
                     hub.server.configurationChange(vm.config).then(function () {
                         logger.info('Changes saved and sent to WOT');
                     });
+                }).finally(function () {
+                    logger.log('finally compelted');
+                    vm.isBusy = false;
                 });
         }
 

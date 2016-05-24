@@ -9,7 +9,7 @@
 
     function mainController(logger, service, defaults, config) {
         var vm = this;
-        vm.title = 'Users';
+        vm.title = 'User Manager';
         var keyCodes = config.keyCodes;
 
         vm.addItem = addItem;
@@ -19,6 +19,8 @@
         vm.currentEdit = {};
         vm.deleteItem = deleteItem;
         vm.editItem = editItem;
+        vm.isBusy = false;
+
         vm.saveItem = saveItem;
         vm.search = search;
 
@@ -47,6 +49,7 @@
                     //TODO: mapping would allow removal of extend method
                     vm.user = angular.extend(vm.user, data);
                     vm.users.unshift(angular.copy(vm.user));
+                    logger.success('User ' + vm.user.userName + ' created!');
                     vm.user.userName = null;
                     //TODO: show error user already exists
                 });
@@ -87,6 +90,7 @@
             service.update(user)
                 .then(function (data) {
                     angular.extend(user, data);
+                    logger.success('User ' + user.userName + ' updated!');
                 });
         }
 
@@ -99,9 +103,12 @@
                 logger.log('setting predicate');
             }
 
+            vm.isBusy = true;
             service.query(searchTerm)
                 .then(function (data) {
                     vm.users = data;
+                }).finally(function () {
+                    vm.isBusy = false;
                 });
         }
 

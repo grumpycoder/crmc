@@ -8,6 +8,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Web.Helpers;
 using System.Web.Http;
 using web.Helpers;
 using web.ViewModels;
@@ -66,23 +67,11 @@ namespace web.Controllers
             }
             else
             {
-                if (vm.OrderDirection == "desc")
-                {
-                    list = context.Persons
-                        .OrderBy(vm.OrderBy ?? "DateCreated", "desc")
-                        //.OrderBy(x => x.DateCreated)
-                        .Where(pred)
-                        .Skip(skipRows)
-                        .Take(pageSize).ToList();
-                }
-                else
-                {
-                    list = context.Persons
-                        .OrderBy(vm.OrderBy ?? "DateCreated", "asc")
-                        .Where(pred)
-                        .Skip(skipRows)
-                        .Take(pageSize).ToList();
-                }
+                list = context.Persons
+                    .Order(vm.OrderBy, vm.OrderDirection == "desc" ? SortDirection.Descending : SortDirection.Ascending)
+                    .Where(pred)
+                    .Skip(skipRows)
+                    .Take(pageSize).ToList();
             }
             var totalCount = context.Persons.Count();
             var filterCount = context.Persons.Where(pred).Count();

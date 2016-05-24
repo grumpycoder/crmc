@@ -10,12 +10,13 @@
 
     function mainController(logger, $modal, service) {
         var vm = this;
-        vm.title = 'Censors';
-
+        vm.title = 'Censor Manager';
+        vm.description = 'View and edit censored words';
         vm.cancelEdit = cancelEdit;
         vm.create = create;
-        vm.editItem = editItem;
         vm.deleteItem = deleteItem;
+        vm.editItem = editItem;
+        vm.isBusy = false;
         vm.saveItem = saveItem;
 
         vm.censors = [];
@@ -37,8 +38,10 @@
             if (typeof (tableState.search.predicateObject) != "undefined") {
                 searchTerm = tableState.search.predicateObject.searchTerm;
             }
+            vm.isBusy = true;
             service.query(searchTerm).then(function (data) {
                 vm.censors = data;
+                vm.isBusy = false;
             });
         }
 

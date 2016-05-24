@@ -17,7 +17,6 @@
         'rzModule',
         'ngTagsInput',
         'switcher',
-        'nzToggle'
-
+        'nzToggle',
     ]);
 })()

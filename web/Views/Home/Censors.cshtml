@@ -2,54 +2,65 @@
     ViewBag.Title = "Censors";
 }
 <div ng-controller="CensorController as vm" ng-cloak>
+    <section class="content-header">
+        <h1>
+            {{vm.title}}<small>{{vm.description}}</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Censors</li>
+        </ol>
+    </section>
+    <!-- /.header -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-warning box-solid">
+                    <div class="box-header with-border">
+                        <span class="box-title">Words</span>
+                        <span class="pull-right">
+                            <button class="btn btn-primary" ng-click="vm.create()"><i class="fa fa-plus"></i></button>
+                        </span>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table st-table="vm.censors" st-pipe="vm.search" class="table table-responsive table-striped">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td><input st-search="searchTerm" st-clear-key class="form-control" type="text" placeholder="Filter Words..." /></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="censor in vm.censors">
+                                    <td>
+                                        <span ng-hide="vm.currentEdit[censor.id]">{{censor.word}}</span>
+                                        <input type="text" class="form-control" ng-model="censor.word" ng-show="vm.currentEdit[censor.id]" />
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <button class="btn bg-default" ng-hide="vm.currentEdit[censor.id]" ng-click="vm.editItem(censor)">Edit</button>
+                                        <button class="btn btn-danger" ng-hide="vm.currentEdit[censor.id]" ng-click="vm.deleteItem(censor)">Delete</button>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <span class="panel-title">{{vm.title}}</span>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <p class="input-group">
-
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </p>
-
-                <div class="col-md-12">
-                    <table st-table="vm.censors" st-pipe="vm.search" class="table table-responsive table-striped">
-                        <thead>
-                            <tr>
-                                <th>Word</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><input st-search="searchTerm" st-clear-key class="form-control" type="text" placeholder="Word" /></td>
-                                <td>
-                                    <div class="pull-right">
-                                        <button class="btn btn-default" ng-click="vm.create()"><i class="fa fa-plus"></i> Add Word</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="censor in vm.censors">
-                                <td>
-                                    <span ng-hide="vm.currentEdit[censor.id]">{{censor.word}}</span>
-                                    <input type="text" class="form-control" ng-model="censor.word" ng-show="vm.currentEdit[censor.id]" />
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="btn bg-default" ng-hide="vm.currentEdit[censor.id]" ng-click="vm.editItem(censor)">Edit</button>
-                                    <button class="btn btn-danger" ng-hide="vm.currentEdit[censor.id]" ng-click="vm.deleteItem(censor)">Delete</button>
-
-                                    <button class="btn btn-success" ng-show="vm.currentEdit[censor.id]" ng-click="vm.saveItem(censor)">Save</button>
-                                    <button class="btn btn-warning" ng-show="vm.currentEdit[censor.id]" ng-click="vm.cancelEdit(censor.id)">Cancel</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <button class="btn btn-success" ng-show="vm.currentEdit[censor.id]" ng-click="vm.saveItem(censor)">Save</button>
+                                        <button class="btn btn-warning" ng-show="vm.currentEdit[censor.id]" ng-click="vm.cancelEdit(censor.id)">Cancel</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="overlay" ng-show="vm.isBusy">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
                 </div>
+                <!-- /.box -->
             </div>
         </div>
-    </div>
+    </section>
+    <!-- /.content -->
 </div>

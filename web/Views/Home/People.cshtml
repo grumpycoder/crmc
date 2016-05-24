@@ -7,111 +7,130 @@
     }
 </style>
 <div ng-controller="PeopleController as vm" class="ng-cloak">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            {{vm.title}}<small>{{vm.description}}</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">People</li>
+        </ol>
+    </section>
 
-    <div class="panel panel-warning">
-        <div class="panel-heading">
-            <span class="panel-title">
-                {{vm.title}}
-            </span>
-            <small class="page-title-subtle">({{vm.searchModel.filteredCount}} / {{vm.searchModel.totalCount}})</small>
-            <span class="pull-right">
-                <small class="page-title-subtle">Page {{vm.searchModel.page}} of {{vm.searchModel.totalPages}}</small>
-            </span>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12">
-
-                    <div class="btn-group" ng-click="vm.quickFilter()">
-
-                        <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="30" uncheckable>30 days</label>
-                        <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="60" uncheckable>60 days</label>
-                        <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="90" uncheckable>90 days</label>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-warning box-solid">
+                    <div class="box-header with-border">
+                        <small>({{vm.searchModel.filteredCount}} / {{vm.searchModel.totalCount}}) Total Records</small>
+                        <span class="pull-right">
+                            <small>Page {{vm.searchModel.page}} of {{vm.searchModel.totalPages}}</small>
+                        </span>
                     </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="col-md-12">
 
-                    <div class="btn-group" ng-click="vm.quickFilter()">
-                        <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.9" uncheckable>High Match</label>
-                        <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.6" uncheckable>Medium Match</label>
+                            <div class="btn-group" ng-click="vm.quickFilter()">
+                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="30" uncheckable>30 days</label>
+                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="60" uncheckable>60 days</label>
+                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="90" uncheckable>90 days</label>
+                            </div>
+
+                            <div class="btn-group" ng-click="vm.quickFilter()">
+                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.9" uncheckable>High Match</label>
+                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.6" uncheckable>Medium Match</label>
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn" ng-click="vm.addItem()"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+
+                            <table st-table="vm.people" st-pipe="vm.search" class="table table-responsive table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="sort-header" st-sort="Firstname">First Name</th>
+                                        <th class="sort-header" st-sort="Lastname">Last Name</th>
+                                        <th class="sort-header" st-sort="EmailAddress">Email</th>
+                                        <th class="sort-header" st-sort="Zipcode">Zipcode</th>
+                                        <th class="sort-header" st-sort="isDonor">Donor</th>
+                                        <th class="sort-header" st-sort="IsPriority">Priority</th>
+                                        <th class="sort-header" st-sort="DateCreated">Entry</th>
+                                        <th class="sort-header" st-sort="FuzzyMatchValue">Match</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <td><input st-search="firstname" st-clear-key class="form-control" type="text" placeholder="First Name" /></td>
+                                        <td><input st-search="lastname" st-clear-key class="form-control" type="text" placeholder="Last Name" /></td>
+                                        <td><input st-search="emailAddress" st-clear-key class="form-control" type="text" placeholder="Email Address" /></td>
+                                        <td><input st-search="zipCode" st-clear-key class="form-control" type="text" placeholder="Zipcode" /></td>
+                                        <td>
+                                            <select st-search="isDonor" st-input-event="change" class="form-control" uib-tooltip="Selecting 'No' should return mostly only local names from kiosks">
+                                                <option value="">All</option>
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select st-search="isPriority" st-input-event="change" class="form-control">
+                                                <option value="">All</option>
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <span class="input-group half">
+                                                <input st-search="dateCreated" st-clear-key ng-model="dt" class="form-control" type="text" placeholder="Date Created" uib-datepicker-popup="MM/dd/yyyy" is-open="newStatus.opened" st-input-event="focus" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn" ng-click="newStatus.opened = !newStatus.opened"><i class="fa fa-calendar"></i></button>
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td><input st-search="fuzzyMatchValue" st-clear-key class="form-control" type="text" placeholder="Fuzzy Match" /></td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="person in vm.people">
+                                        <td>{{person.firstname}}</td>
+                                        <td>{{person.lastname}}</td>
+                                        <td>{{person.emailAddress}}</td>
+                                        <td>{{person.zipcode}}</td>
+                                        <td>{{person.isDonor ? 'Yes' : 'No'}}</td>
+                                        <td>{{person.isPriority ? 'Yes' : 'No'}}</td>
+                                        <td>{{person.dateCreated | date: 'MM/dd/yyyy'}}</td>
+                                        <td>{{person.fuzzyMatchValue | percentage:1}}</td>
+                                        <td style="white-space: nowrap;">
+                                            <button class="btn btn-success" ng-click="vm.editItem(person)"><i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-danger" ng-click="vm.deleteItem(person)"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <uib-pagination total-items="vm.searchModel.filteredCount"
+                                            ng-model="vm.searchModel.page"
+                                            max-size="5"
+                                            items-per-page="vm.searchModel.pageSize"
+                                            class="pagination-sm"
+                                            boundary-link-numbers="true"
+                                            ng-change="vm.paged()"
+                                            rotate="false">
+                            </uib-pagination>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+
+                    <div class="overlay" ng-show="vm.isBusy">
+                        <i class="fa fa-refresh fa-spin"></i>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-
-                    <table st-table="vm.people" st-pipe="vm.search" class="table table-responsive table-striped">
-                        <thead>
-                            <tr>
-                                <th class="sort-header" st-sort="Firstname">First Name</th>
-                                <th class="sort-header" st-sort="Lastname">Last Name</th>
-                                <th class="sort-header" st-sort="EmailAddress">Email</th>
-                                <th class="sort-header" st-sort="Zipcode">Zipcode</th>
-                                <th class="sort-header" st-sort="isDonor">Donor</th>
-                                <th class="sort-header" st-sort="IsPriority">Priority</th>
-                                <th class="sort-header" st-sort="DateCreated">Entry</th>
-                                <th class="sort-header" st-sort="FuzzyMatchValue">Match</th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <td><input st-search="firstname" st-clear-key class="form-control" type="text" placeholder="First Name" /></td>
-                                <td><input st-search="lastname" st-clear-key class="form-control" type="text" placeholder="Last Name" /></td>
-                                <td><input st-search="emailAddress" st-clear-key class="form-control" type="text" placeholder="Email Address" /></td>
-                                <td><input st-search="zipCode" st-clear-key class="form-control" type="text" placeholder="Zipcode" /></td>
-                                <td>
-                                    <select st-search="isDonor" st-input-event="change" class="form-control" uib-tooltip="Selecting 'No' should return mostly only local names from kiosks">
-                                        <option value="">All</option>
-                                        <option value="true">Yes</option>
-                                        <option value="false">No</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select st-search="isPriority" st-input-event="change" class="form-control">
-                                        <option value="">All</option>
-                                        <option value="true">Yes</option>
-                                        <option value="false">No</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <span class="input-group half">
-                                        <input st-search="dateCreated" st-clear-key ng-model="dt" class="form-control" type="text" placeholder="Date Created" uib-datepicker-popup="MM/dd/yyyy" is-open="newStatus.opened" st-input-event="focus" />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn" ng-click="newStatus.opened = !newStatus.opened"><i class="fa fa-calendar"></i></button>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td><input st-search="fuzzyMatchValue" st-clear-key class="form-control" type="text" placeholder="Fuzzy Match" /></td>
-                                <td colspan="2"><button class="btn" ng-click="vm.addItem()"><i class="fa fa-plus"></i></button></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="person in vm.people">
-                                <td>{{person.firstname}}</td>
-                                <td>{{person.lastname}}</td>
-                                <td>{{person.emailAddress}}</td>
-                                <td>{{person.zipcode}}</td>
-                                <td>{{person.isDonor ? 'Yes' : 'No'}}</td>
-                                <td>{{person.isPriority ? 'Yes' : 'No'}}</td>
-                                <td>{{person.dateCreated | date: 'MM/dd/yyyy'}}</td>
-                                <td>{{person.fuzzyMatchValue | percentage:1}}</td>
-                                <td style="white-space: nowrap;">
-                                    <button class="btn btn-success" ng-click="vm.editItem(person)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger" ng-click="vm.deleteItem(person)"><i class="fa fa-trash"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <uib-pagination total-items="vm.searchModel.filteredCount"
-                                    ng-model="vm.searchModel.page"
-                                    max-size="5"
-                                    items-per-page="vm.searchModel.pageSize"
-                                    class="pagination-sm"
-                                    boundary-link-numbers="true"
-                                    ng-change="vm.paged()"
-                                    rotate="false">
-                    </uib-pagination>
-                </div>
+                <!-- /.box -->
             </div>
         </div>
-    </div>
+    </section>
+    <!-- /.content -->
 </div>

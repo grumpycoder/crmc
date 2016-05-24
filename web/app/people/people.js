@@ -12,13 +12,13 @@
         var vm = this;
         var keyCodes = config.keyCodes;
 
-        vm.title = "People";
+        vm.title = "People Manager";
 
         vm.addItem = addItem;
         vm.deleteItem = deleteItem;
         vm.editItem = editItem;
+        vm.isBusy = false;
         vm.quickFilter = quickFilter;
-        vm.isLocal = null;
 
         vm.people = [];
         vm.paged = paged;
@@ -82,7 +82,6 @@
                 ? moment().subtract(parseInt(vm.daysFilter), 'days').format('MM/DD/YYYY')
                 : null;
 
-            //TODO: Sort not implemented
             if (typeof (tableState.sort.predicate) != "undefined") {
                 vm.searchModel.orderBy = tableState.sort.predicate;
                 vm.searchModel.orderDirection = tableState.sort.reverse ? 'desc' : 'asc';
@@ -107,9 +106,11 @@
                 vm.searchModel.isPriority = tableState.search.predicateObject.isPriority;
             }
 
+            vm.isBusy = true;
             service.query(vm.searchModel).then(function (data) {
                 vm.people = data.items;
                 vm.searchModel = data;
+                vm.isBusy = false;
             });
         }
 
