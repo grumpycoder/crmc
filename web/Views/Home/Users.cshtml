@@ -37,6 +37,12 @@
                                     </span>
                                 </div><!-- /input-group -->
                             </div><!-- /.col-lg-6 -->
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="pull-right">
+                                    <button class="btn btn-warning" ng-click="vm.undoDelete()" ng-show="vm.lastDeleted"><i class="fa fa-undo"></i> Undo Delete</button>
+                                    <button class="btn btn-warning" ng-click="vm.undoChange()" ng-show="vm.lastUpdated"><i class="fa fa-undo"></i> Undo Change</button>
+                                </div>
+                            </div>
                         </div>
 
                         <table st-table="vm.users" st-pipe="vm.search" class="table table-responsive table-striped">
@@ -61,15 +67,15 @@
                                     <td>
                                         <span ng-hide="vm.currentEdit[user.id]">{{user.fullName}}</span>
 
-                                        <input type="text" ng-model="user.fullName" ng-show="vm.currentEdit[user.id]" />
+                                        <input type="text" ng-model="vm.itemToEdit.fullName" ng-show="vm.currentEdit[user.id]" />
                                     </td>
                                     <td>
                                         <ul class="list-inline" ng-hide="vm.currentEdit[user.id]">
                                             <li ng-repeat="role in user.roles">
-                                                <span class="label label-info">{{role.name}}</span>
+                                                <span class="label label-info">{{role}}</span>
                                             </li>
                                         </ul>
-                                        <tags-input ng-model="user.roles" placeholder="Add a role" ng-show="vm.currentEdit[user.id]" display-property="name">
+                                        <tags-input ng-model="vm.itemToEdit.roles" placeholder="Add a role" ng-show="vm.currentEdit[user.id]" display-property="name">
                                             <auto-complete source="vm.availableRoles" min-length="1" load-on-down-arrow="true"></auto-complete>
                                         </tags-input>
                                     </td>

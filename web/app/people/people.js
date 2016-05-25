@@ -6,7 +6,7 @@
 
     angular.module('app.people').controller(controllerId, mainController);
 
-    mainController.$inject = ['$log', 'peopleService', '$uibModal', 'config'];
+    mainController.$inject = ['logger', 'peopleService', '$uibModal', 'config'];
 
     function mainController(logger, service, $modal, config) {
         var vm = this;
@@ -14,23 +14,19 @@
 
         vm.title = "People Manager";
 
-        vm.addItem = addItem;
-        vm.deleteItem = deleteItem;
-        vm.editItem = editItem;
+        vm.currentEdit = null;
         vm.isBusy = false;
-        vm.quickFilter = quickFilter;
+        vm.lastDeleted = null;
+        vm.lastUpdated = null;
 
         vm.people = [];
-        vm.paged = paged;
-        vm.search = search;
-        vm.searchTerm = '';
-
         vm.searchModel = {
             page: 1,
             pageSize: 15,
             orderBy: 'Firstname',
             orderDirection: 'desc'
         };
+        vm.searchTerm = '';
 
         var tableStateRef;
 
@@ -40,41 +36,70 @@
             logger.log(controllerId + ' activated');
         }
 
-        function addItem() {
-            var item = {
-                fuzzyMatchValue: 0.0
-            };
+        vm.addItem = function addItem() {
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
+                //controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'vm', 'storage', editPersonController],
+                controller: ['logger', '$uibModalInstance', 'peopleService', 'vm', 'storage', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
-                    item: function () { return item; }
+                    vm: vm
                 }
             }).result.then(function (data) {
                 vm.people.unshift(data);
+                logger.success('Successfully created ' + getFullName(data));
             });
         }
 
-        function editItem(item) {
+        vm.editItem = function editItem(item) {
+            vm.currentEdit = item;
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
-                controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'storage', editPersonController],
+                //controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'vm', 'storage', editPersonController],
+                controller: ['logger', '$uibModalInstance', 'peopleService', 'vm', 'storage', editPersonController],
                 controllerAs: 'vm',
                 resolve: {
-                    item: function () { return item; }
+                    vm: vm
                 }
+            }).result.then(function (data) {
+                vm.lastUpdated = angular.copy(vm.currentEdit);
+                angular.extend(item, data);
+                logger.success('Successfully updated ' + getFullName(data));
             });
         }
 
-        function deleteItem(person) {
+        vm.deleteItem = function deleteItem(person) {
             service.remove(person.id).then(function (data) {
+                vm.lastDeleted = person;
                 var idx = vm.people.indexOf(person);
                 vm.people.splice(idx, 1);
+                logger.warning('Deleted person ' + person.firstname + ' ' + person.lastname);
             });
         }
 
-        function search(tableState) {
+        vm.undoDelete = function () {
+            service.create(vm.lastDeleted).then(function (data) {
+                logger.success('Successfully restored ' + data.firstname + ' ' + data.lastname);
+                vm.people.unshift(data);
+                vm.lastDeleted = null;
+            });
+        };
+
+        vm.undoChange = function () {
+            service.update(vm.lastUpdated)
+                .then(function (data) {
+                    angular.forEach(vm.people,
+                        function (u, i) {
+                            if (u.id === vm.lastUpdated.id) {
+                                vm.people[i] = vm.lastUpdated;
+                            }
+                        });
+                    logger.success('Successfully restored ' + vm.lastUpdated.firstname + ' ' + vm.lastUpdated.lastname);
+                    vm.lastUpdated = null;
+                });
+        }
+
+        vm.search = function search(tableState) {
             tableStateRef = tableState;
             if (!vm.searchModel.isPriority) vm.searchModel.isPriority = null;
 
@@ -114,34 +139,34 @@
             });
         }
 
-        function paged(pageNum) {
+        vm.pages = function paged(pageNum) {
             search(tableStateRef);
         }
 
-        function quickFilter() {
-            search(tableStateRef);
+        vm.quickFilter = function () {
+            vm.search(tableStateRef);
+        }
+
+        function getFullName(person) {
+            return person.firstname + ' ' + person.lastname;
         }
     }
 
-    function editPersonController(logger, $modal, service, item, storage) {
+    //function editPersonController(logger, $modal, service, item, model, storage) {
+    function editPersonController(logger, $modal, service, model, storage) {
         var vm = this;
-
         //TODO: Can be made global??
         var censors = JSON.parse(storage.get('censors'));
 
-        vm.item = angular.copy(item);
+        vm.item = angular.copy(model.currentEdit);
 
-        vm.close = close;
-        vm.save = save;
-        vm.matchValue = matchValue;
-
-        function close() {
+        vm.close = function () {
             $modal.dismiss();
         }
 
-        function matchValue() {
+        vm.matchValue = function () {
             var value = 0.0;
-            var fn = getFullName(vm.item);// vm.item.firstname + ' ' + vm.item.lastname;
+            var fn = getFullName(vm.item);
 
             _.forEach(censors, function (censor) {
                 var idx = clj_fuzzy.metrics.dice(fn, censor.word);
@@ -150,23 +175,20 @@
             vm.item.fuzzyMatchValue = value;
         }
 
-        function getFullName(item) {
-            return item.firstname + ' ' + item.lastname;
-        }
-
-        function save() {
+        vm.save = function () {
             if (vm.item.id) {
-                service.update(vm.item).then(function () {
-                    angular.extend(item, vm.item);
-                    logger.info('Successfully updated ' + getFullName(item));
-                    $modal.close(vm.item);
+                service.update(vm.item).then(function (data) {
+                    $modal.close(data);
                 });
             } else {
                 service.create(vm.item).then(function (data) {
-                    logger.info('Successfully created ' + vm.item.fullName);
                     $modal.close(data);
                 });
             }
+        }
+
+        function getFullName(item) {
+            return item.firstname + ' ' + item.lastname;
         }
     }
 })()
