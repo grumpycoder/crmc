@@ -78,9 +78,9 @@
                                     <!-- The user image in the menu -->
                                     <li class="user-header">
                                         @*<img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">*@
-
+                                        <gfl-text-avatar size="160" class="img-circle">@(ViewData["FullName"])</gfl-text-avatar>
                                         <span>
-                                            @(ViewData["FullName"])
+                                            @*@(ViewData["FullName"])*@
                                             @*<small>Member since Nov. 2012</small>*@
                                         </span>
                                     </li>
@@ -153,6 +153,7 @@
     <script src="~/lib/angular-switcher/dist/angular-switcher.min.js"></script>
     <script src="~/lib/nz-toggle/dist/nz-toggle.min.js"></script>
     <script src="~/lib/toastr/toastr.min.js"></script>
+    <script src="~/lib/gfl-text-avatar/dist/gfl-text-avatar.min.js"></script>
 
     <!-- Bootstrapping -->
     <script src="~/app/app.module.js"></script>

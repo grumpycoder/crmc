@@ -18,5 +18,6 @@
         'ngTagsInput',
         'switcher',
         'nzToggle',
+        'gfl.textAvatar'
     ]);
 })()
