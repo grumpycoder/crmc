@@ -12,16 +12,13 @@
         var vm = this;
         vm.title = 'Censor Manager';
         vm.description = 'View and edit censored words';
-        vm.cancelEdit = cancelEdit;
-        vm.create = create;
-        vm.deleteItem = deleteItem;
-        vm.editItem = editItem;
         vm.isBusy = false;
-        vm.saveItem = saveItem;
 
         vm.censors = [];
         vm.currentEdit = {};
-        vm.search = search;
+        vm.lastDeleted = null;
+        vm.lastUpdated = null;
+        vm.itemToEdit = {};
 
         var tableStateRef;
 
@@ -31,7 +28,7 @@
             logger.log(controllerId + ' activated');
         }
 
-        function search(tableState) {
+        vm.search = function (tableState) {
             tableStateRef = tableState;
 
             var searchTerm = '';
@@ -45,11 +42,11 @@
             });
         }
 
-        function cancelEdit(id) {
+        vm.cancelEdit = function (id) {
             vm.currentEdit[id] = false;
         }
 
-        function create() {
+        vm.create = function () {
             var item = {};
             $modal.open({
                 templateUrl: '/app/censors/views/censor.html',
@@ -63,7 +60,8 @@
             });
         }
 
-        function deleteItem(censor) {
+        vm.deleteItem = function (censor) {
+            vm.lastDeleted = censor;
             service.remove(censor.id)
                 .then(function (data) {
                     var idx = vm.censors.indexOf(censor);
@@ -71,16 +69,40 @@
                 });
         }
 
-        function editItem(censor) {
+        vm.editItem = function (censor) {
             vm.currentEdit[censor.id] = true;
             vm.itemToEdit = angular.copy(censor);
         }
 
-        function saveItem(censor) {
+        vm.saveItem = function (censor) {
             vm.currentEdit[censor.id] = false;
-            service.update(censor).then(function (data) {
+            angular.copy(censor, vm.lastUpdated = {});
+            angular.extend(censor, vm.itemToEdit);
+            service.update(vm.itemToEdit).then(function (data) {
                 censor = data;
             });
+        }
+
+        vm.undoDelete = function () {
+            service.create(vm.lastDeleted).then(function (data) {
+                logger.success('Successfully restored ' + data.word);
+                vm.censors.unshift(data);
+                vm.lastDeleted = null;
+            });
+        };
+
+        vm.undoChange = function () {
+            service.update(vm.lastUpdated)
+                .then(function (data) {
+                    angular.forEach(vm.censors,
+                        function (u, i) {
+                            if (u.id === vm.lastUpdated.id) {
+                                vm.censors[i] = vm.lastUpdated;
+                            }
+                        });
+                    logger.success('Successfully restored ' + data.word);
+                    vm.lastUpdated = null;
+                });
         }
     }
 

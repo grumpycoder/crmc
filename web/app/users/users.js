@@ -12,17 +12,13 @@
         vm.title = 'User Manager';
         var keyCodes = config.keyCodes;
 
-        vm.addItem = addItem;
         vm.availableRoles = [];
-        vm.cancelEdit = cancelEdit;
         vm.clearCreate = clearCreate;
         vm.currentEdit = {};
-        vm.deleteItem = deleteItem;
-        vm.editItem = editItem;
         vm.isBusy = false;
-
-        vm.saveItem = saveItem;
-        vm.search = search;
+        vm.lastDeleted = null;
+        vm.lastUpdated = null;
+        vm.itemToEdit = {};
 
         vm.user = {
             //userName: null,
@@ -40,7 +36,7 @@
             getAvailableRoles();
         }
 
-        function addItem() {
+        vm.addItem = function () {
             vm.user.fullName = parseFullName(vm.user.userName);
             vm.user.email = vm.user.userName + defaults.EMAIL_SUFFIX;
 
@@ -55,20 +51,21 @@
                 });
         }
 
-        function cancelEdit(id) {
+        vm.cancelEdit = function (id) {
             vm.currentEdit[id] = false;
         }
 
-        function deleteItem(user) {
+        vm.deleteItem = function (user) {
+            angular.copy(user, vm.lastDeleted = {});
             service.remove(user.id).then(function (data) {
                 var idx = vm.users.indexOf(user);
                 vm.users.splice(idx, 1);
             });
         }
 
-        function editItem(user) {
+        vm.editItem = function (user) {
             vm.currentEdit[user.id] = true;
-            vm.itemToEdit = angular.copy(user);
+            angular.copy(user, vm.itemToEdit = {});
         }
 
         function getAvailableRoles() {
@@ -78,36 +75,76 @@
                 });
         }
 
-        function saveItem(user) {
+        vm.saveItem = function (user) {
+            vm.isBusy = true;
+
             vm.currentEdit[user.id] = false;
+            angular.copy(user, vm.lastUpdated = {});
+            logger.log('lastUpdated', vm.lastUpdated);
             var roles = [];
 
-            _.forEach(user.roles, function (role) {
+            _.forEach(vm.itemToEdit.roles, function (role) {
                 roles.push(role.name);
             });
-            user.roles = roles;
+            vm.itemToEdit.roles = roles;
 
-            service.update(user)
+            service.update(vm.itemToEdit)
                 .then(function (data) {
                     angular.extend(user, data);
-                    logger.success('User ' + user.userName + ' updated!');
+                    logger.success('User ' + data.userName + ' updated!');
+                    vm.isBusy = false;
                 });
         }
 
-        function search(tableState) {
+        vm.search = function (tableState) {
             tableStateRef = tableState;
             var searchTerm;
 
             if (typeof (tableState.search.predicateObject) != 'undefined') {
                 searchTerm = tableState.search.predicateObject.searchTerm;
-                logger.log('setting predicate');
             }
 
             vm.isBusy = true;
             service.query(searchTerm)
                 .then(function (data) {
                     vm.users = data;
+                    logger.log('users', vm.users);
                 }).finally(function () {
+                    vm.isBusy = false;
+                });
+        }
+
+        vm.undoDelete = function () {
+            var roles = [];
+
+            _.forEach(vm.lastDeleted.roles, function (role) {
+                roles.push(role.name);
+                logger.log('role', role.name);
+            });
+            vm.lastDeleted.roles = roles;
+            vm.lastDeleted.password = defaults.GENERIC_PASSWORD;
+
+            service.create(vm.lastDeleted).then(function (data) {
+                logger.success('Successfully restored ' + data.userName);
+                vm.users.unshift(data);
+                vm.lastDeleted = null;
+            });
+        };
+
+        vm.undoChange = function () {
+            vm.isBusy = true;
+            
+            service.update(vm.lastUpdated)
+                .then(function (data) {
+                    angular.forEach(vm.users,
+                        function (u, i) {
+                            if (u.id === vm.lastUpdated.id) {
+                                vm.users[i] = vm.lastUpdated;
+                            }
+                        });
+                    logger.success('Successfully restored ' + data.userName);
+                    vm.lastUpdated = null;
+                }).finally(function() {
                     vm.isBusy = false;
                 });
         }

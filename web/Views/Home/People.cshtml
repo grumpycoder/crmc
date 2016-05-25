@@ -34,17 +34,19 @@
                         <div class="col-md-12">
 
                             <div class="btn-group" ng-click="vm.quickFilter()">
-                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="30" uncheckable>30 days</label>
-                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="60" uncheckable>60 days</label>
-                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-btn-radio="90" uncheckable>90 days</label>
+                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-tooltip="30 days or newer" uib-btn-radio="30" uncheckable>30 days</label>
+                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-tooltip="60 days or newer" uib-btn-radio="60" uncheckable>60 days</label>
+                                <label class="btn btn-danger" ng-model="vm.daysFilter" uib-tooltip="90 days or newer" uib-btn-radio="90" uncheckable>90 days</label>
                             </div>
 
                             <div class="btn-group" ng-click="vm.quickFilter()">
-                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.9" uncheckable>High Match</label>
-                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-btn-radio="0.6" uncheckable>Medium Match</label>
+                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-tooltip="fuzzy Match 90% or above" uib-btn-radio="0.9" uncheckable>High Match</label>
+                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-tooltip="fuzzy Match 60% or above" uib-btn-radio="0.6" uncheckable>Medium Match</label>
                             </div>
                             <div class="pull-right">
-                                <button class="btn" ng-click="vm.addItem()"><i class="fa fa-plus"></i></button>
+                                <button class="btn btn-warning" ng-click="vm.undoDelete()" ng-show="vm.lastDeleted"><i class="fa fa-undo"></i> Undo Delete</button>
+                                <button class="btn btn-warning" ng-click="vm.undoChange()" ng-show="vm.lastUpdated"><i class="fa fa-undo"></i> Undo Change</button>
+                                <button class="btn" ng-click="vm.addItem()" uib-tooltip="Add a new person"><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                         <div class="col-md-12">

@@ -19,7 +19,10 @@
                     <div class="box-header with-border">
                         <span class="box-title">Words</span>
                         <span class="pull-right">
-                            <button class="btn btn-primary" ng-click="vm.create()"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-warning" ng-click="vm.undoDelete()" ng-show="vm.lastDeleted"><i class="fa fa-undo"></i> Undo Delete</button>
+                            <button class="btn btn-warning" ng-click="vm.undoChange()" ng-show="vm.lastUpdated"><i class="fa fa-undo"></i> Undo Change</button>
+
+                            <button class="btn btn-default" ng-click="vm.create()"><i class="fa fa-plus"></i></button>
                         </span>
                     </div>
                     <!-- /.box-header -->
@@ -40,7 +43,7 @@
                                 <tr ng-repeat="censor in vm.censors">
                                     <td>
                                         <span ng-hide="vm.currentEdit[censor.id]">{{censor.word}}</span>
-                                        <input type="text" class="form-control" ng-model="censor.word" ng-show="vm.currentEdit[censor.id]" />
+                                        <input type="text" class="form-control" ng-model="vm.itemToEdit.word" ng-show="vm.currentEdit[censor.id]" />
                                     </td>
                                     <td style="text-align: right;">
                                         <button class="btn bg-default" ng-hide="vm.currentEdit[censor.id]" ng-click="vm.editItem(censor)">Edit</button>
