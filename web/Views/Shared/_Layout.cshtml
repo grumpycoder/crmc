@@ -88,7 +88,7 @@
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                            <a href="~/profile" class="btn btn-default btn-flat">Profile</a>
                                         </div>
                                         @if (Request.IsAuthenticated)
                                         {
@@ -198,6 +198,10 @@
     <!--users admin-->
     <script src="~/app/users/users.module.js"></script>
     <script src="~/app/users/users.js"></script>
+
+    <!--users profile-->
+    <script src="~/app/profile/profile.module.js"></script>
+    <script src="~/app/profile/profile.js"></script>
 
     @RenderSection("scripts", required: false)
 </body>

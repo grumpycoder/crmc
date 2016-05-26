@@ -132,6 +132,7 @@ namespace web.Controllers
             }
 
             user.FullName = vm.FullName;
+            user.Email = vm.Email;
             await UserManager.UpdateAsync(user);
 
             return Ok(vm);

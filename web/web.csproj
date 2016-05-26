@@ -248,6 +248,8 @@
     <Content Include="app\people\people.js" />
     <Content Include="app\people\people.module.js" />
     <Content Include="app\people\views\person.html" />
+    <Content Include="app\profile\profile.js" />
+    <Content Include="app\profile\profile.module.js" />
     <Content Include="app\services\censor.service.js" />
     <Content Include="app\services\configuration.service.js" />
     <Content Include="app\services\people.service.js" />
@@ -311,6 +313,7 @@
     <Content Include="Views\Home\Users.cshtml" />
     <Content Include="Views\Shared\UnAuthorized.cshtml" />
     <Content Include="Views\Home\Kiosk.cshtml" />
+    <Content Include="Views\Home\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
