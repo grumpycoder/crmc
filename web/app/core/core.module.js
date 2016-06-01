@@ -19,6 +19,7 @@
         'switcher',
         'nzToggle',
         'gfl.textAvatar',
-        'ng-file-input'
+        'ng-file-input',
+        'ngFileUpload'
     ]);
 })()

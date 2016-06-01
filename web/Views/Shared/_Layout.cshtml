@@ -95,9 +95,9 @@
                                         <div class="pull-right">
                                             @using (Html.BeginForm("LogOff", "Auth", FormMethod.Post, new { id = "logoutForm" }))
                                                 {
-                                                @Html.AntiForgeryToken()
-                                                @*<a href="javascript:document.getElementById('logoutForm').submit()"><i class="btn btn-default btn-flat"></i><span>Sign out</span></a>*@
-                                                <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>
+                                            @Html.AntiForgeryToken()
+                                            @*<a href="javascript:document.getElementById('logoutForm').submit()"><i class="btn btn-default btn-flat"></i><span>Sign out</span></a>*@
+                                            <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>
                                                 }
                                         </div>
                                         }
@@ -155,6 +155,7 @@
     <script src="~/lib/toastr/toastr.min.js"></script>
     <script src="~/lib/gfl-text-avatar/dist/gfl-text-avatar.min.js"></script>
     <script src="~/lib/ng-file-input/dist/ng-file-input.min.js"></script>
+    <script src="~/lib/ng-file-upload/ng-file-upload-all.min.js"></script>
 
     <!-- Bootstrapping -->
     <script src="~/app/app.module.js"></script>

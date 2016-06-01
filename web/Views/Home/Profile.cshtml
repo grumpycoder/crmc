@@ -25,7 +25,7 @@
                         User Information
                     </div><!-- /.box-header -->
                     <div class="box-body">
-                        <form name="profileForm">
+                        <form name="vm.profileForm">
                             <div class="form-group">
                                 <label for="" class="control-label">Full Name</label>
                                 <input type="text" name="fullName" class="form-control" ng-model="vm.user.fullName">
@@ -35,7 +35,7 @@
                                 <input type="email" name="email" class="form-control" ng-model="vm.user.email">
                             </div>
 
-                            <button class="btn btn-success" ng-click="vm.save()">Save</button>
+                            <button class="btn btn-success" ng-click="vm.save()" ng-show="vm.profileForm.$dirty">Update</button>
                         </form>
                     </div><!-- /.box-body -->
                     <div class="overlay" ng-show="vm.isBusy">
@@ -53,23 +53,18 @@
                         <div class="text-center">
 
                             <div>
-                                @*<input type="file" name="myImage" image-with-preview
-                                    ng-model="vm.image"
-                                    accept="image/jpeg,image/png"
-                                    dimensions="height < 400 && width < 1800 && width > 2 * height">*@
-
-                                <input type="file" ng-model="vm.file" />
-                                <img ng-show="vm.image.src" ng-src="{{vm.image.src}}" />
-                                <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.image.src">@(ViewData["FullName"])</gfl-text-avatar>
-
-                                <button class="btn" ng-click="vm.saveAvatar()">Save</button>
+                                <input type="file" ngf-select ng-model="vm.file" name="file"
+                                       accept="image/*" ngf-max-size="2MB" required
+                                       ngf-model-invalid="errorFile"
+                                       ngf-change="vm.avatarChanged()">
+                                <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.user.avatar || vm.file">@(ViewData["FullName"])</gfl-text-avatar>
+                                <img ng-src="{{vm.user.avatar}}" alt="User Avatar" ng-show="vm.user.avatar && !vm.isAvatarChanged" height="160" width="160" />
+                                <img alt="User Avatar" ng-show="vm.file" ngf-thumbnail="vm.file" height="160" width="160" />
                             </div>
 
                             <div>
-
-                                @*<gfl-text-avatar size="160" class="img-circle" ng-hide="vm.flow.files[0]">@(ViewData["FullName"])</gfl-text-avatar>*@
-
                                 <span class="pull-right">
+                                    <button class="btn" ng-click="vm.saveAvatar()" ng-show="vm.file">Save</button>
                                 </span>
                             </div>
                         </div>

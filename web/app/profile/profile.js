@@ -16,7 +16,7 @@
         vm.description = 'Update your profile';
 
         vm.user = {};
-        vm.flow = {};
+        vm.isAvatarChanged = false;
 
         activate();
 
@@ -46,6 +46,7 @@
                     logger.info(data);
                 }).finally(function () {
                     vm.isBusy = false;
+                    vm.profileForm.$setPristine();
                 });
         }
 
@@ -54,7 +55,14 @@
 
             service.uploadAvatar(vm.user.userName, vm.file).then(function (data) {
                 logger.log('complete', data);
+                vm.user.avatar = 'images/users/' + vm.user.userName + '.jpg';
+                vm.isAvatarChanged = false;
             });
+        }
+
+        vm.avatarChanged = function (e) {
+            vm.isAvatarChanged = true;
+            logger.log('changed avatar', e);
         }
     }
 })();

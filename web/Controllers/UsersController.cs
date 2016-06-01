@@ -72,8 +72,10 @@ namespace web.Controllers
                 UserName = u.UserName,
                 Email = u.Email,
                 FullName = u.FullName,
-                Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray()
+                Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray(),
+                Avatar = File.Exists(HttpContext.Current.Server.MapPath(@"~\images\users\" + u.UserName + ".jpg")) ? @"images\users\" + u.UserName + ".jpg" : null
             });
+
             return Ok(users);
         }
 
@@ -172,6 +174,7 @@ namespace web.Controllers
                 postedFile.SaveAs(filePath);
                 var file = new FileInfo(filePath);
                 var destPath = HttpContext.Current.Server.MapPath(@"~\images\users\" + id + file.Extension);
+                if (File.Exists(destPath)) File.Delete(destPath);
                 file.MoveTo(destPath);
                 File.Delete(filePath);
             }
