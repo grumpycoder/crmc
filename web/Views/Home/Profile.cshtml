@@ -51,12 +51,27 @@
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <div class="text-center">
-                            <div class="form-group">
-                                <gfl-text-avatar size="160" class="img-circle">@(ViewData["FullName"])</gfl-text-avatar>
+
+                            <div>
+                                @*<input type="file" name="myImage" image-with-preview
+                                    ng-model="vm.image"
+                                    accept="image/jpeg,image/png"
+                                    dimensions="height < 400 && width < 1800 && width > 2 * height">*@
+
+                                <input type="file" ng-model="vm.file" />
+                                <img ng-show="vm.image.src" ng-src="{{vm.image.src}}" />
+                                <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.image.src">@(ViewData["FullName"])</gfl-text-avatar>
+
+                                <button class="btn" ng-click="vm.saveAvatar()">Save</button>
                             </div>
-                            <span class="pull-right">
-                                <button class="btn">Change</button>
-                            </span>
+
+                            <div>
+
+                                @*<gfl-text-avatar size="160" class="img-circle" ng-hide="vm.flow.files[0]">@(ViewData["FullName"])</gfl-text-avatar>*@
+
+                                <span class="pull-right">
+                                </span>
+                            </div>
                         </div>
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->

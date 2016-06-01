@@ -8,16 +8,21 @@
 
     angular.module('app.users').controller(controllerId, mainController);
 
-    mainController.$inject = ['logger', 'userService', 'defaults', 'config'];
+    mainController.$inject = ['$scope', '$http', 'logger', 'userService', 'defaults', 'config'];
 
-    function mainController(logger, service, defaults, config) {
+    function mainController($scope, $http, logger, service, defaults, config) {
         var vm = this;
         vm.title = 'Profile Manager';
         vm.description = 'Update your profile';
 
         vm.user = {};
+        vm.flow = {};
 
         activate();
+
+        $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
+            event.preventDefault();//prevent file from uploading
+        });
 
         function activate() {
             logger.log(controllerId + ' activated');
@@ -42,6 +47,14 @@
                 }).finally(function () {
                     vm.isBusy = false;
                 });
+        }
+
+        vm.saveAvatar = function () {
+            logger.log('file', vm.file);
+
+            service.uploadAvatar(vm.user.userName, vm.file).then(function (data) {
+                logger.log('complete', data);
+            });
         }
     }
 })();
