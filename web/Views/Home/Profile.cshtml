@@ -52,23 +52,33 @@
                     <div class="box-body">
                         <div class="text-center">
 
-                            <div>
-                                <input type="file" ngf-select ng-model="vm.file" name="file"
-                                       accept="image/*" ngf-max-size="2MB" required
-                                       ngf-model-invalid="errorFile"
-                                       ngf-change="vm.avatarChanged()">
-                                <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.user.avatar || vm.file">@(ViewData["FullName"])</gfl-text-avatar>
-                                <img ng-src="{{vm.user.avatar}}" alt="User Avatar" ng-show="vm.user.avatar && !vm.isAvatarChanged" height="160" width="160" />
-                                <img alt="User Avatar" ng-show="vm.file" ngf-thumbnail="vm.file" height="160" width="160" />
-                            </div>
+                            <form name="vm.avatarForm" novalidate="">
+                                <div>
+                                    <div ngf-drop ngf-select ng-model="vm.file" class="drop-box"
+                                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="true"
+                                         accept="image/*,application/pdf"
+                                         ngf-pattern="'image/*,application/pdf'">
 
-                            <div>
-                                <span class="pull-right">
-                                    <button class="btn" ng-click="vm.saveAvatar()" ng-show="vm.file">Save</button>
-                                </span>
-                            </div>
+                                        <div>
+                                            Drop images here or click to upload
+                                        </div>
+                                        <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.user.avatar || vm.file">@(ViewData["FullName"])</gfl-text-avatar>
+                                        <img ng-src="{{vm.user.avatar}}" alt="User Avatar" ng-hide="!vm.user.avatar || vm.file" height="160" width="160" />
+                                        <img alt="User Avatar" ng-show="vm.file" ngf-thumbnail="vm.file" height="160" width="160" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <span class="pull-right">
+                                        <button class="btn" ng-click="vm.saveAvatar()" ng-show="vm.avatarForm.$dirty">Save</button>
+                                    </span>
+                                </div>
+                            </form>
                         </div>
                     </div><!-- /.box-body -->
+                    <div class="overlay" ng-show="vm.isAvatarBusy">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
                 </div><!-- /.box -->
             </div><!-- /.col-md-4 -->
 

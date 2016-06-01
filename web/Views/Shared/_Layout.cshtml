@@ -54,11 +54,11 @@
                             <li>@Html.IconActionLink("fa fa-cog", "Settings", "Settings", "Home")</li>
                             <li>@Html.IconActionLink("fa fa-group", "Users", "Users", "Home")</li>
                         </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
-                            </div>
-                        </form>
+                        @*<form class="navbar-form navbar-left" role="search">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
+                                </div>
+                            </form>*@
                     </div>
                     <!-- /.navbar-collapse -->
                     <!-- Navbar Right Menu -->
@@ -70,19 +70,14 @@
                                 <!-- Menu Toggle Button -->
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <!-- The user image in the navbar-->
-                                    @*<img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">*@
+                                    @*<img src="images/users/mark.lawrence.jpg" class="user-image" alt="User Image">*@
                                     <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                     <span class="hidden-xs">@(ViewData["FullName"])</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- The user image in the menu -->
                                     <li class="user-header">
-                                        @*<img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">*@
                                         <gfl-text-avatar size="160" class="img-circle">@(ViewData["FullName"])</gfl-text-avatar>
-                                        <span>
-                                            @*@(ViewData["FullName"])*@
-                                            @*<small>Member since Nov. 2012</small>*@
-                                        </span>
                                     </li>
                                     <!-- Menu Body -->
                                     <!-- Menu Footer-->
@@ -92,14 +87,14 @@
                                         </div>
                                         @if (Request.IsAuthenticated)
                                         {
-                                        <div class="pull-right">
-                                            @using (Html.BeginForm("LogOff", "Auth", FormMethod.Post, new { id = "logoutForm" }))
+                                            <div class="pull-right">
+                                                @using (Html.BeginForm("LogOff", "Auth", FormMethod.Post, new { id = "logoutForm" }))
                                                 {
-                                            @Html.AntiForgeryToken()
-                                            @*<a href="javascript:document.getElementById('logoutForm').submit()"><i class="btn btn-default btn-flat"></i><span>Sign out</span></a>*@
-                                            <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>
+                                                    @Html.AntiForgeryToken()
+                                                    @*<a href="javascript:document.getElementById('logoutForm').submit()"><i class="btn btn-default btn-flat"></i><span>Sign out</span></a>*@
+                                                    <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>
                                                 }
-                                        </div>
+                                            </div>
                                         }
                                     </li>
                                 </ul>

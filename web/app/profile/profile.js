@@ -16,7 +16,6 @@
         vm.description = 'Update your profile';
 
         vm.user = {};
-        vm.isAvatarChanged = false;
 
         activate();
 
@@ -30,10 +29,11 @@
         }
 
         function getUserData() {
+            //TODO: Need to get logged in username
+
             service.query('mark.lawrence')
                 .then(function (data) {
                     vm.user = data[0];
-                    logger.log(vm.user);
                 });
         }
 
@@ -51,18 +51,12 @@
         }
 
         vm.saveAvatar = function () {
-            logger.log('file', vm.file);
-
+            vm.isAvatarBusy = true;
             service.uploadAvatar(vm.user.userName, vm.file).then(function (data) {
-                logger.log('complete', data);
-                vm.user.avatar = 'images/users/' + vm.user.userName + '.jpg';
-                vm.isAvatarChanged = false;
+                logger.success(data);
+                vm.avatarForm.$setPristine();
+                vm.isAvatarBusy = false;
             });
-        }
-
-        vm.avatarChanged = function (e) {
-            vm.isAvatarChanged = true;
-            logger.log('changed avatar', e);
         }
     }
 })();
