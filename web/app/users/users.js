@@ -10,6 +10,7 @@
     function mainController(logger, service, defaults, config) {
         var vm = this;
         vm.title = 'User Manager';
+        vm.description = 'Edit and update users';
         var keyCodes = config.keyCodes;
 
         vm.availableRoles = [];
@@ -133,7 +134,7 @@
 
         vm.undoChange = function () {
             vm.isBusy = true;
-            
+
             service.update(vm.lastUpdated)
                 .then(function (data) {
                     angular.forEach(vm.users,
@@ -144,7 +145,7 @@
                         });
                     logger.success('Successfully restored ' + data.userName);
                     vm.lastUpdated = null;
-                }).finally(function() {
+                }).finally(function () {
                     vm.isBusy = false;
                 });
         }

@@ -1,14 +1,17 @@
-﻿using crmc.data;
-using crmc.domain;
+﻿using crmc.domain;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using web.ViewModels;
 
 namespace web.Controllers
@@ -69,8 +72,10 @@ namespace web.Controllers
                 UserName = u.UserName,
                 Email = u.Email,
                 FullName = u.FullName,
-                Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray()
+                Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray(),
+                Avatar = File.Exists(HttpContext.Current.Server.MapPath(@"~\images\users\" + u.UserName + ".jpg")) ? @"images\users\" + u.UserName + ".jpg" : null
             });
+
             return Ok(users);
         }
 
@@ -132,6 +137,7 @@ namespace web.Controllers
             }
 
             user.FullName = vm.FullName;
+            user.Email = vm.Email;
             await UserManager.UpdateAsync(user);
 
             return Ok(vm);
@@ -146,6 +152,37 @@ namespace web.Controllers
             }
 
             return Ok("User deleted");
+        }
+
+        [HttpPost, Route("UploadAvatar/{id}")]
+        public async Task<IHttpActionResult> UploadAvatar(string id)
+        {
+            var request = HttpContext.Current.Request;
+
+            if (request.Files.Count == 0)
+            {
+                return BadRequest();
+            }
+
+            var postedFile = request.Files[0];
+
+            var filename = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf("\\") + 1);
+
+            try
+            {
+                var filePath = HttpContext.Current.Server.MapPath(@"~\app_data\" + filename);
+                postedFile.SaveAs(filePath);
+                var file = new FileInfo(filePath);
+                var destPath = HttpContext.Current.Server.MapPath(@"~\images\users\" + id + file.Extension);
+                if (File.Exists(destPath)) File.Delete(destPath);
+                file.MoveTo(destPath);
+                File.Delete(filePath);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok("Successfully saved avatar");
         }
 
         [HttpGet]

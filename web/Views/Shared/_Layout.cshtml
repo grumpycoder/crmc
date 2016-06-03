@@ -54,11 +54,11 @@
                             <li>@Html.IconActionLink("fa fa-cog", "Settings", "Settings", "Home")</li>
                             <li>@Html.IconActionLink("fa fa-group", "Users", "Users", "Home")</li>
                         </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
-                            </div>
-                        </form>
+                        @*<form class="navbar-form navbar-left" role="search">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
+                                </div>
+                            </form>*@
                     </div>
                     <!-- /.navbar-collapse -->
                     <!-- Navbar Right Menu -->
@@ -70,25 +70,20 @@
                                 <!-- Menu Toggle Button -->
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <!-- The user image in the navbar-->
-                                    @*<img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">*@
+                                    @*<img src="images/users/mark.lawrence.jpg" class="user-image" alt="User Image">*@
                                     <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                     <span class="hidden-xs">@(ViewData["FullName"])</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- The user image in the menu -->
                                     <li class="user-header">
-                                        @*<img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">*@
                                         <gfl-text-avatar size="160" class="img-circle">@(ViewData["FullName"])</gfl-text-avatar>
-                                        <span>
-                                            @*@(ViewData["FullName"])*@
-                                            @*<small>Member since Nov. 2012</small>*@
-                                        </span>
                                     </li>
                                     <!-- Menu Body -->
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                            <a href="~/profile" class="btn btn-default btn-flat">Profile</a>
                                         </div>
                                         @if (Request.IsAuthenticated)
                                         {
@@ -154,6 +149,8 @@
     <script src="~/lib/nz-toggle/dist/nz-toggle.min.js"></script>
     <script src="~/lib/toastr/toastr.min.js"></script>
     <script src="~/lib/gfl-text-avatar/dist/gfl-text-avatar.min.js"></script>
+    <script src="~/lib/ng-file-input/dist/ng-file-input.min.js"></script>
+    <script src="~/lib/ng-file-upload/ng-file-upload-all.min.js"></script>
 
     <!-- Bootstrapping -->
     <script src="~/app/app.module.js"></script>
@@ -198,6 +195,10 @@
     <!--users admin-->
     <script src="~/app/users/users.module.js"></script>
     <script src="~/app/users/users.js"></script>
+
+    <!--users profile-->
+    <script src="~/app/profile/profile.module.js"></script>
+    <script src="~/app/profile/profile.js"></script>
 
     @RenderSection("scripts", required: false)
 </body>

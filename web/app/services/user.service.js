@@ -17,7 +17,8 @@
             get: get,
             query: query,
             remove: remove,
-            update: update
+            update: update,
+            uploadAvatar: uploadAvatar
         }
 
         return service;
@@ -30,6 +31,7 @@
             return $http.post(url, user).then(_success);
         }
 
+        //TODO: Need a getbyname function
         function get() {
             return $http.get(url).then(_success);
         }
@@ -48,6 +50,14 @@
 
         function remove(id) {
             return $http.delete(url + '/' + id).then(_success);
+        }
+
+        function uploadAvatar(username, avatar) {
+            var formData = new FormData();
+            formData.append('file', avatar);
+
+            return $http.post(url + '/uploadAvatar/' + username + '/', formData, { headers: { 'Content-Type': undefined } }
+            ).then(_success);
         }
 
         function _success(response) {

@@ -13,6 +13,7 @@
         'app.censors',
         'app.people',
         'app.settings',
-        'app.users'
+        'app.users',
+        'app.profile'
     ]);
 })()

@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Profile";
+}
+
+<div ng-controller="ProfileController as vm" ng-cloak>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            {{vm.title}}
+            <small>{{vm.description}}</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Profile</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="box box-warning box-solid">
+                    <div class="box-header">
+                        User Information
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <form name="vm.profileForm">
+                            <div class="form-group">
+                                <label for="" class="control-label">Full Name</label>
+                                <input type="text" name="fullName" class="form-control" ng-model="vm.user.fullName">
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="control-label">Email</label>
+                                <input type="email" name="email" class="form-control" ng-model="vm.user.email">
+                            </div>
+
+                            <button class="btn btn-success" ng-click="vm.save()" ng-show="vm.profileForm.$dirty">Update</button>
+                        </form>
+                    </div><!-- /.box-body -->
+                    <div class="overlay" ng-show="vm.isBusy">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div><!-- /.box -->
+            </div><!-- /.col-md-4 -->
+
+            <div class="col-md-4">
+                <div class="box box-primary box-solid">
+                    <div class="box-header">
+                        Avatar
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="text-center">
+
+                            <form name="vm.avatarForm" novalidate="">
+                                <div>
+                                    <div ngf-drop ngf-select ng-model="vm.file" class="drop-box"
+                                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="true"
+                                         accept="image/*,application/pdf"
+                                         ngf-pattern="'image/*,application/pdf'">
+
+                                        <div>
+                                            Drop images here or click to upload
+                                        </div>
+                                        <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.user.avatar || vm.file">@(ViewData["FullName"])</gfl-text-avatar>
+                                        <img ng-src="{{vm.user.avatar}}" alt="User Avatar" ng-hide="!vm.user.avatar || vm.file" height="160" width="160" />
+                                        <img alt="User Avatar" ng-show="vm.file" ngf-thumbnail="vm.file" height="160" width="160" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <span class="pull-right">
+                                        <button class="btn" ng-click="vm.saveAvatar()" ng-show="vm.avatarForm.$dirty">Save</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!-- /.box-body -->
+                    <div class="overlay" ng-show="vm.isAvatarBusy">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div><!-- /.box -->
+            </div><!-- /.col-md-4 -->
+
+            <div class="col-md-4">
+                <div class="box box-success box-solid">
+                    <div class="box-header">
+                        Roles <span class="badge">{{vm.user.roles.length}}</span>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="role in vm.user.roles">{{role}}</li>
+                        </ul>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div><!-- /.col-md-4 -->
+        </div><!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
