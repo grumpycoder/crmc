@@ -55,8 +55,6 @@
         function uploadAvatar(username, avatar) {
             var formData = new FormData();
             formData.append('file', avatar);
-            logger.log('file', avatar);
-            logger.log('url', url + '/uploadAvatar');
 
             return $http.post(url + '/uploadAvatar/' + username + '/', formData, { headers: { 'Content-Type': undefined } }
             ).then(_success);
