@@ -25,19 +25,19 @@ namespace wot.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:11277/")]
-        public string WebserverUri {
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\audio")]
+        public string AudioFilePath {
             get {
-                return ((string)(this["WebserverUri"]));
+                return ((string)(this["AudioFilePath"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\audio")]
-        public string AudioFilePath {
+        [global::System.Configuration.DefaultSettingValueAttribute("http://crmc-test/")]
+        public string WebserverUri {
             get {
-                return ((string)(this["AudioFilePath"]));
+                return ((string)(this["WebserverUri"]));
             }
         }
     }

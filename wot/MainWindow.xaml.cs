@@ -231,6 +231,8 @@ namespace wot
 
         private async Task InitAudioSettings()
         {
+            if (!Directory.Exists(AudioFilePath)) Directory.CreateDirectory(AudioFilePath);
+
             if (!Directory.GetFiles(AudioFilePath).Any(f => f.EndsWith(".mp3"))) return;
             AudioManager = new AudioManager(MediaPlayer, @Properties.Settings.Default.AudioFilePath);
             AudioManager.ChangeVolume(Configuration.Volume);
