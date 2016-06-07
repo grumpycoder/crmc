@@ -54,6 +54,7 @@ namespace web.Controllers
             {
                 return View(model);
             }
+            //TODO: Add Authentication to AD
             var user = UserManager.FindByName(model.Username);
             if (user != null)
             {

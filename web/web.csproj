@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>web</RootNamespace>
     <AssemblyName>web</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -230,7 +230,6 @@
     <Content Include="app\core\config.js" />
     <Content Include="app\configuration\settings.js" />
     <Content Include="app\configuration\settings.module.js" />
-    <Content Include="app\core\constants.js" />
     <Content Include="app\core\core.module.js" />
     <Content Include="app\directives\blacklist.directive.js" />
     <Content Include="app\directives\clear-key.directive.js" />
@@ -239,8 +238,7 @@
     <Content Include="app\filters\filter.module.js" />
     <Content Include="app\home\home.js" />
     <Content Include="app\home\home.module.js" />
-    <Content Include="app\app.kiosk.module.js" />
-    <Content Include="app\kiosk\app.module.js" />
+    <Content Include="app\kiosk\kiosk.module.js" />
     <Content Include="app\kiosk\keyboard.html" />
     <Content Include="app\kiosk\kiosk.js" />
     <Content Include="app\kiosk\views\partial-config.html" />
@@ -264,11 +262,15 @@
     <Content Include="app\users\users.module.js" />
     <Content Include="css\animate.css" />
     <Content Include="css\images\kioskbackground-16x9.png" />
-    <Content Include="css\keyboard.css" />
-    <Content Include="css\kiosk-animations.css" />
-    <Content Include="css\kiosk.css" />
+    <Content Include="css\kiosk.min.css" />
+    <Content Include="css\kiosk\keyboard.css" />
+    <Content Include="css\kiosk\kiosk-animations.css" />
+    <Content Include="css\kiosk\kiosk.css" />
     <Content Include="css\site.css" />
+    <Content Include="css\site.min.css" />
+    <Content Include="css\vendor.min.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -278,7 +280,15 @@
     <Content Include=".bowerrc" />
     <Content Include="bower.json" />
     <Content Include="fonts\HelveticaNeueLTStd-Lt.otf" />
+    <Content Include="js\vendor.min.js" />
+    <Content Include="package.json" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
+    <Content Include="gulpfile.js" />
     <Content Include="images\kioskbackground.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -298,7 +308,9 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -319,6 +331,10 @@
     <Content Include="Views\Shared\UnAuthorized.cshtml" />
     <Content Include="Views\Home\Kiosk.cshtml" />
     <Content Include="Views\Home\Profile.cshtml" />
+    <None Include="Web.Test.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Tmp\FileUploads\" />

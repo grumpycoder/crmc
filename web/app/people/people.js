@@ -4,11 +4,11 @@
 (function () {
     var controllerId = 'PeopleController';
 
-    angular.module('app.people').controller(controllerId, mainController);
+    angular.module('app.people').controller(controllerId, PeopleController);
 
-    mainController.$inject = ['logger', 'peopleService', '$uibModal', 'config'];
+    PeopleController.$inject = ['logger', 'peopleService', '$uibModal', 'config'];
 
-    function mainController(logger, service, $modal, config) {
+    function PeopleController(logger, service, $modal, config) {
         var vm = this;
         var keyCodes = config.keyCodes;
 
@@ -34,7 +34,7 @@
 
         function activate() {
             logger.log(controllerId + ' activated');
-        }
+        };
 
         vm.addItem = function addItem() {
             $modal.open({
@@ -45,11 +45,12 @@
                 resolve: {
                     vm: vm
                 }
-            }).result.then(function (data) {
-                vm.people.unshift(data);
-                logger.success('Successfully created ' + getFullName(data));
-            });
-        }
+            })
+                .result.then(function (data) {
+                    vm.people.unshift(data);
+                    logger.success('Successfully created ' + getFullName(data));
+                });
+        };
 
         vm.editItem = function editItem(item) {
             vm.currentEdit = item;
@@ -61,28 +62,31 @@
                 resolve: {
                     vm: vm
                 }
-            }).result.then(function (data) {
-                vm.lastUpdated = angular.copy(vm.currentEdit);
-                angular.extend(item, data);
-                logger.success('Successfully updated ' + getFullName(data));
-            });
-        }
+            })
+                .result.then(function (data) {
+                    vm.lastUpdated = angular.copy(vm.currentEdit);
+                    angular.extend(item, data);
+                    logger.success('Successfully updated ' + getFullName(data));
+                });
+        };
 
         vm.deleteItem = function deleteItem(person) {
-            service.remove(person.id).then(function (data) {
-                vm.lastDeleted = person;
-                var idx = vm.people.indexOf(person);
-                vm.people.splice(idx, 1);
-                logger.warning('Deleted person ' + person.firstname + ' ' + person.lastname);
-            });
-        }
+            service.remove(person.id)
+                .then(function (data) {
+                    vm.lastDeleted = person;
+                    var idx = vm.people.indexOf(person);
+                    vm.people.splice(idx, 1);
+                    logger.warning('Deleted person ' + person.firstname + ' ' + person.lastname);
+                });
+        };
 
         vm.undoDelete = function () {
-            service.create(vm.lastDeleted).then(function (data) {
-                logger.success('Successfully restored ' + data.firstname + ' ' + data.lastname);
-                vm.people.unshift(data);
-                vm.lastDeleted = null;
-            });
+            service.create(vm.lastDeleted)
+                .then(function (data) {
+                    logger.success('Successfully restored ' + data.firstname + ' ' + data.lastname);
+                    vm.people.unshift(data);
+                    vm.lastDeleted = null;
+                });
         };
 
         vm.undoChange = function () {
@@ -97,7 +101,7 @@
                     logger.success('Successfully restored ' + vm.lastUpdated.firstname + ' ' + vm.lastUpdated.lastname);
                     vm.lastUpdated = null;
                 });
-        }
+        };
 
         vm.search = function search(tableState) {
             tableStateRef = tableState;
@@ -132,24 +136,25 @@
             }
 
             vm.isBusy = true;
-            service.query(vm.searchModel).then(function (data) {
-                vm.people = data.items;
-                vm.searchModel = data;
-                vm.isBusy = false;
-            });
-        }
+            service.query(vm.searchModel)
+                .then(function (data) {
+                    vm.people = data.items;
+                    vm.searchModel = data;
+                    vm.isBusy = false;
+                });
+        };
 
         vm.pages = function paged(pageNum) {
             search(tableStateRef);
-        }
+        };
 
         vm.quickFilter = function () {
             vm.search(tableStateRef);
-        }
+        };
 
         function getFullName(person) {
             return person.firstname + ' ' + person.lastname;
-        }
+        };
     }
 
     //function editPersonController(logger, $modal, service, item, model, storage) {
@@ -162,33 +167,36 @@
 
         vm.close = function () {
             $modal.dismiss();
-        }
+        };
 
         vm.matchValue = function () {
             var value = 0.0;
             var fn = getFullName(vm.item);
 
-            _.forEach(censors, function (censor) {
-                var idx = clj_fuzzy.metrics.dice(fn, censor.word);
-                if (idx > value) value = idx;
-            });
+            _.forEach(censors,
+                function (censor) {
+                    var idx = clj_fuzzy.metrics.dice(fn, censor.word);
+                    if (idx > value) value = idx;
+                });
             vm.item.fuzzyMatchValue = value;
-        }
+        };
 
         vm.save = function () {
             if (vm.item.id) {
-                service.update(vm.item).then(function (data) {
-                    $modal.close(data);
-                });
+                service.update(vm.item)
+                    .then(function (data) {
+                        $modal.close(data);
+                    });
             } else {
-                service.create(vm.item).then(function (data) {
-                    $modal.close(data);
-                });
+                service.create(vm.item)
+                    .then(function (data) {
+                        $modal.close(data);
+                    });
             }
-        }
+        };
 
         function getFullName(item) {
             return item.firstname + ' ' + item.lastname;
-        }
-    }
-})()
+        };
+    };
+})();

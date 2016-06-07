@@ -1,16 +1,10 @@
 ﻿//config.js
 //mark.lawrence
-
 (function () {
-    var core = angular.module('app.core');
-
-    core.config(toastrConfig);
-
-    /* @ngInject */
     function toastrConfig(toastr) {
         toastr.options.timeOut = 4000;
         toastr.options.positionClass = 'toast-bottom-right';
-    }
+    };
 
     var keyCodes = {
         backspace: 8,
@@ -35,13 +29,13 @@
         Person: 'person',
         User: 'users',
         Configuration: 'configuration'
-    }
+    };
 
     var config = {
         appErrorPrefix: '[CRMC Error] ', //Configure the exceptionHandler decorator
         appTitle: 'CRMC',
         version: '1.0.0',
-        apiUrl: 'http://localhost:11277/api/',
+        apiUrl: 'http://' + window.location.host + '/api/',
         keyCodes: keyCodes,
         apiEndPoints: apiEndPoints
     };
@@ -49,8 +43,10 @@
     var defaults = {
         EMAIL_SUFFIX: '@splcenter.org',
         GENERIC_PASSWORD: '1P@ssword'
-    }
+    };
 
-    core.constant('config', config);
-    core.value('defaults', defaults);
+    angular.module('app.core')
+        .config(toastrConfig)
+        .constant('config', config)
+        .value('defaults', defaults);
 })();

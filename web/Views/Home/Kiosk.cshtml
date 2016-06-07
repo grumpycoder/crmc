@@ -6,18 +6,8 @@
 <head>
     <title>Tolerance Kiosk</title>
     <base href="/kiosk">
-    <link href="~/lib/bootswatch-dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/lib/font-awesome-bower/css/font-awesome.css" rel="stylesheet" />
-    <link href="~/lib/angularjs-slider/dist/rzslider.min.css" rel="stylesheet" />
-    <link href="~/lib/ng-tags-input/ng-tags-input.min.css" rel="stylesheet" />
-    <link href="~/lib/angular-switcher/dist/angular-switcher.min.css" rel="stylesheet" />
-    <link href="~/lib/toastr/toastr.min.css" rel="stylesheet" />
-    <link href="~/lib/nz-toggle/dist/nz-toggle.min.css" rel="stylesheet" />
-
-    <link href="~/css/keyboard.css" rel="stylesheet" />
-    <link href="~/css/animate.css" rel="stylesheet" />
-    <link href="~/css/kiosk.css" rel="stylesheet" />
-    <link href="~/css/kiosk-animations.css" rel="stylesheet" />
+    <link href="~/css/vendor.min.css" rel="stylesheet" />
+    <link href="~/css/kiosk.min.css" rel="stylesheet" />
 </head>
 <body ng-app="app">
 
@@ -27,31 +17,12 @@
     </div>
 
     <!-- Vendor Libraries -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootswatch-dist/js/bootstrap.min.js"></script>
-    <script src="~/lib/lodash/lodash.min.js"></script>
-    <script src="~/lib/moment/min/moment.min.js"></script>
-    <script src="~/lib/clj-fuzzy/src-js/clj-fuzzy.js"></script>
+    <script src="~/js/vendor.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script src="~/lib/angular/angular.min.js"></script>
-    <script src="~/lib/angular-animate/angular-animate.js"></script>
-    <script src="~/lib/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script src="~/lib/angular-messages/angular-messages.min.js"></script>
-    <script src="~/lib/angularLocalStorage/dist/angularLocalStorage.min.js"></script>
-    <script src="~/lib/angular-cookies/angular-cookies.min.js"></script>
-    <script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <script src="~/lib/angular-smart-table/dist/smart-table.min.js"></script>
-    <script src="~/lib/angularjs-slider/dist/rzslider.min.js"></script>
-    <script src="~/lib/ng-tags-input/ng-tags-input.min.js"></script>
-    <script src="~/lib/angular-switcher/dist/angular-switcher.min.js"></script>
-    <script src="~/lib/nz-toggle/dist/nz-toggle.min.js"></script>
-    <script src="~/lib/toastr/toastr.min.js"></script>
-    <script src="~/lib/humanize-plus/dist/humanize.min.js"></script>
-    @*<script src="~/Scripts/keyboard.js"></script>*@
 
     <!-- Bootstrapping -->
-    <script src="~/app/kiosk/app.module.js"></script>
+    <script src="~/app/app.module.js"></script>
 
     <!-- Reusable Blocks/Modules -->
     <script src="~/app/blocks/logger/logger.module.js"></script>
@@ -74,7 +45,32 @@
     <script src="~/app/services/user.service.js"></script>
     <script src="~/app/services/configuration.service.js"></script>
 
-    <!-- app -->
+    <!--home-->
+    <script src="~/app/home/home.module.js"></script>
+    <script src="~/app/home/home.js"></script>
+
+    <!-- kiosk -->
+    <script src="~/app/kiosk/kiosk.module.js"></script>
     <script src="~/app/kiosk/kiosk.js"></script>
+
+    <!--censors-->
+    <script src="~/app/censors/censors.module.js"></script>
+    <script src="~/app/censors/censors.js"></script>
+
+    <!--people-->
+    <script src="~/app/people/people.module.js"></script>
+    <script src="~/app/people/people.js"></script>
+
+    <!--settings-->
+    <script src="~/app/configuration/settings.module.js"></script>
+    <script src="~/app/configuration/settings.js"></script>
+
+    <!--users admin-->
+    <script src="~/app/users/users.module.js"></script>
+    <script src="~/app/users/users.js"></script>
+
+    <!--users profile-->
+    <script src="~/app/profile/profile.module.js"></script>
+    <script src="~/app/profile/profile.js"></script>
 </body>
 </html>

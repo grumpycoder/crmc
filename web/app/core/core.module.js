@@ -6,6 +6,8 @@
         //angular modules
         'ngMessages',
         'angularLocalStorage',
+        'ui.router',
+        'ngAnimate',
 
         //custom modules
         'blocks.logger',
@@ -14,12 +16,12 @@
         //third party modules
         'smart-table',
         'ui.bootstrap',
-        'rzModule',
         'ngTagsInput',
+        'ngFileUpload',
+        'rzModule',
         'switcher',
-        'nzToggle',
-        'gfl.textAvatar',
-        'ng-file-input',
-        'ngFileUpload'
-    ]);
+        'gfl.textAvatar'
+    ])
+    .constant('toastr', toastr)
+    .constant('moment', moment);;
 })()

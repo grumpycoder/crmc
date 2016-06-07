@@ -3,11 +3,11 @@
 
     var controllerId = 'UserController';
 
-    angular.module('app.users').controller(controllerId, mainController);
+    angular.module('app.users').controller(controllerId, UserController);
 
-    mainController.$inject = ['logger', 'userService', 'defaults', 'config'];
+    UserController.$inject = ['logger', 'userService', 'defaults', 'config'];
 
-    function mainController(logger, service, defaults, config) {
+    function UserController(logger, service, defaults, config) {
         var vm = this;
         vm.title = 'User Manager';
         vm.description = 'Edit and update users';
@@ -26,7 +26,7 @@
             roles: ['user'],
             fullName: '',
             password: defaults.GENERIC_PASSWORD
-        }
+        };
 
         var tableStateRef;
 
@@ -35,7 +35,7 @@
         function activate() {
             logger.log(controllerId + ' activated');
             getAvailableRoles();
-        }
+        };
 
         vm.addItem = function () {
             vm.user.fullName = parseFullName(vm.user.userName);
@@ -50,31 +50,32 @@
                     vm.user.userName = null;
                     //TODO: show error user already exists
                 });
-        }
+        };
 
         vm.cancelEdit = function (id) {
             vm.currentEdit[id] = false;
-        }
+        };
 
         vm.deleteItem = function (user) {
             angular.copy(user, vm.lastDeleted = {});
-            service.remove(user.id).then(function (data) {
-                var idx = vm.users.indexOf(user);
-                vm.users.splice(idx, 1);
-            });
-        }
+            service.remove(user.id)
+                .then(function (data) {
+                    var idx = vm.users.indexOf(user);
+                    vm.users.splice(idx, 1);
+                });
+        };
 
         vm.editItem = function (user) {
             vm.currentEdit[user.id] = true;
             angular.copy(user, vm.itemToEdit = {});
-        }
+        };
 
         function getAvailableRoles() {
             service.availableRoles()
                 .then(function (data) {
                     vm.availableRoles = data;
                 });
-        }
+        };
 
         vm.saveItem = function (user) {
             vm.isBusy = true;
@@ -84,9 +85,10 @@
             logger.log('lastUpdated', vm.lastUpdated);
             var roles = [];
 
-            _.forEach(vm.itemToEdit.roles, function (role) {
-                roles.push(role.name);
-            });
+            _.forEach(vm.itemToEdit.roles,
+                function (role) {
+                    roles.push(role.name);
+                });
             vm.itemToEdit.roles = roles;
 
             service.update(vm.itemToEdit)
@@ -95,7 +97,7 @@
                     logger.success('User ' + data.userName + ' updated!');
                     vm.isBusy = false;
                 });
-        }
+        };
 
         vm.search = function (tableState) {
             tableStateRef = tableState;
@@ -110,10 +112,11 @@
                 .then(function (data) {
                     vm.users = data;
                     logger.log('users', vm.users);
-                }).finally(function () {
+                })
+                .finally(function () {
                     vm.isBusy = false;
                 });
-        }
+        };
 
         vm.undoDelete = function () {
             var roles = [];
@@ -145,16 +148,17 @@
                         });
                     logger.success('Successfully restored ' + data.userName);
                     vm.lastUpdated = null;
-                }).finally(function () {
+                })
+                .finally(function () {
                     vm.isBusy = false;
                 });
-        }
+        };
 
         function clearCreate($event) {
             if ($event.keyCode === keyCodes.esc) {
                 vm.user.userName = '';
-            }
-        }
+            };
+        };
 
         function parseFullName(name) {
             var arr = name.split('.');
@@ -166,5 +170,5 @@
 
             return _.trim(fullname);
         };
-    }
+    };
 })();

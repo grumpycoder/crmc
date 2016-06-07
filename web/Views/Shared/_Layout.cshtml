@@ -6,24 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - CRMC Administration</title>
 
-    <link href="~/lib/bootswatch-dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/lib/font-awesome-bower/css/font-awesome.css" rel="stylesheet" />
-    <link href="~/lib/angularjs-slider/dist/rzslider.min.css" rel="stylesheet" />
-    <link href="~/lib/ng-tags-input/ng-tags-input.min.css" rel="stylesheet" />
-    <link href="~/lib/angular-switcher/dist/angular-switcher.min.css" rel="stylesheet" />
-    <link href="~/lib/toastr/toastr.min.css" rel="stylesheet" />
-    <link href="~/lib/nz-toggle/dist/nz-toggle.min.css" rel="stylesheet" />
     <!-- Ionicons -->
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="~/lib/AdminLTE/dist/css/AdminLTE.min.css">
+    @*<link rel="stylesheet" href="~/lib/AdminLTE/dist/css/AdminLTE.min.css">*@
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
           apply the skin class to the body tag so the changes take effect.
     -->
-    <link rel="stylesheet" href="~/lib/AdminLTE/dist/css/skins/skin-black.min.css">
+    @*<link rel="stylesheet" href="~/lib/AdminLTE/dist/css/skins/skin-black.min.css">*@
 
-    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/vendor.min.css" rel="stylesheet" />
+    <link href="~/css/site.min.css" rel="stylesheet" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -35,9 +29,8 @@
 <body class="hold-transition skin-black layout-top-nav">
     <div class="wrapper">
 
-        @*@Html.Partial("_MainHeaderNavbar")*@
         <header class="main-header">
-            <nav class="navbar navbar-static-top">
+            <nav class="navbar navbar-inverse navbar-static-top">
                 <div class="container">
                     <div class="navbar-header">
                         <a href="/" class="navbar-brand"><b>CRMC</b>Administration</a>
@@ -91,7 +84,6 @@
                                                 @using (Html.BeginForm("LogOff", "Auth", FormMethod.Post, new { id = "logoutForm" }))
                                                 {
                                                     @Html.AntiForgeryToken()
-                                                    @*<a href="javascript:document.getElementById('logoutForm').submit()"><i class="btn btn-default btn-flat"></i><span>Sign out</span></a>*@
                                                     <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>
                                                 }
                                             </div>
@@ -117,43 +109,26 @@
         <footer class="main-footer">
             <div class="container">
                 <div class="pull-right hidden-xs">
-                    <b>Version</b> 2.3.3
+                    <b>Version</b> 2.0.0
                 </div>
-                <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights
-                reserved.
+                <strong>Copyright &copy; @DateTime.Now.Year </strong>
             </div>
             <!-- /.container -->
         </footer>
     </div>
     <!-- Vendor Libraries -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootswatch-dist/js/bootstrap.min.js"></script>
-
-    <!-- AdminLTE App -->
-    <script src="~/lib/adminlte/dist/js/app.min.js"></script>
-
-    <script src="~/lib/lodash/lodash.min.js"></script>
-    <script src="~/lib/moment/min/moment.min.js"></script>
-    <script src="~/lib/clj-fuzzy/src-js/clj-fuzzy.js"></script>
+    <script src="~/js/vendor.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script src="~/lib/angular/angular.min.js"></script>
-    <script src="~/lib/angular-messages/angular-messages.min.js"></script>
-    <script src="~/lib/angularLocalStorage/dist/angularLocalStorage.min.js"></script>
-    <script src="~/lib/angular-cookies/angular-cookies.min.js"></script>
-    <script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <script src="~/lib/angular-smart-table/dist/smart-table.min.js"></script>
-    <script src="~/lib/angularjs-slider/dist/rzslider.min.js"></script>
-    <script src="~/lib/ng-tags-input/ng-tags-input.min.js"></script>
-    <script src="~/lib/angular-switcher/dist/angular-switcher.min.js"></script>
-    <script src="~/lib/nz-toggle/dist/nz-toggle.min.js"></script>
-    <script src="~/lib/toastr/toastr.min.js"></script>
-    <script src="~/lib/gfl-text-avatar/dist/gfl-text-avatar.min.js"></script>
-    <script src="~/lib/ng-file-input/dist/ng-file-input.min.js"></script>
-    <script src="~/lib/ng-file-upload/ng-file-upload-all.min.js"></script>
 
     <!-- Bootstrapping -->
+    @*<script src="~/app/all.min.js"></script>*@
     <script src="~/app/app.module.js"></script>
+
+    <!-- core module -->
+    <script src="~/app/core/core.module.js"></script>
+    <script src="~/app/core/config.js"></script>
+    <script src="~/app/services/service.module.js"></script>
 
     <!-- Reusable Blocks/Modules -->
     <script src="~/app/blocks/logger/logger.module.js"></script>
@@ -165,11 +140,6 @@
     <script src="~/app/directives/smart-table.directive.js"></script>
     <script src="~/app/directives/clear-key.directive.js"></script>
 
-    <!-- core module -->
-    <script src="~/app/core/core.module.js"></script>
-    <script src="~/app/core/constants.js"></script>
-    <script src="~/app/core/config.js"></script>
-    <script src="~/app/services/service.module.js"></script>
     <script src="~/app/filters/app.filters.js"></script>
     <script src="~/app/services/censor.service.js"></script>
     <script src="~/app/services/people.service.js"></script>
@@ -179,6 +149,10 @@
     <!--home-->
     <script src="~/app/home/home.module.js"></script>
     <script src="~/app/home/home.js"></script>
+
+    <!-- kiosk -->
+    <script src="~/app/kiosk/kiosk.module.js"></script>
+    <script src="~/app/kiosk/kiosk.js"></script>
 
     <!--censors-->
     <script src="~/app/censors/censors.module.js"></script>

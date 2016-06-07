@@ -2,13 +2,15 @@
 //mark.lawrence
 
 (function () {
+    'use strict';
+
     var controllerId = 'CensorController';
 
-    angular.module('app.censors').controller(controllerId, mainController);
+    angular.module('app.censors').controller(controllerId, CensorController);
 
-    mainController.$inject = ['logger', '$uibModal', 'censorService'];
+    CensorController.$inject = ['logger', '$uibModal', 'censorService'];
 
-    function mainController(logger, $modal, service) {
+    function CensorController(logger, $modal, service) {
         var vm = this;
         vm.title = 'Censor Manager';
         vm.description = 'View and edit censored words';
@@ -26,7 +28,7 @@
 
         function activate() {
             logger.log(controllerId + ' activated');
-        }
+        };
 
         vm.search = function (tableState) {
             tableStateRef = tableState;
@@ -36,15 +38,16 @@
                 searchTerm = tableState.search.predicateObject.searchTerm;
             }
             vm.isBusy = true;
-            service.query(searchTerm).then(function (data) {
-                vm.censors = data;
-                vm.isBusy = false;
-            });
-        }
+            service.query(searchTerm)
+                .then(function (data) {
+                    vm.censors = data;
+                    vm.isBusy = false;
+                });
+        };
 
         vm.cancelEdit = function (id) {
             vm.currentEdit[id] = false;
-        }
+        };
 
         vm.create = function () {
             var item = {};
@@ -55,10 +58,11 @@
                 resolve: {
                     item: function () { return item; }
                 }
-            }).result.then(function (data) {
-                vm.censors.unshift(data);
-            });
-        }
+            })
+                .result.then(function (data) {
+                    vm.censors.unshift(data);
+                });
+        };
 
         vm.deleteItem = function (censor) {
             vm.lastDeleted = censor;
@@ -67,28 +71,30 @@
                     var idx = vm.censors.indexOf(censor);
                     vm.censors.splice(idx, 1);
                 });
-        }
+        };
 
         vm.editItem = function (censor) {
             vm.currentEdit[censor.id] = true;
             vm.itemToEdit = angular.copy(censor);
-        }
+        };
 
         vm.saveItem = function (censor) {
             vm.currentEdit[censor.id] = false;
             angular.copy(censor, vm.lastUpdated = {});
             angular.extend(censor, vm.itemToEdit);
-            service.update(vm.itemToEdit).then(function (data) {
-                censor = data;
-            });
-        }
+            service.update(vm.itemToEdit)
+                .then(function (data) {
+                    censor = data;
+                });
+        };
 
         vm.undoDelete = function () {
-            service.create(vm.lastDeleted).then(function (data) {
-                logger.success('Successfully restored ' + data.word);
-                vm.censors.unshift(data);
-                vm.lastDeleted = null;
-            });
+            service.create(vm.lastDeleted)
+                .then(function (data) {
+                    logger.success('Successfully restored ' + data.word);
+                    vm.censors.unshift(data);
+                    vm.lastDeleted = null;
+                });
         };
 
         vm.undoChange = function () {
@@ -103,8 +109,8 @@
                     logger.success('Successfully restored ' + data.word);
                     vm.lastUpdated = null;
                 });
-        }
-    }
+        };
+    };
 
     function createCensorController($modal, service, item) {
         var vm = this;
@@ -116,13 +122,14 @@
 
         function close() {
             $modal.dismiss();
-        }
+        };
 
         function save() {
-            service.create(vm.item).then(function (data) {
-                vm.item = data;
-                $modal.close(vm.item);
-            });
-        }
-    }
-})()
+            service.create(vm.item)
+                .then(function (data) {
+                    vm.item = data;
+                    $modal.close(vm.item);
+                });
+        };
+    };
+})();

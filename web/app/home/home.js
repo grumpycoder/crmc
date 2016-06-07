@@ -30,7 +30,7 @@
                         });
             }
             refresh();
-        }
+        };
 
         function refresh() {
             peopleService.getCurrentStats()
@@ -42,6 +42,6 @@
                 .then(function (data) {
                     vm.people = data;
                 });
-        }
-    }
+        };
+    };
 })();

@@ -2,12 +2,14 @@
 //kiosk.js
 
 (function () {
+    'use strict';
+
     var controllerId = 'KioskController';
-    angular.module('app').controller(controllerId, mainController);
+    angular.module('app').controller(controllerId, KioskController);
 
-    mainController.$inject = ['$scope', '$log', '$state', '$timeout', 'peopleService', 'configurationService', 'censors', 'config'];
+    KioskController.$inject = ['$scope', '$log', '$state', '$timeout', 'peopleService', 'configurationService', 'censors', 'config'];
 
-    function mainController($scope, logger, $state, $timeout, peopleService, configurationService, censors, config) {
+    function KioskController($scope, logger, $state, $timeout, peopleService, configurationService, censors, config) {
         var vm = this;
         var tableStateRef;
         var prevSelection = null;
@@ -45,13 +47,13 @@
                 prevSelection = person;
             }
             resetTimer();
-        }
+        };
 
         vm.setFocus = function (event) {
             vm.editItem = event;
 
             if (event) vm.editItem = event;
-        }
+        };
 
         vm.keyboardInput = function (key) {
             resetTimer();
@@ -75,19 +77,19 @@
                 vm.editItem.$setViewValue(vm.editItem.$viewValue + keyCode);
             }
             vm.editItem.$render();
-        }
+        };
 
         vm.paged = function () {
             prevSelection = null;
-            vm.search(tableStateRef);
-        }
+            vm.searchName(tableStateRef);
+        };
 
         vm.updateKiosk = function () {
             logger.info('changed kiosk', vm.kiosk);
             localStorage.setItem('kiosk', vm.kiosk);
-        }
+        };
 
-        vm.search = function (tableState) {
+        vm.searchName = function (tableState) {
             tableStateRef = tableState;
 
             if (vm.searchForm !== undefined && vm.searchForm.$invalid) {
@@ -100,21 +102,24 @@
 
             vm.searchModel.firstname = fn;
             vm.searchModel.lastname = ln;
+            vm.searchModel.orderBy = 'firstname';
 
-            peopleService.query(vm.searchModel).then(function (data) {
-                vm.people = data.items;
-                vm.searchModel = data;
+            peopleService.query(vm.searchModel)
+              .then(function (data) {
+                  vm.people = data.items;
+                  vm.searchModel = data;
 
-                $state.go('home.list').then(function () {
-                    resetTimer();
-                });
-            });
-        }
+                  $state.go('home.list')
+                      .then(function () {
+                          resetTimer();
+                      });
+              });
+        };
 
         vm.goBack = function () {
             resetTimer();
             history.back();
-        }
+        };
 
         vm.gotoPledge = function () {
             if (vm.createForm.$invalid) {
@@ -130,82 +135,90 @@
             vm.person.fuzzyMatchValue = matchValue(vm.person);
             if (vm.person.emailAddress) vm.person.emailAddress = vm.person.emailAddress.toLowerCase();
 
-            $state.go('home.pledge').then(function () {
-                resetTimer();
-            });
-        }
+            $state.go('home.pledge')
+                .then(function () {
+                    resetTimer();
+                });
+        };
 
         vm.gotoSearch = function () {
-            $state.go('home.search').then(function () {
-                vm.showValidationErrors = false;
-                vm.editItem = vm.searchForm.searchTerm;
-                resetTimer();
-            });
-        }
+            $state.go('home.search')
+                .then(function () {
+                    vm.showValidationErrors = false;
+                    vm.editItem = vm.searchForm.searchTerm;
+                    resetTimer();
+                });
+        };
 
         vm.gotoCreate = function gotoCreate() {
-            $state.go('home.create').then(function () {
-                vm.editItem = vm.createForm.firstname;
-                vm.showValidationErrors = false;
-                vm.person = { firstname: '', lastname: '' };
-                createValidationWatcher();
-                resetTimer();
-            });
-        }
+            $state.go('home.create')
+                .then(function () {
+                    vm.editItem = vm.createForm.firstname;
+                    vm.showValidationErrors = false;
+                    vm.person = { firstname: '', lastname: '' };
+                    createValidationWatcher();
+                    resetTimer();
+                });
+        };
 
         vm.cancel = function () {
             vm.person = { firstname: '', lastname: '' };
             vm.searchTerm = '';
             vm.people = [];
 
-            $state.go('home').then(function () {
-                $timeout.cancel(timer);
-            });
-        }
+            $state.go('home')
+                .then(function () {
+                    $timeout.cancel(timer);
+                });
+        };
 
         vm.finish = function () {
-            $state.go('home.finish').then(function () {
-                logger.info('sending to hub');
-                hub.server.addName(vm.kiosk, vm.person).then(function () {
-                    logger.info('Sent person to WOT', vm.person);
-                    resetTimer();
+            $state.go('home.finish')
+                .then(function () {
+                    logger.info('sending to hub');
+                    hub.server.addName(vm.kiosk, vm.person)
+                        .then(function () {
+                            logger.info('Sent person to WOT', vm.person);
+                            resetTimer();
+                        });
                 });
-            });
-        }
+        };
 
         vm.save = function () {
-            peopleService.create(vm.person).then(function (data) {
-                vm.finish();
-            });
-        }
+            peopleService.create(vm.person)
+                .then(function (data) {
+                    vm.finish();
+                });
+        };
 
         vm.unlockSettings = function (key) {
             logger.info('keyCode', keyCode, false);
             if (keyCode.length > 4) {
                 keyCode = key;
-            }
-            else {
+            } else {
                 keyCode += key.toString();
             }
 
             if (keyCode === '12') {
-                $state.go('home.config').then(function () {
-                    keyCode = '';
-                    logger.info('current kiosk', vm.kiosk);
-                });
+                $state.go('home.config')
+                    .then(function () {
+                        keyCode = '';
+                        logger.info('current kiosk', vm.kiosk);
+                    });
             }
-        }
+        };
 
         vm.saveConfig = function () {
             configurationService.update(vm.config)
                 .then(function (data) {
                     vm.config = data;
                     toastr.success('Settings Saved!');
-                    hub.server.configurationChange(vm.config).then(function () {
-                        logger.info('Changes saved and sent to WOT');
-                    });
+                    hub.server.configurationChange(vm.config)
+                        .then(function () {
+                            logger.info('Changes saved and sent to WOT');
+                        });
                 });
-        }
+        };
 
         function matchValue(person) {
             var value = 0.0;
@@ -216,7 +229,7 @@
                 if (idx > value) value = idx;
             });
             return value;
-        }
+        };
 
         function getFullName(person) {
             return person.firstname + ' ' + person.lastname;
@@ -227,7 +240,7 @@
             timer = $timeout(function () {
                 vm.cancel();
             }, waitTime);
-        }
+        };
 
         function createValidationWatcher() {
             //logger.info('creating watcher', vm.person, false);
@@ -241,7 +254,7 @@
                     }
                 }
             });
-        }
+        };
 
         function validatePerson(person) {
             var fullName = (person.firstname ? person.firstname : '') + ' ' + (person.lastname ? person.lastname : '');
@@ -251,6 +264,6 @@
 
             var match = firstmatch || lastmatch || fullmatch;
             return !match;
-        }
-    }
+        };
+    };
 })();

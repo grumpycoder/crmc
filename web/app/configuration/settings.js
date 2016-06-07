@@ -25,35 +25,39 @@
 
         function activate() {
             logger.log(controllerId + ' actived');
-            $.connection.hub.start().done(function () {
-                logger.info('hub connection successful');
-            });
+            $.connection.hub.start()
+                .done(function () {
+                    logger.info('hub connection successful');
+                });
             getSettings();
-        }
+        };
 
         function getSettings() {
-            service.get().then(function (data) {
-                vm.config = data;
-                vm.lastSaved = angular.copy(vm.config);
-            });
-        }
+            service.get()
+                .then(function (data) {
+                    vm.config = data;
+                    vm.lastSaved = angular.copy(vm.config);
+                });
+        };
 
         function save() {
             vm.isBusy = true;
             service.update(vm.config)
                 .then(function (data) {
                     vm.config = data;
-                    hub.server.configurationChange(vm.config).then(function () {
-                        logger.info('Changes saved and sent to WOT');
-                    });
-                }).finally(function () {
+                    hub.server.configurationChange(vm.config)
+                        .then(function () {
+                            logger.info('Changes saved and sent to WOT');
+                        });
+                })
+                .finally(function () {
                     logger.log('finally compelted');
                     vm.isBusy = false;
                 });
-        }
+        };
 
         function undo() {
             vm.config = vm.lastSaved;
-        }
-    }
-})()
+        };
+    };
+})();

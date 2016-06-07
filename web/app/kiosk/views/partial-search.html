@@ -8,7 +8,6 @@
 
 <div class="row">
     <div class="col-md-8 col-md-offset-2" style="margin-top: 40px;">
-        <!--<form name="vm.searchForm" novalidate="" id="searchForm" role="form" style="width: 658px; margin: 30px auto 0 auto;">-->
         <form name="vm.searchForm" novalidate="" role="form">
             <div class="row">
                 <div class="col-md-12">
@@ -143,7 +142,7 @@
             GO BACK
         </button>
         <button class="btn btn-danger btn-lg btn-custom pull-right"
-                ng-click="vm.search()"
+                ng-click="vm.searchName()"
                 ng-disabled="vm.searchForm.$invalid">
             CONTINUE <i class="fa fa-angle-right"></i>
         </button>

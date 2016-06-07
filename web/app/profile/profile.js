@@ -26,7 +26,7 @@
         function activate() {
             logger.log(controllerId + ' activated');
             getUserData();
-        }
+        };
 
         function getUserData() {
             //TODO: Need to get logged in username
@@ -35,7 +35,7 @@
                 .then(function (data) {
                     vm.user = data[0];
                 });
-        }
+        };
 
         vm.save = function () {
             vm.isBusy = true;
@@ -44,19 +44,21 @@
                 .then(function (data) {
                     vm.user = data;
                     logger.info(data);
-                }).finally(function () {
+                })
+                .finally(function () {
                     vm.isBusy = false;
                     vm.profileForm.$setPristine();
                 });
-        }
+        };
 
         vm.saveAvatar = function () {
             vm.isAvatarBusy = true;
-            service.uploadAvatar(vm.user.userName, vm.file).then(function (data) {
-                logger.success(data);
-                vm.avatarForm.$setPristine();
-                vm.isAvatarBusy = false;
-            });
-        }
-    }
+            service.uploadAvatar(vm.user.userName, vm.file)
+                .then(function (data) {
+                    logger.success(data);
+                    vm.avatarForm.$setPristine();
+                    vm.isAvatarBusy = false;
+                });
+        };
+    };
 })();

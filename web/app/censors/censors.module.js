@@ -3,4 +3,4 @@
 
 (function () {
     angular.module('app.censors', []);
-})()
+})();

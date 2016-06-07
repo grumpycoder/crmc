@@ -28,7 +28,7 @@
         this.$get = function () {
             return { config: this.config };
         };
-    }
+    };
 
     /**
      * Configure by setting an optional string value for appErrorPrefix.
@@ -39,7 +39,7 @@
      */
     function config($provide) {
         $provide.decorator('$exceptionHandler', extendExceptionHandler);
-    }
+    };
 
     /**
      * Extend the $exceptionHandler service to also display a toast.
@@ -65,5 +65,5 @@
              */
             logger.error(exception.message, errorData);
         };
-    }
+    };
 })();
