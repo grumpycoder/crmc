@@ -17,17 +17,17 @@
             query: query,
             update: update,
             remove: remove
-        }
+        };
 
         return service;
 
         function create(censor) {
             return $http.post(url, censor).then(_success);
-        }
+        };
 
         function get() {
             return $http.get(url).then(_success);
-        }
+        };
 
         function query(searchTerm) {
             if (searchTerm == undefined) {
@@ -35,18 +35,18 @@
             } else {
                 return $http.get(url + '/?search=' + searchTerm).then(_success);
             }
-        }
+        };
 
         function update(censor) {
             return $http.put(url, censor).then(_success);
-        }
+        };
 
         function remove(id) {
             return $http.delete(url + '/' + id).then(_success);
-        }
+        };
 
         function _success(response) {
             return response.data;
-        }
+        };
     }
-})()
+})();

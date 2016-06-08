@@ -56,12 +56,15 @@
             var formData = new FormData();
             formData.append('file', avatar);
 
-            return $http.post(url + '/uploadAvatar/' + username + '/', formData, { headers: { 'Content-Type': undefined } }
-            ).then(_success);
+            return $http.post(url + '/uploadAvatar/' + username + '/',
+                    formData,
+                    { headers: { 'Content-Type': undefined } }
+                )
+                .then(_success);
         }
 
         function _success(response) {
             return response.data;
         }
     }
-})()
+})();

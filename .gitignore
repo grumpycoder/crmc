@@ -247,3 +247,4 @@ ModelManifest.xml
 bower_components
 lib
 
+/web/images/users

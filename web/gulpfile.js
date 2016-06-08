@@ -10,24 +10,43 @@ var mainBowerFiles = require('main-bower-files');
 var cleanCSS = require('gulp-clean-css');
 var order = require('gulp-order');
 var exclude = require('arr-exclude');
+var print = require('gulp-print');
 
 var config = {
     //Include all js files but exclude any min.js files
-    js: ['app/**/*.js', '!app/**/*.min.js', '!app/blocks/**/*.js', '!app/services/**/*.js'],
+    js: ['app/**/*.js', '!app/**/*.min.js'],
     css: ['css/**/*.css', '!**/*.min.css']
 }
 
-gulp.task('default', ['build-vendor', 'build-app', 'fonts']);
+gulp.task('default', ['build-vendor', 'build-app']);
 
 gulp.task('build-vendor', [
   'build-vendor:js',
-  'build-vendor:css'
+  'build-vendor:css',
+  'fonts'
 ]);
 
 gulp.task('build-app', [
-  //'build-app:js',
+  'build-app:js',
   'build-app:css'
 ]);
+
+gulp.task('build-app:js', function () {
+    return gulp.src(config.js)
+        .pipe(filter(['app/**/*.js']))
+        .pipe(order([
+            '**/app.module.js',
+            '**/core/core.module.js',
+            '**/core/config.js',
+            '**/*.module.js'
+        ]))
+        .pipe(print())
+        .pipe(sourcemaps.init())
+        //.pipe(uglify())
+        .pipe(concat('modules.min.js'))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('app/'));
+});
 
 gulp.task('build-app:css', function () {
     return gulp.src(config.css)
@@ -77,24 +96,3 @@ gulp.task('build-vendor:css', function () {
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('css/'));
 });
-
-//gulp.task('build-app:js', function () {
-//    return gulp.src(config.js)
-//        //.pipe(uglify())
-//        //.pipe(filter(['app/**/*.js']))
-//        //.pipe(filter(['app/**/*.js']))
-//        .pipe(order([
-//            '**app.module.js',
-//            '**core/core.module.js',
-//            '**core/constants.js',
-//            '**core/config.js',
-//            '**blocks/**/*.js'
-//        ]))
-//        //.pipe(filter(['app/app.module.js', 'app/blocks/**/*.js', 'app/core/**/*.js', 'app/services/**/*.js'], 'app/filters/**/*.js', 'app/directives/**/*.js'))
-//        //.pipe(filter(['app/app.module.js', 'app/blocks/**/*.js', 'app/filters/**/*.js', 'app/directives/**/*.js']))
-//        //.pipe(filter(['app/app.module.js', 'app/core/**/*.js']))
-//        .pipe(sourcemaps.init())
-//        .pipe(concat('all.min.js'))
-//        .pipe(sourcemaps.write())
-//        .pipe(gulp.dest('app/'));
-//});

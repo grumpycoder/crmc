@@ -28,12 +28,14 @@
 
         function get() {
             return $http.get(url)
-                .then(_success).catch(function (message) { exception.catcher('Failed to retrieve people')(message); });
+                .then(_success)
+                .catch(function (message) { exception.catcher('Failed to retrieve people')(message); });
         }
 
         function query(search) {
-            return $http.post(url + '/search', search).then(_success)
-                        .catch(function (message) { exception.catcher('Failed to retrieve people')(message); });
+            return $http.post(url + '/search', search)
+                .then(_success)
+                .catch(function (message) { exception.catcher('Failed to retrieve people')(message); });
         }
 
         function update(person) {
@@ -46,11 +48,12 @@
 
         function getCurrentStats() {
             return $http.get(url + '/stat')
-                .then(_success).catch(function (message) { exception.catcher('Failed to retrieve stats')(message); });
+                .then(_success)
+                .catch(function (message) { exception.catcher('Failed to retrieve stats')(message); });
         }
 
         function _success(response) {
             return response.data;
         }
     }
-})()
+})();
