@@ -41,11 +41,9 @@
     },
     "AdminLTE": {
       "main": [
-        "index2.html",
         "dist/css/AdminLTE.css",
         "dist/js/app.js",
-        "build/less/AdminLTE.less",
-        "dist/css/skins/all-skins.css"
+        "dist/css/skins/_all-skins.css"
       ]
     }
   },

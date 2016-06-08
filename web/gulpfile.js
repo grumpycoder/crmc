@@ -87,7 +87,6 @@ gulp.task('build-vendor:js', function () {
 });
 
 gulp.task('build-vendor:css', function () {
-    console.log(mainBowerFiles());
     return gulp.src(mainBowerFiles())
       .pipe(filter(['**/*.css']))
       .pipe(sourcemaps.init())
