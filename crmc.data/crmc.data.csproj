@@ -78,6 +78,14 @@
     <Compile Include="Migrations\201604291928497_identity.Designer.cs">
       <DependentUpon>201604291928497_identity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606081720050_User Photo.cs" />
+    <Compile Include="Migrations\201606081720050_User Photo.Designer.cs">
+      <DependentUpon>201606081720050_User Photo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606082317233_user photo type.cs" />
+    <Compile Include="Migrations\201606082317233_user photo type.Designer.cs">
+      <DependentUpon>201606082317233_user photo type.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -106,6 +114,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604291928497_identity.resx">
       <DependentUpon>201604291928497_identity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606081720050_User Photo.resx">
+      <DependentUpon>201606081720050_User Photo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606082317233_user photo type.resx">
+      <DependentUpon>201606082317233_user photo type.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

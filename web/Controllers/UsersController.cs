@@ -53,19 +53,34 @@ namespace web.Controllers
 
         public IHttpActionResult Get()
         {
-            var users = UserManager.Users.ToList().Select(u => new UserViewModel()
+            var userId = User.Identity.GetUserId();
+            var u = UserManager.Users.FirstOrDefault(x => x.Id == userId);
+
+            var vm = new UserViewModel()
             {
                 Id = u.Id,
                 UserName = u.UserName,
                 Email = u.Email,
                 FullName = u.FullName,
-                Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray()
-            });
-            return Ok(users);
+                Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray(),
+                UserPhoto = u.UserPhoto
+            };
+
+            return Ok(vm);
         }
 
         public IHttpActionResult Get(string searchTerm)
         {
+            //var users = UserManager.Users.Where(x => x.UserName.Contains(searchTerm) || x.FullName.Contains(searchTerm)).ToList().Select(u => new UserViewModel()
+            //{
+            //    Id = u.Id,
+            //    UserName = u.UserName,
+            //    Email = u.Email,
+            //    FullName = u.FullName,
+            //    Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray(),
+            //    Avatar = File.Exists(HttpContext.Current.Server.MapPath(@"~\images\users\" + u.UserName + ".jpg")) ? @"images\users\" + u.UserName + ".jpg" : null
+            //});
+
             var users = UserManager.Users.Where(x => x.UserName.Contains(searchTerm) || x.FullName.Contains(searchTerm)).ToList().Select(u => new UserViewModel()
             {
                 Id = u.Id,
@@ -73,7 +88,7 @@ namespace web.Controllers
                 Email = u.Email,
                 FullName = u.FullName,
                 Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray(),
-                Avatar = File.Exists(HttpContext.Current.Server.MapPath(@"~\images\users\" + u.UserName + ".jpg")) ? @"images\users\" + u.UserName + ".jpg" : null
+                UserPhoto = u.UserPhoto
             });
 
             return Ok(users);
@@ -138,6 +153,8 @@ namespace web.Controllers
 
             user.FullName = vm.FullName;
             user.Email = vm.Email;
+            user.UserPhoto = vm.UserPhoto;
+            user.UserPhotoType = vm.UserPhotoType;
             await UserManager.UpdateAsync(user);
 
             return Ok(vm);

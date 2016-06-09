@@ -54,29 +54,33 @@
 
                             <form name="vm.avatarForm" novalidate="">
                                 <div>
-                                    <div ngf-drop ngf-select ng-model="vm.file" class="drop-box"
+                                    <div ngf-drop ngf-select
+                                         class="drop-box"
+                                         ng-model="vm.file"
                                          ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="true"
-                                         accept="image/*,application/pdf"
-                                         ngf-pattern="'image/*,application/pdf'">
+                                         ngf-change="vm.fileSelected($files, $file, $event, $rejectedFiles)"
+                                         accept="image/**"
+                                         ngf-pattern="'image/**'">
 
                                         <div>
                                             Drop images here or click to upload
                                         </div>
-                                        <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.user.avatar || vm.file">@(ViewData["FullName"])</gfl-text-avatar>
-                                        <img ng-src="{{vm.user.avatar}}" alt="User Avatar" ng-hide="!vm.user.avatar || vm.file" height="160" width="160" />
-                                        <img alt="User Avatar" ng-show="vm.file" ngf-thumbnail="vm.file" height="160" width="160" />
+                                        <gfl-text-avatar size="160" class="img-circle" ng-hide="vm.user.userPhoto || vm.file">@(ViewData["FullName"])</gfl-text-avatar>
+
+                                        <img alt="User Avatar" ng-show="vm.file" ngf-thumbnail="vm.file" class="widget-user-image" height="160" width="160" />
+                                        <img ng-show="vm.user.userPhoto && !vm.file" height="160" width="160" class="widget-user-image" ng-hide="vm.file" ng-src="data:{{vm.user.userPhotoType}};base64,{{vm.user.userPhoto}}">
                                     </div>
                                 </div>
 
                                 <div>
                                     <span class="pull-right">
-                                        <button class="btn" ng-click="vm.saveAvatar()" ng-show="vm.avatarForm.$dirty">Save</button>
+                                        <button class="btn" ng-click="vm.save()" ng-show="vm.avatarForm.$dirty">Save</button>
                                     </span>
                                 </div>
                             </form>
                         </div>
                     </div><!-- /.box-body -->
-                    <div class="overlay" ng-show="vm.isAvatarBusy">
+                    <div class="overlay" ng-show="vm.isBusy">
                         <i class="fa fa-refresh fa-spin"></i>
                     </div>
                 </div><!-- /.box -->

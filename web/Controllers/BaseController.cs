@@ -21,7 +21,11 @@ namespace web.Controllers
                     if (!string.IsNullOrWhiteSpace(username))
                     {
                         var user = context.Users.SingleOrDefault(u => u.UserName == username);
-                        if (user != null) ViewData.Add("FullName", user.FullName);
+                        if (user != null)
+                        {
+                            ViewData.Add("FullName", user.FullName);
+                            ViewData.Add("UserPhoto", user.UserPhoto);
+                        }
                     }
                 }
             }

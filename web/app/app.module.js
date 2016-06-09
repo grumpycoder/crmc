@@ -10,6 +10,7 @@
         'app.filter',
 
         //feature areas
+        'app.nav',
         'app.home',
         'app.censors',
         'app.people',
@@ -17,7 +18,9 @@
         'app.users',
         'app.profile',
         'app.kiosk'
-    ]).config(['$stateProvider', '$urlRouterProvider', config]);
+    ]).config(['$stateProvider', '$urlRouterProvider', config]).run(['$rootScope', 'logger', 'userService', function ($rootScope, logger, service) {
+        logger.log('app running');
+    }]);
 
     function config($stateProvider, $urlRouterProvider) {
         //$locationProvider.html5Mode(true);

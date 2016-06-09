@@ -9,5 +9,7 @@
         public string Email { get; set; }
         public string[] Roles { get; set; }
         public string Avatar { get; set; }
+        public byte[] UserPhoto { get; set; }
+        public string UserPhotoType { get; set; }
     }
 }

@@ -16,5 +16,7 @@ namespace crmc.domain
         }
 
         public string FullName { get; set; }
+        public byte[] UserPhoto { get; set; }
+        public string UserPhotoType { get; set; }
     }
 }

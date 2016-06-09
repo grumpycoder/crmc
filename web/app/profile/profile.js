@@ -8,9 +8,9 @@
 
     angular.module('app.users').controller(controllerId, mainController);
 
-    mainController.$inject = ['$scope', '$http', 'logger', 'userService', 'defaults', 'config'];
+    mainController.$inject = ['$scope', '$http', 'logger', 'userService', 'defaults', 'config', '$rootScope'];
 
-    function mainController($scope, $http, logger, service, defaults, config) {
+    function mainController($scope, $http, logger, service, defaults, config, $rootScope) {
         var vm = this;
         vm.title = 'Profile Manager';
         vm.description = 'Update your profile';
@@ -19,45 +19,33 @@
 
         activate();
 
-        $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
-            event.preventDefault();//prevent file from uploading
-        });
-
         function activate() {
             logger.log(controllerId + ' activated');
-            getUserData();
+            vm.user = JSON.parse(localStorage.getItem('currentUser'));
         };
 
-        function getUserData() {
-            //TODO: Need to get logged in username
-
-            service.query('mark.lawrence')
-                .then(function (data) {
-                    vm.user = data[0];
-                });
+        vm.fileSelected = function ($files, $file, $event, $rejectedFiles) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var dataURL = reader.result;
+                vm.user.userPhoto = dataURL.split(',')[1];
+                vm.user.userPhotoType = $file.type;
+            };
+            reader.readAsDataURL($file);
         };
 
         vm.save = function () {
             vm.isBusy = true;
-            logger.log('user', vm.user);
             service.update(vm.user)
                 .then(function (data) {
                     vm.user = data;
-                    logger.info(data);
+                    localStorage.setItem('currentUser', JSON.stringify(vm.user));
                 })
                 .finally(function () {
                     vm.isBusy = false;
+                    vm.file = null;
                     vm.profileForm.$setPristine();
-                });
-        };
-
-        vm.saveAvatar = function () {
-            vm.isAvatarBusy = true;
-            service.uploadAvatar(vm.user.userName, vm.file)
-                .then(function (data) {
-                    logger.success(data);
                     vm.avatarForm.$setPristine();
-                    vm.isAvatarBusy = false;
                 });
         };
     };

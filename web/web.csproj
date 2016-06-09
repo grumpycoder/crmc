@@ -249,6 +249,8 @@
     <Content Include="app\kiosk\views\partial-search.html" />
     <Content Include="app\kiosk\views\home.html" />
     <Content Include="app\modules.min.js" />
+    <Content Include="app\nav\nav.js" />
+    <Content Include="app\nav\nav.module.js" />
     <Content Include="app\people\people.js" />
     <Content Include="app\people\people.module.js" />
     <Content Include="app\people\views\person.html" />

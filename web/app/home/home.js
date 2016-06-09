@@ -5,9 +5,9 @@
 
     angular.module('app.home').controller(controllerId, mainController);
 
-    mainController.$inject = ['peopleService', 'censorService', 'storage', 'logger', '$timeout'];
+    mainController.$inject = ['peopleService', 'censorService', 'userService', 'storage', 'logger'];
 
-    function mainController(peopleService, censorService, storage, logger, $timeout) {
+    function mainController(peopleService, censorService, userService, storage, logger) {
         var vm = this;
         vm.title = 'Home';
 
@@ -20,6 +20,12 @@
 
         function activate() {
             logger.log(controllerId + ' active');
+
+            userService.get().then(function (data) {
+                vm.user = data;
+                localStorage.setItem('currentUser', JSON.stringify(vm.user));
+            });
+
             censors = JSON.parse(storage.get('censors'));
 
             if (!censors) {
