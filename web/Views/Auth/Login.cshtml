@@ -11,6 +11,15 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link href="~/css/vendor.min.css" rel="stylesheet" />
+    <style>
+        .validation-summary-errors ul {
+            list-style-type: none;
+        }
+
+        .validation-summary-valid.alert-danger {
+            display: none;
+        }
+    </style>
 </head>
 <body class="hold-transition login-page">
     <div class="login-box">
@@ -22,13 +31,18 @@
             @using (Html.BeginForm("Login", "Auth", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+
                 <div class="form-group has-feedback">
                     @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => m.Username)
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    @Html.ValidationMessageFor(m => m.Password)
                 </div>
                 <div class="row">
                     <div class="col-xs-12">

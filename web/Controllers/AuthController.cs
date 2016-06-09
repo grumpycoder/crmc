@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System.Configuration;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using web.ViewModels;
 
 namespace web.Controllers
@@ -54,14 +56,32 @@ namespace web.Controllers
             {
                 return View(model);
             }
-            //TODO: Add Authentication to AD
+            var env = ConfigurationManager.AppSettings["Environment"];
             var user = UserManager.FindByName(model.Username);
+
             if (user != null)
             {
+                switch (env)
+                {
+                    case "Prod":
+                        if (Membership.ValidateUser(model.Username, model.Password))
+                        {
+                            await SignInManager.SignInAsync(user, true, model.RememberMe);
+                            return RedirectToLocal(returnUrl);
+                        }
+                        ModelState.AddModelError("", "Invalid username or password.");
+                        break;
+
+                    default:
+                        await SignInManager.SignInAsync(user, true, model.RememberMe);
+                        return RedirectToLocal(returnUrl);
+                }
                 await SignInManager.SignInAsync(user, true, model.RememberMe);
                 return RedirectToLocal(returnUrl);
             }
+
             ModelState.AddModelError("", "You are not authorized.");
+
             return View(model);
         }
 

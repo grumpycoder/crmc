@@ -17,8 +17,7 @@
             get: get,
             query: query,
             remove: remove,
-            update: update,
-            uploadAvatar: uploadAvatar
+            update: update
         }
 
         return service;
@@ -28,7 +27,9 @@
         }
 
         function create(user) {
-            return $http.post(url, user).then(_success);
+            return $http.post(url, user).then(_success, function (error) {
+                logger.log('error', error);
+            });
         }
 
         //TODO: Need a getbyname function
@@ -37,11 +38,12 @@
         }
 
         function query(searchTerm) {
+            url += '/search/';
+
             if (searchTerm != undefined && searchTerm.length > 0) {
-                return $http.get(url + '?searchTerm=' + searchTerm).then(_success);
-            } else {
-                return get(url);
-            }
+                url += '?' + searchTerm;
+            };
+            return $http.get(url).then(_success);
         }
 
         function update(user) {
@@ -50,17 +52,6 @@
 
         function remove(id) {
             return $http.delete(url + '/' + id).then(_success);
-        }
-
-        function uploadAvatar(username, avatar) {
-            var formData = new FormData();
-            formData.append('file', avatar);
-
-            return $http.post(url + '/uploadAvatar/' + username + '/',
-                    formData,
-                    { headers: { 'Content-Type': undefined } }
-                )
-                .then(_success);
         }
 
         function _success(response) {

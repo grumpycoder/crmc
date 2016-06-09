@@ -11,8 +11,8 @@
                        ng-pattern="/^[a-zA-Z, .`-]*$/"
                        ng-minlength="2"
                        ng-maxlength="50"
-                       ng-class="{error: form.firstname.$invalid && !form.firstname.$pristine}">
-                <span ng-messages="form.firstname.$error" ng-show="form.firstname.$invalid">
+                       ng-class="{error: form.firstname.$invalid}">
+                <span ng-messages="form.firstname.$error" ng-show="form.firstname.$invalid" class="has-error">
                     <span class="help-block text-danger" ng-message="required">Required</span>
                     <span class="help-block text-danger" ng-message="minlength">Too short</span>
                     <span class="help-block text-danger" ng-message="maxlength">Too long</span>
@@ -27,7 +27,7 @@
                        ng-minlength="2"
                        ng-maxlength="50"
                        ng-class="{error: form.lastname.$invalid && !form.lastname.$pristine}">
-                <span ng-messages="form.lastname.$error" ng-show="form.lastname.$invalid">
+                <span ng-messages="form.lastname.$error" ng-show="form.lastname.$invalid" class="has-error">
                     <span class="help-block text-danger" ng-message="required">Required</span>
                     <span class="help-block text-danger" ng-message="minlength">Too short</span>
                     <span class="help-block text-danger" ng-message="maxlength">Too long</span>
@@ -39,7 +39,7 @@
             <div class="col-md-12">
                 <label for="" class="control-label">Email</label>
                 <input type="email" name="email" class="form-control" ng-model="vm.item.emailAddress">
-                <span ng-messages="form.email.$error" ng-show="form.email.$invalid">
+                <span ng-messages="form.email.$error" ng-show="form.email.$invalid" class="has-error">
                     <span class="help-block text-danger" ng-message="email">Invalid email address</span>
                 </span>
             </div>
@@ -47,7 +47,10 @@
         <div class="form-group">
             <div class="col-md-6">
                 <label for="" class="control-label">Zipcode</label>
-                <input type="text" class="form-control" ng-model="vm.item.zipcode">
+                <input type="text" name="zipcode" class="form-control" ng-model="vm.item.zipcode" ng-pattern="/^[0-9]*$/">
+                <span ng-messages="form.zipcode.$error" ng-show="form.zipcode.$invalid" class="has-error">
+                    <span class="help-block text-danger" ng-message="pattern">Must be numeric 0-9</span>
+                </span>
             </div>
             <div class="col-md-6">
                 <label for="" class="control-label">Fuzzy Match</label>

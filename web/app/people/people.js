@@ -37,6 +37,8 @@
         };
 
         vm.addItem = function addItem() {
+            vm.lastDeleted = null;
+            vm.lastUpdated = null;
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
                 //controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'vm', 'storage', editPersonController],
@@ -54,6 +56,8 @@
 
         vm.editItem = function editItem(item) {
             vm.currentEdit = item;
+            vm.lastDeleted = null;
+            vm.lastUpdated = null;
             $modal.open({
                 templateUrl: '/app/people/views/person.html',
                 //controller: ['logger', '$uibModalInstance', 'peopleService', 'item', 'vm', 'storage', editPersonController],
@@ -67,6 +71,8 @@
                     vm.lastUpdated = angular.copy(vm.currentEdit);
                     angular.extend(item, data);
                     logger.success('Successfully updated ' + getFullName(data));
+                }).finally(function () {
+                    vm.currentEdit = null;
                 });
         };
 
@@ -105,27 +111,28 @@
 
         vm.search = function search(tableState) {
             tableStateRef = tableState;
+
             if (!vm.searchModel.isPriority) vm.searchModel.isPriority = null;
 
             vm.searchModel.dateCreated = vm.daysFilter
                 ? moment().subtract(parseInt(vm.daysFilter), 'days').format('MM/DD/YYYY')
                 : null;
-
             if (typeof (tableState.sort.predicate) != "undefined") {
                 vm.searchModel.orderBy = tableState.sort.predicate;
                 vm.searchModel.orderDirection = tableState.sort.reverse ? 'desc' : 'asc';
             }
             if (typeof (tableState.search.predicateObject) != "undefined") {
+                if (tableState.search.predicateObject.fuzzyMatchValue) {
+                    vm.fuzzyMatchValue = null;
+                    vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue / 100;
+                } else {
+                    vm.searchModel.fuzzyMatchValue = vm.fuzzyMatchValue;
+                }
+
                 vm.daysFilter = tableState.search.predicateObject.dateCreated ? null : vm.daysFilter;
                 vm.searchModel.dateCreated = vm.daysFilter
                     ? vm.searchModel.dateCreated
                     : tableState.search.predicateObject.dateCreated;
-
-                if (tableState.search.predicateObject.fuzzyMatchValue) {
-                    vm.searchModel.fuzzyMatchValue = tableState.search.predicateObject.fuzzyMatchValue / 100;
-                } else {
-                    vm.searchModel.fuzzyMatchValue = null;
-                }
 
                 vm.searchModel.isDonor = tableState.search.predicateObject.isDonor;
                 vm.searchModel.firstname = tableState.search.predicateObject.firstname;
@@ -133,6 +140,8 @@
                 vm.searchModel.zipcode = tableState.search.predicateObject.zipCode;
                 vm.searchModel.emailAddress = tableState.search.predicateObject.emailAddress;
                 vm.searchModel.isPriority = tableState.search.predicateObject.isPriority;
+            } else {
+                vm.searchModel.fuzzyMatchValue = vm.fuzzyMatchValue;
             }
 
             vm.isBusy = true;
@@ -144,8 +153,10 @@
                 });
         };
 
-        vm.pages = function paged(pageNum) {
-            search(tableStateRef);
+        vm.paged = function paged(pageNum) {
+            vm.lastDeleted = null;
+            vm.lastUpdated = null;
+            vm.search(tableStateRef);
         };
 
         vm.quickFilter = function () {
@@ -157,7 +168,6 @@
         };
     }
 
-    //function editPersonController(logger, $modal, service, item, model, storage) {
     function editPersonController(logger, $modal, service, model, storage) {
         var vm = this;
         //TODO: Can be made global??

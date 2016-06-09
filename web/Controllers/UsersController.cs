@@ -69,26 +69,18 @@ namespace web.Controllers
             return Ok(vm);
         }
 
-        public IHttpActionResult Get(string searchTerm)
+        [HttpGet, Route("Search")]
+        public IHttpActionResult Search(string term = "")
         {
-            //var users = UserManager.Users.Where(x => x.UserName.Contains(searchTerm) || x.FullName.Contains(searchTerm)).ToList().Select(u => new UserViewModel()
-            //{
-            //    Id = u.Id,
-            //    UserName = u.UserName,
-            //    Email = u.Email,
-            //    FullName = u.FullName,
-            //    Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray(),
-            //    Avatar = File.Exists(HttpContext.Current.Server.MapPath(@"~\images\users\" + u.UserName + ".jpg")) ? @"images\users\" + u.UserName + ".jpg" : null
-            //});
-
-            var users = UserManager.Users.Where(x => x.UserName.Contains(searchTerm) || x.FullName.Contains(searchTerm)).ToList().Select(u => new UserViewModel()
+            var users = UserManager.Users.Where(x => x.UserName.Contains(term) || x.FullName.Contains(term)).ToList().Select(u => new UserViewModel()
             {
                 Id = u.Id,
                 UserName = u.UserName,
                 Email = u.Email,
                 FullName = u.FullName,
                 Roles = UserManager.GetRolesAsync(u.Id).Result.ToArray(),
-                UserPhoto = u.UserPhoto
+                UserPhoto = u.UserPhoto,
+                UserPhotoType = u.UserPhotoType
             });
 
             return Ok(users);

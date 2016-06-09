@@ -40,8 +40,10 @@
                             </div>
 
                             <div class="btn-group" ng-click="vm.quickFilter()">
-                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-tooltip="fuzzy Match 90% or above" uib-btn-radio="0.9" uncheckable>High Match</label>
-                                <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-tooltip="fuzzy Match 60% or above" uib-btn-radio="0.6" uncheckable>Medium Match</label>
+                                @*<label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-tooltip="fuzzy Match 90% or above" uib-btn-radio="0.9" uncheckable>High Match</label>
+                                    <label class="btn btn-primary" ng-model="vm.searchModel.fuzzyMatchValue" uib-tooltip="fuzzy Match 60% or above" uib-btn-radio="0.6" uncheckable>Medium Match</label>*@
+                                <label class="btn btn-primary" ng-model="vm.fuzzyMatchValue" uib-tooltip="fuzzy Match 90% or above" uib-btn-radio="0.9" uncheckable>High Match</label>
+                                <label class="btn btn-primary" ng-model="vm.fuzzyMatchValue" uib-tooltip="fuzzy Match 60% or above" uib-btn-radio="0.6" uncheckable>Medium Match</label>
                             </div>
                             <div class="pull-right">
                                 <button class="btn btn-warning" ng-click="vm.undoDelete()" ng-show="vm.lastDeleted"><i class="fa fa-undo"></i> Undo Delete</button>
@@ -69,14 +71,14 @@
                                         <td><input st-search="lastname" st-clear-key class="form-control" type="text" placeholder="Last Name" /></td>
                                         <td><input st-search="emailAddress" st-clear-key class="form-control" type="text" placeholder="Email Address" /></td>
                                         <td><input st-search="zipCode" st-clear-key class="form-control" type="text" placeholder="Zipcode" /></td>
-                                        <td>
+                                        <td width="80">
                                             <select st-search="isDonor" st-input-event="change" class="form-control" uib-tooltip="Selecting 'No' should return mostly only local names from kiosks">
                                                 <option value="">All</option>
                                                 <option value="true">Yes</option>
                                                 <option value="false">No</option>
                                             </select>
                                         </td>
-                                        <td>
+                                        <td width="80">
                                             <select st-search="isPriority" st-input-event="change" class="form-control">
                                                 <option value="">All</option>
                                                 <option value="true">Yes</option>
@@ -91,7 +93,7 @@
                                                 </span>
                                             </span>
                                         </td>
-                                        <td><input st-search="fuzzyMatchValue" st-clear-key class="form-control" type="text" placeholder="Fuzzy Match" /></td>
+                                        <td width="130"><input st-search="fuzzyMatchValue" st-clear-key class="form-control" type="text" placeholder="Fuzzy Match" /></td>
                                         <td colspan="2"></td>
                                     </tr>
                                 </thead>

@@ -27,15 +27,22 @@
                         <div class="row">
 
                             <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" clear-key ng-model="vm.user.userName" placeholder="New username...">
-                                    <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-primary" ng-click="vm.addItem()" ng-disabled="!vm.user.userName"
-                                                tooltip="Click here to add new user" tooltip-placement="right">
-                                            <span class="fa fa-plus"></span> Add
-                                        </button>
-                                    </span>
-                                </div><!-- /input-group -->
+                                <form novalidate="" name="myForm">
+                                    <div class="input-group">
+                                        <input type="text" name="username" class="form-control" clear-key ng-model="vm.user.userName"
+                                               placeholder="New username ..." ng-pattern="/^[a-zA-Z0-9.]*$/">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary" ng-click="vm.addItem()" ng-disabled="!vm.user.userName"
+                                                    tooltip="Click here to add new user" tooltip-placement="right">
+                                                <span class="fa fa-plus"></span> Add
+                                            </button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                    <div ng-messages="myForm.username.$error" class="has-error" role="alert">
+
+                                        <span ng-message="pattern" class="has-error help-block">Username must be alpha-numeric with no spaces</span>
+                                    </div>
+                                </form>
                             </div><!-- /.col-lg-6 -->
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="pull-right">
@@ -61,6 +68,10 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="user in vm.users">
+                                    <td>
+                                        <gfl-text-avatar ng-hide="user.userPhoto" size="30" class="img-circle">{{user.fullName}}</gfl-text-avatar>
+                                        <img ng-show="user.userPhoto" class="user-image" height="30" width="30" ng-src="data:{{user.userPhotoType}};base64,{{user.userPhoto}}">
+                                    </td>
                                     <td>
                                         <span>{{user.userName}}</span>
                                     </td>

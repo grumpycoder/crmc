@@ -34,6 +34,11 @@
         "dist/fonts/glyphicons-halflings-regular.woff"
       ]
     },
+    "clj-fuzzy": {
+      "main": [
+        "src-js/clj-fuzzy.js"
+      ]
+    },
     "bootswatch": {
       "main": [
         "cosmo/css/bootstrap.css"
