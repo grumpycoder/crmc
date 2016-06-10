@@ -1,9 +1,6 @@
 <form novalidate="" name="form" role="form">
 
     <div class="modal-header">
-        <button type="button" class="close" ng-click="vm.close()" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
         <h4 class="modal-title">{{vm.item.firstname}} {{vm.item.lastname}} <i class="fa fa-asterisk fa-pull-right red-text" ng-show="form.$dirty"></i></h4>
     </div>
     <div class="modal-body">
@@ -89,6 +86,6 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default pull-left" data-dismiss="modal" ng-click="vm.close()">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="!form.$dirty && form.$invalid">Save changes</button>
+        <button type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="(form.$invalid || !form.$dirty) && form.$invalid">Save changes</button>
     </div>
 </form>
