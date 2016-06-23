@@ -38,12 +38,12 @@
         }
 
         function query(searchTerm) {
-            url += '/search/';
+            var searchUrl = url + '/search/';
 
             if (searchTerm != undefined && searchTerm.length > 0) {
-                url += '?' + searchTerm;
+                searchUrl += '?' + searchTerm;
             };
-            return $http.get(url).then(_success);
+            return $http.get(searchUrl).then(_success);
         }
 
         function update(user) {

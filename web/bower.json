@@ -21,7 +21,8 @@
     "moment": "~2.13.0",
     "clj-fuzzy": "^0.3.1",
     "AdminLTE": "admin-lte#^2.3.3",
-    "bootstrap": "3.3.6"
+    "bootstrap": "3.3.6",
+    "humanize-plus": "^1.8.2"
   },
   "overrides": {
     "bootstrap": {
@@ -37,6 +38,11 @@
     "clj-fuzzy": {
       "main": [
         "src-js/clj-fuzzy.js"
+      ]
+    },
+    "humanize-plus": {
+      "main": [
+        "dist/humanize.min.js"
       ]
     },
     "bootswatch": {

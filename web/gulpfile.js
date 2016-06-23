@@ -51,6 +51,7 @@ gulp.task('build-app:js', function () {
 gulp.task('build-app:css', function () {
     return gulp.src(config.css)
       .pipe(filter(['**/*.css', '!**/kiosk/*.css']))
+      .pipe(print())
       .pipe(sourcemaps.init())
       .pipe(cleanCSS())
       .pipe(concat('site.min.css'))
@@ -61,6 +62,7 @@ gulp.task('build-app:css', function () {
 gulp.task('build-kiosk:css', function () {
     return gulp.src(config.css)
       .pipe(filter(['**/kiosk/*.css']))
+      .pipe(print())
       .pipe(sourcemaps.init())
       .pipe(cleanCSS())
       .pipe(concat('kiosk.min.css'))
@@ -79,6 +81,7 @@ gulp.task('fonts', function () {
 gulp.task('build-vendor:js', function () {
     return gulp.src(mainBowerFiles(['**/*.js']))
       .pipe(filter(['**/*.js', '!*AdminLTE*']))
+      .pipe(print())
       .pipe(sourcemaps.init())
       .pipe(uglify())
       .pipe(concat('vendor.min.js'))
@@ -89,6 +92,7 @@ gulp.task('build-vendor:js', function () {
 gulp.task('build-vendor:css', function () {
     return gulp.src(mainBowerFiles())
       .pipe(filter(['**/*.css']))
+      .pipe(print())
       .pipe(sourcemaps.init())
       .pipe(cleanCSS())
       .pipe(concat('vendor.min.css'))
